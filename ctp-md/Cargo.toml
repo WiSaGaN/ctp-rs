@@ -1,0 +1,9 @@
+[package]
+name = "ctp-md"
+version = "0.1.0"
+authors = ["Wangshan Lu <wisagan@gmail.com>"]
+build = "build.rs"
+
+[dependencies.ctp-common]
+version = "0"
+path = "../ctp-common"

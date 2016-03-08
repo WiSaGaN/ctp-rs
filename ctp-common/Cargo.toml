@@ -2,5 +2,10 @@
 name = "ctp-common"
 version = "0.1.0"
 authors = ["Wangshan Lu <wisagan@gmail.com>"]
+build = "build.rs"
 
 [dependencies]
+
+
+[build-dependencies]
+bindgen = "0.16"

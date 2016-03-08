@@ -1,3 +1,6 @@
+#![feature(ptr_as_ref)]
+extern crate encoding;
+
 mod binding {
 #![allow(dead_code)]
 #![allow(non_camel_case_types)]
@@ -5,7 +8,10 @@ mod binding {
 include!(concat!(env!("OUT_DIR"), "/ctp-api.rs.in"));
 }
 
-use std::os::raw::c_int;
+use encoding::{ decode, DecoderTrap };
+use encoding::all::GB18030;
+use std::ffi::CStr;
+use std::os::raw::{ c_char, c_int };
 
 pub use binding::*;
 
@@ -52,4 +58,35 @@ pub fn from_api_return_to_api_result(api_return: c_int) -> ApiResult {
         -3 => Err(ApiError::Throttled),
         _ => Err(ApiError::Unknown),
     }
+}
+
+#[derive(Clone, Debug, PartialEq)]
+pub struct RspError {
+    pub id: i32,
+    pub msg: String,
+}
+
+
+#[must_use]
+pub type RspResult = Result<(), RspError>;
+
+fn gb18030_cstr_to_string(cstr: &CStr) -> String {
+    decode(cstr.to_bytes(), DecoderTrap::Replace, GB18030).0.unwrap_or_else(|e| e.into_owned())
+}
+
+pub fn from_rsp_info_to_rsp_result(rsp_info: *const Struct_CThostFtdcRspInfoField) -> RspResult {
+    match unsafe { rsp_info.as_ref() } {
+        Some(&info) => match info {
+            Struct_CThostFtdcRspInfoField { ErrorID: 0, ErrorMsg: _ } => {
+                Ok(())
+            },
+            Struct_CThostFtdcRspInfoField { ErrorID: id, ErrorMsg: ref msg } => {
+                Err(RspError{ id: id, msg: gb18030_cstr_to_string(unsafe { CStr::from_ptr(msg as *const u8 as *const c_char) }) })
+            }
+        },
+        None => {
+            Ok(())
+        },
+    }
+
 }

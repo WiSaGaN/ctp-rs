@@ -19,14 +19,16 @@ pub enum DisconnectionReason {
     Unknown = 0x0000,
 }
 
-pub fn from_reason_to_disconnection_reason(reason: c_int) -> DisconnectionReason {
-    match reason {
-        0x1001 => DisconnectionReason::ReadError,
-        0x1002 => DisconnectionReason::WriteError,
-        0x2001 => DisconnectionReason::HeartbeatTimeout,
-        0x2002 => DisconnectionReason::HeartbeatSendError,
-        0x2003 => DisconnectionReason::ErrorMessageReceived,
-        _ => DisconnectionReason::Unknown,
+impl std::convert::From<c_int> for DisconnectionReason {
+    fn from(reason: c_int) -> DisconnectionReason {
+        match reason {
+            0x1001 => DisconnectionReason::ReadError,
+            0x1002 => DisconnectionReason::WriteError,
+            0x2001 => DisconnectionReason::HeartbeatTimeout,
+            0x2002 => DisconnectionReason::HeartbeatSendError,
+            0x2003 => DisconnectionReason::ErrorMessageReceived,
+            _ => DisconnectionReason::Unknown,
+        }
     }
 }
 
@@ -41,6 +43,7 @@ pub enum ApiError {
 #[must_use]
 pub type ApiResult = Result<(), ApiError>;
 
+// TODO: use std::convert::From after trait specialization?
 pub fn from_api_return_to_api_result(api_return: c_int) -> ApiResult {
     match api_return {
         0 => Ok(()),

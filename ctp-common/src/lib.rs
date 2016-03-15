@@ -16,6 +16,23 @@ use std::os::raw::{ c_char, c_int };
 pub use binding::*;
 
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub enum ResumeType {
+    Restart = 0,
+    Resume = 1,
+    Quick = 2,
+}
+
+impl std::convert::Into<Enum_THOST_TE_RESUME_TYPE> for ResumeType {
+    fn into(self) -> Enum_THOST_TE_RESUME_TYPE {
+        match self {
+            ResumeType::Restart => Enum_THOST_TE_RESUME_TYPE::THOST_TERT_RESTART,
+            ResumeType::Resume => Enum_THOST_TE_RESUME_TYPE::THOST_TERT_RESUME,
+            ResumeType::Quick => Enum_THOST_TE_RESUME_TYPE::THOST_TERT_QUICK,
+        }
+    }
+}
+
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub enum DisconnectionReason {
     ReadError = 0x1001,
     WriteError = 0x1002,

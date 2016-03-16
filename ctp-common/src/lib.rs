@@ -87,7 +87,7 @@ pub struct RspError {
 #[must_use]
 pub type RspResult = Result<(), RspError>;
 
-fn gb18030_cstr_to_string(cstr: &CStr) -> String {
+pub fn gb18030_cstr_to_string(cstr: &CStr) -> String {
     decode(cstr.to_bytes(), DecoderTrap::Replace, GB18030).0.unwrap_or_else(|e| e.into_owned())
 }
 

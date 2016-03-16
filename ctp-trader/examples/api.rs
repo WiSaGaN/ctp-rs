@@ -26,7 +26,17 @@ impl TraderSpi for Spi {
 
     #[allow(unused_variables)]
     fn on_rsp_qry_instrument(&mut self, instrument: Option<&Struct_CThostFtdcInstrumentField>, result: RspResult, request_id: i32, is_last: bool) {
-        println!("on_rsp_qry_instrument: {}, {:?}, {:?}", unsafe { CStr::from_ptr(instrument.unwrap().InstrumentID[..].as_ptr() as *const c_char) }.to_str().unwrap(), request_id, is_last);
+        let inst = instrument.unwrap();
+        unsafe {
+            println!("on_rsp_qry_instrument: {}, {}, {}, {}, {}, {:?}, {:?}",
+                 to_str(&inst.InstrumentID[..]),
+                 to_str(&inst.ExchangeID[..]),
+                 gb18030_cstr_to_string(CStr::from_ptr(inst.InstrumentName[..].as_ptr() as *const c_char)),
+                 to_str(&inst.ExchangeInstID[..]),
+                 to_str(&inst.ProductID[..]),
+                 request_id,
+                 is_last);
+        }
     }
 
     #[allow(unused_variables)]
@@ -39,6 +49,10 @@ fn fill_cstr_array(array: &mut [u8], content: &str) {
     for (place, data) in array.split_last_mut().unwrap().1.iter_mut().zip(content.as_bytes().iter()) {
         *place = *data;
     }
+}
+
+unsafe fn to_str(array: &[u8]) -> &str {
+    CStr::from_ptr(array.as_ptr() as *const c_char).to_str().unwrap()
 }
 
 fn new_login(broker_id: &str, user_id: &str, password: &str) -> Struct_CThostFtdcReqUserLoginField {

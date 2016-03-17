@@ -17,9 +17,9 @@ pub use binding::*;
 
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub enum ResumeType {
-    Restart = 0,
-    Resume = 1,
-    Quick = 2,
+    Restart = Enum_THOST_TE_RESUME_TYPE::THOST_TERT_RESTART as isize,
+    Resume = Enum_THOST_TE_RESUME_TYPE::THOST_TERT_RESUME as isize,
+    Quick = Enum_THOST_TE_RESUME_TYPE::THOST_TERT_QUICK as isize,
 }
 
 impl std::convert::Into<Enum_THOST_TE_RESUME_TYPE> for ResumeType {

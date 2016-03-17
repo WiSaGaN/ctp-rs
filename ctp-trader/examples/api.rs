@@ -69,6 +69,18 @@ fn new_qry_instrument(pattern: &str) -> Struct_CThostFtdcQryInstrumentField {
     qry_instrument
 }
 
+fn new_qry_order(pattern: &str) -> Struct_CThostFtdcQryOrderField {
+    let mut qry_order: Struct_CThostFtdcQryOrderField = Default::default();
+    fill_cstr_array(&mut qry_order.InvestorID, pattern);
+    qry_order
+}
+
+fn new_qry_trade(pattern: &str) -> Struct_CThostFtdcQryTradeField {
+    let mut qry_trade: Struct_CThostFtdcQryTradeField = Default::default();
+    fill_cstr_array(&mut qry_trade.InvestorID, pattern);
+    qry_trade
+}
+
 fn main() {
     let flow_path = ::std::ffi::CString::new("").unwrap();
     let mut trader_api = TraderApi::new(flow_path);
@@ -87,8 +99,18 @@ fn main() {
         Ok(()) => println!("req_qry_instrument ok"),
         Err(err) => println!("req_qry_instrument err: {:?}", err),
     };
+    std::thread::sleep(std::time::Duration::from_secs(1));
+    match trader_api.req_qry_order(&new_qry_order(""), 3) {
+        Ok(()) => println!("req_qry_order ok"),
+        Err(err) => println!("req_qry_order err: {:?}", err),
+    };
+    std::thread::sleep(std::time::Duration::from_secs(1));
+    match trader_api.req_qry_trade(&new_qry_trade(""), 4) {
+        Ok(()) => println!("req_qry_trade ok"),
+        Err(err) => println!("req_qry_trade err: {:?}", err),
+    };
     std::thread::sleep(std::time::Duration::from_secs(5));
-    match trader_api.req_user_logout(&Default::default(), 3) {
+    match trader_api.req_user_logout(&Default::default(), 99) {
         Ok(()) => println!("req_user_logout ok"),
         Err(err) => println!("req_user_logout err: {:?}", err),
     };

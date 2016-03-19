@@ -9,12 +9,27 @@ include!(concat!(env!("OUT_DIR"), "/struct.rs.in"));
 include!(concat!(env!("OUT_DIR"), "/data_type.rs.in"));
 }
 
-use encoding::{ decode, DecoderTrap };
+use encoding::{ DecoderTrap, Encoding };
 use encoding::all::GB18030;
-use std::ffi::CStr;
-use std::os::raw::{ c_char, c_int };
+use std::ascii::AsciiExt;
+use std::borrow::Cow;
+use std::fmt;
+use std::os::raw::c_int;
 
 pub use binding::*;
+
+pub fn gb18030_cstr_to_str<'a>(v: &'a [u8]) -> Cow<'a, str> {
+    let slice = v.split(|&c| c == 0u8).next().unwrap();
+    if slice.is_ascii() {
+        unsafe {
+            return Cow::Borrowed::<str>(std::str::from_utf8_unchecked(slice));
+        }
+    }
+    match GB18030.decode(slice, DecoderTrap::Replace) {
+        Ok(s) => Cow::Owned(s),
+        Err(e) => e,
+    }
+}
 
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub enum ResumeType {
@@ -95,10 +110,6 @@ pub fn from_rsp_result_to_string(rsp_result: RspResult) -> String {
     }
 }
 
-pub fn gb18030_cstr_to_string(cstr: &CStr) -> String {
-    decode(cstr.to_bytes(), DecoderTrap::Replace, GB18030).0.unwrap_or_else(|e| e.into_owned())
-}
-
 pub fn from_rsp_info_to_rsp_result(rsp_info: *const Struct_CThostFtdcRspInfoField) -> RspResult {
     match unsafe { rsp_info.as_ref() } {
         Some(&info) => match info {
@@ -106,12 +117,55 @@ pub fn from_rsp_info_to_rsp_result(rsp_info: *const Struct_CThostFtdcRspInfoFiel
                 Ok(())
             },
             Struct_CThostFtdcRspInfoField { ErrorID: id, ErrorMsg: ref msg } => {
-                Err(RspError{ id: id, msg: gb18030_cstr_to_string(unsafe { CStr::from_ptr(msg as *const u8 as *const c_char) }) })
+                Err(RspError{ id: id, msg: gb18030_cstr_to_str(msg).into_owned() })
             }
         },
         None => {
             Ok(())
         },
     }
+}
 
+#[cfg(test)]
+mod tests {
+    use std::borrow::Cow;
+    use super::gb18030_cstr_to_str;
+
+    #[test]
+    fn cstr_conversion_empty_str() {
+        match gb18030_cstr_to_str(b"") {
+            Cow::Borrowed::<str>(s) => assert_eq!(s, ""),
+            Cow::Owned::<str>(_) => panic!("ascii str should not allocate"),
+        };
+        match gb18030_cstr_to_str(b"\0") {
+            Cow::Borrowed::<str>(s) => assert_eq!(s, ""),
+            Cow::Owned::<str>(_) => panic!("ascii str should not allocate"),
+        };
+    }
+
+    #[test]
+    fn cstr_conversion_ascii() {
+        match gb18030_cstr_to_str(b"ascii") {
+            Cow::Borrowed::<str>(s) => assert_eq!(s, "ascii"),
+            Cow::Owned::<str>(_) => panic!("ascii str should not allocate"),
+        };
+    }
+
+    #[test]
+    fn cstr_conversion_ascii_cstr() {
+        match gb18030_cstr_to_str(b"ascii\0") {
+            Cow::Borrowed::<str>(s) => assert_eq!(s, "ascii"),
+            Cow::Owned::<str>(_) => panic!("ascii str should not allocate"),
+        };
+    }
+
+    #[test]
+    fn cstr_conversion_gb2312() {
+        assert_eq!(gb18030_cstr_to_str(b"\xd5\xfd\xc8\xb7"), "正确");
+    }
+
+    #[test]
+    fn cstr_conversion_gb2312_cstr() {
+        assert_eq!(gb18030_cstr_to_str(b"\xd5\xfd\xc8\xb7\0"), "正确");
+    }
 }

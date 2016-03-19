@@ -14,8 +14,6 @@ pub use ctp_common::*;
 _ZN18CFtdcTraderApiImpl11ReqQryQuoteEP23CThostFtdcQryQuoteFieldi
 _ZN18CFtdcTraderApiImpl12ReqQryNoticeEP24CThostFtdcQryNoticeFieldi
 _ZN18CFtdcTraderApiImpl13ReqQryProductEP25CThostFtdcQryProductFieldi
-_ZN18CFtdcTraderApiImpl14ReqOrderActionEP31CThostFtdcInputOrderActionFieldi
-_ZN18CFtdcTraderApiImpl14ReqOrderInsertEP25CThostFtdcInputOrderFieldi
 _ZN18CFtdcTraderApiImpl14ReqQryExchangeEP26CThostFtdcQryExchangeFieldi
 _ZN18CFtdcTraderApiImpl14ReqQryForQuoteEP26CThostFtdcQryForQuoteFieldi
 _ZN18CFtdcTraderApiImpl14ReqQryInvestorEP26CThostFtdcQryInvestorFieldi
@@ -88,6 +86,8 @@ extern "C" {
     fn _ZN18CFtdcTraderApiImpl15ReqAuthenticateEP30CThostFtdcReqAuthenticateFieldi(api: *mut c_void, pReqAuthenticateField: *const Struct_CThostFtdcReqAuthenticateField, nRequestID: c_int) -> c_int;
     fn _ZN18CFtdcTraderApiImpl12ReqUserLoginEP27CThostFtdcReqUserLoginFieldi(api: *mut c_void, pReqUserLoginField: *const Struct_CThostFtdcReqUserLoginField, nRequestID: c_int) -> c_int;
     fn _ZN18CFtdcTraderApiImpl13ReqUserLogoutEP25CThostFtdcUserLogoutFieldi(api: *mut c_void, pUserLogoutField: *const Struct_CThostFtdcUserLogoutField, nRequestID: c_int) -> c_int;
+    fn _ZN18CFtdcTraderApiImpl14ReqOrderInsertEP25CThostFtdcInputOrderFieldi(api: *mut c_void, pInputOrder: *const Struct_CThostFtdcInputOrderField, nRequestID: c_int) -> c_int;
+    fn _ZN18CFtdcTraderApiImpl14ReqOrderActionEP31CThostFtdcInputOrderActionFieldi(api: *mut c_void, pInputOrderAction: *const Struct_CThostFtdcInputOrderActionField, nRequestID: c_int) -> c_int;
     fn _ZN18CFtdcTraderApiImpl11ReqQryOrderEP23CThostFtdcQryOrderFieldi(api: *mut c_void, pQryOrder: *const Struct_CThostFtdcQryOrderField, nRequestID: c_int) -> c_int;
     fn _ZN18CFtdcTraderApiImpl11ReqQryTradeEP23CThostFtdcQryTradeFieldi(api: *mut c_void, pQryTrade: *const Struct_CThostFtdcQryTradeField, nRequestID: c_int) -> c_int;
     fn _ZN18CFtdcTraderApiImpl16ReqQryInstrumentEP28CThostFtdcQryInstrumentFieldi(api: *mut c_void, pQryInstrument: *const Struct_CThostFtdcQryInstrumentField, nRequestID: c_int) -> c_int;
@@ -179,6 +179,14 @@ impl TraderApi {
         from_api_return_to_api_result(unsafe { _ZN18CFtdcTraderApiImpl13ReqUserLogoutEP25CThostFtdcUserLogoutFieldi(self.trader_api_ptr, req_user_logout, request_id) })
     }
 
+    pub fn req_order_insert(&mut self, input_order: &Struct_CThostFtdcInputOrderField, request_id: i32) -> ApiResult {
+        from_api_return_to_api_result(unsafe { _ZN18CFtdcTraderApiImpl14ReqOrderInsertEP25CThostFtdcInputOrderFieldi(self.trader_api_ptr, input_order, request_id) })
+    }
+
+    pub fn req_order_action(&mut self, input_order_action: &Struct_CThostFtdcInputOrderActionField, request_id: i32) -> ApiResult {
+        from_api_return_to_api_result(unsafe { _ZN18CFtdcTraderApiImpl14ReqOrderActionEP31CThostFtdcInputOrderActionFieldi(self.trader_api_ptr, input_order_action, request_id) })
+    }
+
     pub fn req_qry_order(&mut self, qry_order: &Struct_CThostFtdcQryOrderField, request_id: i32) -> ApiResult {
         from_api_return_to_api_result(unsafe { _ZN18CFtdcTraderApiImpl11ReqQryOrderEP23CThostFtdcQryOrderFieldi(self.trader_api_ptr, qry_order, request_id) })
     }
@@ -221,57 +229,77 @@ pub trait TraderSpi {
 
     #[allow(unused_variables)]
     fn on_rsp_authenticate(&mut self, rsp_authenticate: Option<&Struct_CThostFtdcRspAuthenticateField>, result: RspResult, request_id: i32, is_last: bool) {
-        println!("on_rsp_authenticate: .., {:?}, {:?}", request_id, is_last);
+        println!("on_rsp_authenticate: {:?}, {}, {:?}, {:?}", rsp_authenticate.and_then(|_| Some(())), from_rsp_result_to_string(result), request_id, is_last);
     }
 
     #[allow(unused_variables)]
     fn on_rsp_user_login(&mut self, rsp_user_login: Option<&Struct_CThostFtdcRspUserLoginField>, result: RspResult, request_id: i32, is_last: bool) {
-        println!("on_rsp_user_login: .., {:?}, {:?}", request_id, is_last);
+        println!("on_rsp_user_login: {:?}, {}, {:?}, {:?}", rsp_user_login.and_then(|_| Some(())), from_rsp_result_to_string(result), request_id, is_last);
     }
 
     #[allow(unused_variables)]
     fn on_rsp_user_logout(&mut self, rsp_user_logout: Option<&Struct_CThostFtdcUserLogoutField>, result: RspResult, request_id: i32, is_last: bool) {
-        println!("on_rsp_user_logout: .., {:?}, {:?}", request_id, is_last);
+        println!("on_rsp_user_logout: {:?}, {}, {:?}, {:?}", rsp_user_logout.and_then(|_| Some(())), from_rsp_result_to_string(result), request_id, is_last);
     }
 
     #[allow(unused_variables)]
-    fn on_rsp_qry_order(&mut self, instrument: Option<&Struct_CThostFtdcOrderField>, result: RspResult, request_id: i32, is_last: bool) {
-        println!("on_rsp_qry_order: .., {:?}, {:?}", request_id, is_last);
+    fn on_rsp_order_insert(&mut self, input_order: Option<&Struct_CThostFtdcInputOrderField>, result: RspResult, request_id: i32, is_last: bool) {
+        println!("on_rsp_order_insert: {:?}, {}, {:?}, {:?}", input_order.and_then(|_| Some(())), from_rsp_result_to_string(result), request_id, is_last);
     }
 
     #[allow(unused_variables)]
-    fn on_rsp_qry_trade(&mut self, instrument: Option<&Struct_CThostFtdcTradeField>, result: RspResult, request_id: i32, is_last: bool) {
-        println!("on_rsp_qry_trade: .., {:?}, {:?}", request_id, is_last);
+    fn on_rsp_order_action(&mut self, input_order_action: Option<&Struct_CThostFtdcInputOrderActionField>, result: RspResult, request_id: i32, is_last: bool) {
+        println!("on_rsp_order_action: {:?}, {}, {:?}, {:?}", input_order_action.and_then(|_| Some(())), from_rsp_result_to_string(result), request_id, is_last);
+    }
+
+    #[allow(unused_variables)]
+    fn on_rsp_qry_order(&mut self, order: Option<&Struct_CThostFtdcOrderField>, result: RspResult, request_id: i32, is_last: bool) {
+        println!("on_rsp_qry_order: {:?}, {}, {:?}, {:?}", order.and_then(|_| Some(())), from_rsp_result_to_string(result), request_id, is_last);
+    }
+
+    #[allow(unused_variables)]
+    fn on_rsp_qry_trade(&mut self, trade: Option<&Struct_CThostFtdcTradeField>, result: RspResult, request_id: i32, is_last: bool) {
+        println!("on_rsp_qry_trade: {:?}, {}, {:?}, {:?}", trade.and_then(|_| Some(())), from_rsp_result_to_string(result), request_id, is_last);
+    }
+
+    #[allow(unused_variables)]
+    fn on_err_rtn_order_insert(&mut self, input_order: Option<&Struct_CThostFtdcInputOrderField>, result: RspResult) {
+        println!("on_err_rtn_order_insert: {:?}, {}", input_order.and_then(|_| Some(())), from_rsp_result_to_string(result));
+    }
+
+    #[allow(unused_variables)]
+    fn on_err_rtn_order_action(&mut self, order_action: Option<&Struct_CThostFtdcOrderActionField>, result: RspResult) {
+        println!("on_err_rtn_order_action: {:?}, {}", order_action.and_then(|_| Some(())), from_rsp_result_to_string(result));
     }
 
     #[allow(unused_variables)]
     fn on_rsp_qry_instrument(&mut self, instrument: Option<&Struct_CThostFtdcInstrumentField>, result: RspResult, request_id: i32, is_last: bool) {
-        println!("on_rsp_qry_instrument: .., {:?}, {:?}", request_id, is_last);
+        println!("on_rsp_qry_instrument: {:?}, {}, {:?}, {:?}", instrument.and_then(|_| Some(())), from_rsp_result_to_string(result), request_id, is_last);
     }
 
     #[allow(unused_variables)]
     fn on_rsp_error(&mut self, result: RspResult, request_id: i32, is_last: bool) {
-        println!("on_rsp_error: .., {:?}, {:?}", request_id, is_last);
+        println!("on_rsp_error: {}, {:?}, {:?}", from_rsp_result_to_string(result), request_id, is_last);
     }
 
     #[allow(unused_variables)]
     fn on_rtn_order(&mut self, order: Option<&Struct_CThostFtdcOrderField>) {
-        println!("on_rtn_order");
+        println!("on_rtn_order: {:?}", order.and_then(|_| Some(())));
     }
 
     #[allow(unused_variables)]
     fn on_rtn_trade(&mut self, trade: Option<&Struct_CThostFtdcTradeField>) {
-        println!("on_rtn_trade");
+        println!("on_rtn_trade: {:?}", trade.and_then(|_| Some(())));
     }
 
     #[allow(unused_variables)]
-    fn on_rtn_instrument_status(&mut self, trade: Option<&Struct_CThostFtdcInstrumentStatusField>) {
-        println!("on_rtn_instrument_status");
+    fn on_rtn_instrument_status(&mut self, instrument_status: Option<&Struct_CThostFtdcInstrumentStatusField>) {
+        println!("on_rtn_instrument_status: {:?}", instrument_status.and_then(|_| Some(())));
     }
 
     #[allow(unused_variables)]
-    fn on_rtn_trading_notice(&mut self, trade: Option<&Struct_CThostFtdcTradingNoticeInfoField>) {
-        println!("on_rtn_trading_notice");
+    fn on_rtn_trading_notice(&mut self, trading_notice_info: Option<&Struct_CThostFtdcTradingNoticeInfoField>) {
+        println!("on_rtn_trading_notice: {:?}", trading_notice_info.and_then(|_| Some(())));
     }
 }
 
@@ -316,8 +344,11 @@ extern "C" fn spi_on_rsp_user_password_update(spi: *mut Struct_CThostFtdcTraderS
 #[allow(non_snake_case, unused_variables)]
 extern "C" fn spi_on_rsp_trading_account_password_update(spi: *mut Struct_CThostFtdcTraderSpi, pTradingAccountPasswordUpdate: *const Struct_CThostFtdcTradingAccountPasswordUpdateField, pRspInfo: *const Struct_CThostFtdcRspInfoField, nRequestID: c_int, bIsLast: c_bool) {}
 
-#[allow(non_snake_case, unused_variables)]
-extern "C" fn spi_on_rsp_order_insert(spi: *mut Struct_CThostFtdcTraderSpi, pInputOrder: *const Struct_CThostFtdcInputOrderField, pRspInfo: *const Struct_CThostFtdcRspInfoField, nRequestID: c_int, bIsLast: c_bool) {}
+#[allow(non_snake_case)]
+extern "C" fn spi_on_rsp_order_insert(spi: *mut Struct_CThostFtdcTraderSpi, pInputOrder: *const Struct_CThostFtdcInputOrderField, pRspInfo: *const Struct_CThostFtdcRspInfoField, nRequestID: c_int, bIsLast: c_bool) {
+    let rsp_info = from_rsp_info_to_rsp_result(pRspInfo);
+    unsafe { transmute::<*mut TraderSpi, &mut TraderSpi>(transmute::<*mut Struct_CThostFtdcTraderSpi, &mut Struct_CThostFtdcTraderSpi>(spi).trader_spi_ptr).on_rsp_order_insert(pInputOrder.as_ref(), rsp_info, nRequestID, bIsLast != 0) };
+}
 
 #[allow(non_snake_case, unused_variables)]
 extern "C" fn spi_on_rsp_parked_order_insert(spi: *mut Struct_CThostFtdcTraderSpi, pParkedOrder: *const Struct_CThostFtdcParkedOrderField, pRspInfo: *const Struct_CThostFtdcRspInfoField, nRequestID: c_int, bIsLast: c_bool) {}
@@ -325,8 +356,11 @@ extern "C" fn spi_on_rsp_parked_order_insert(spi: *mut Struct_CThostFtdcTraderSp
 #[allow(non_snake_case, unused_variables)]
 extern "C" fn spi_on_rsp_parked_order_action(spi: *mut Struct_CThostFtdcTraderSpi, pParkedOrderAction: *const Struct_CThostFtdcParkedOrderActionField, pRspInfo: *const Struct_CThostFtdcRspInfoField, nRequestID: c_int, bIsLast: c_bool) {}
 
-#[allow(non_snake_case, unused_variables)]
-extern "C" fn spi_on_rsp_order_action(spi: *mut Struct_CThostFtdcTraderSpi, pInputOrderAction: *const Struct_CThostFtdcInputOrderActionField, pRspInfo: *const Struct_CThostFtdcRspInfoField, nRequestID: c_int, bIsLast: c_bool) {}
+#[allow(non_snake_case)]
+extern "C" fn spi_on_rsp_order_action(spi: *mut Struct_CThostFtdcTraderSpi, pInputOrderAction: *const Struct_CThostFtdcInputOrderActionField, pRspInfo: *const Struct_CThostFtdcRspInfoField, nRequestID: c_int, bIsLast: c_bool) {
+    let rsp_info = from_rsp_info_to_rsp_result(pRspInfo);
+    unsafe { transmute::<*mut TraderSpi, &mut TraderSpi>(transmute::<*mut Struct_CThostFtdcTraderSpi, &mut Struct_CThostFtdcTraderSpi>(spi).trader_spi_ptr).on_rsp_order_action(pInputOrderAction.as_ref(), rsp_info, nRequestID, bIsLast != 0) };
+}
 
 #[allow(non_snake_case, unused_variables)]
 extern "C" fn spi_on_rsp_query_max_order_volume(spi: *mut Struct_CThostFtdcTraderSpi, pQueryMaxOrderVolume: *const Struct_CThostFtdcQueryMaxOrderVolumeField, pRspInfo: *const Struct_CThostFtdcRspInfoField, nRequestID: c_int, bIsLast: c_bool) {}
@@ -491,11 +525,17 @@ extern "C" fn spi_on_rtn_trade(spi: *mut Struct_CThostFtdcTraderSpi, pTrade: *co
     unsafe { transmute::<*mut TraderSpi, &mut TraderSpi>(transmute::<*mut Struct_CThostFtdcTraderSpi, &mut Struct_CThostFtdcTraderSpi>(spi).trader_spi_ptr).on_rtn_trade(pTrade.as_ref()) };
 }
 
-#[allow(non_snake_case, unused_variables)]
-extern "C" fn spi_on_err_rtn_order_insert(spi: *mut Struct_CThostFtdcTraderSpi, pInputOrder: *const Struct_CThostFtdcInputOrderField, pRspInfo: *const Struct_CThostFtdcRspInfoField) {}
+#[allow(non_snake_case)]
+extern "C" fn spi_on_err_rtn_order_insert(spi: *mut Struct_CThostFtdcTraderSpi, pInputOrder: *const Struct_CThostFtdcInputOrderField, pRspInfo: *const Struct_CThostFtdcRspInfoField) {
+    let rsp_info = from_rsp_info_to_rsp_result(pRspInfo);
+    unsafe { transmute::<*mut TraderSpi, &mut TraderSpi>(transmute::<*mut Struct_CThostFtdcTraderSpi, &mut Struct_CThostFtdcTraderSpi>(spi).trader_spi_ptr).on_err_rtn_order_insert(pInputOrder.as_ref(), rsp_info) };
+}
 
-#[allow(non_snake_case, unused_variables)]
-extern "C" fn spi_on_err_rtn_order_action(spi: *mut Struct_CThostFtdcTraderSpi, pOrderAction: *const Struct_CThostFtdcOrderActionField, pRspInfo: *const Struct_CThostFtdcRspInfoField) {}
+#[allow(non_snake_case)]
+extern "C" fn spi_on_err_rtn_order_action(spi: *mut Struct_CThostFtdcTraderSpi, pOrderAction: *const Struct_CThostFtdcOrderActionField, pRspInfo: *const Struct_CThostFtdcRspInfoField) {
+    let rsp_info = from_rsp_info_to_rsp_result(pRspInfo);
+    unsafe { transmute::<*mut TraderSpi, &mut TraderSpi>(transmute::<*mut Struct_CThostFtdcTraderSpi, &mut Struct_CThostFtdcTraderSpi>(spi).trader_spi_ptr).on_err_rtn_order_action(pOrderAction.as_ref(), rsp_info) };
+}
 
 #[allow(non_snake_case)]
 extern "C" fn spi_on_rtn_instrument_status(spi: *mut Struct_CThostFtdcTraderSpi, pInstrumentStatus: *const Struct_CThostFtdcInstrumentStatusField) {

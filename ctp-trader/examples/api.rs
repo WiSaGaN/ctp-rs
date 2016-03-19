@@ -6,24 +6,6 @@ use std::os::raw::c_char;
 
 struct Spi;
 impl TraderSpi for Spi {
-    fn on_front_connected(&mut self) {
-        println!("on_front_connected");
-    }
-
-    fn on_front_disconnected(&mut self, reason: DisconnectionReason) {
-        println!("on_front_disconnected: {:?}", reason);
-    }
-
-    #[allow(unused_variables)]
-    fn on_rsp_user_login(&mut self, rsp_user_login: Option<&Struct_CThostFtdcRspUserLoginField>, result: RspResult, request_id: i32, is_last: bool) {
-        println!("on_rsp_user_login: .., {:?}, {:?}", request_id, is_last);
-    }
-
-    #[allow(unused_variables)]
-    fn on_rsp_user_logout(&mut self, rsp_user_logout: Option<&Struct_CThostFtdcUserLogoutField>, result: RspResult, request_id: i32, is_last: bool) {
-        println!("on_rsp_user_logout: .., {:?}, {:?}", request_id, is_last);
-    }
-
     #[allow(unused_variables)]
     fn on_rsp_qry_instrument(&mut self, instrument: Option<&Struct_CThostFtdcInstrumentField>, result: RspResult, request_id: i32, is_last: bool) {
         let inst = instrument.unwrap();
@@ -37,11 +19,6 @@ impl TraderSpi for Spi {
                  request_id,
                  is_last);
         }
-    }
-
-    #[allow(unused_variables)]
-    fn on_rsp_error(&mut self, result: RspResult, request_id: i32, is_last: bool) {
-        println!("on_rsp_error: {}, {:?}, {:?}", result.err().unwrap().msg, request_id, is_last);
     }
 }
 
@@ -64,21 +41,35 @@ fn new_login(broker_id: &str, user_id: &str, password: &str) -> Struct_CThostFtd
 }
 
 fn new_qry_instrument(pattern: &str) -> Struct_CThostFtdcQryInstrumentField {
-    let mut qry_instrument: Struct_CThostFtdcQryInstrumentField = Default::default();
-    fill_cstr_array(&mut qry_instrument.InstrumentID, pattern);
-    qry_instrument
+    let mut f: Struct_CThostFtdcQryInstrumentField = Default::default();
+    fill_cstr_array(&mut f.InstrumentID, pattern);
+    f
 }
 
 fn new_qry_order(pattern: &str) -> Struct_CThostFtdcQryOrderField {
-    let mut qry_order: Struct_CThostFtdcQryOrderField = Default::default();
-    fill_cstr_array(&mut qry_order.InvestorID, pattern);
-    qry_order
+    let mut f: Struct_CThostFtdcQryOrderField = Default::default();
+    fill_cstr_array(&mut f.InvestorID, pattern);
+    f
 }
 
 fn new_qry_trade(pattern: &str) -> Struct_CThostFtdcQryTradeField {
-    let mut qry_trade: Struct_CThostFtdcQryTradeField = Default::default();
-    fill_cstr_array(&mut qry_trade.InvestorID, pattern);
-    qry_trade
+    let mut f: Struct_CThostFtdcQryTradeField = Default::default();
+    fill_cstr_array(&mut f.InvestorID, pattern);
+    f
+}
+
+fn new_input_order(pattern: &str) -> Struct_CThostFtdcInputOrderField {
+    let mut f: Struct_CThostFtdcInputOrderField = Default::default();
+    f.TimeCondition = THOST_FTDC_TC_GFD;
+    f.OrderPriceType = THOST_FTDC_OPT_LIMITPRICE;
+    f.LimitPrice = 1f64;
+    f
+}
+
+fn new_input_order_action(pattern: &str) -> Struct_CThostFtdcInputOrderActionField {
+    let mut f: Struct_CThostFtdcInputOrderActionField = Default::default();
+    f.ActionFlag = THOST_FTDC_AF_DELETE;
+    f
 }
 
 fn main() {
@@ -109,7 +100,17 @@ fn main() {
         Ok(()) => println!("req_qry_trade ok"),
         Err(err) => println!("req_qry_trade err: {:?}", err),
     };
-    std::thread::sleep(std::time::Duration::from_secs(5));
+    std::thread::sleep(std::time::Duration::from_secs(1));
+    match trader_api.req_order_insert(&new_input_order(""), 5) {
+        Ok(()) => println!("req_order_insert ok"),
+        Err(err) => println!("req_order_insert err: {:?}", err),
+    };
+    std::thread::sleep(std::time::Duration::from_secs(1));
+    match trader_api.req_order_action(&new_input_order_action(""), 6) {
+        Ok(()) => println!("req_order_action ok"),
+        Err(err) => println!("req_order_action err: {:?}", err),
+    };
+    std::thread::sleep(std::time::Duration::from_secs(1));
     match trader_api.req_user_logout(&Default::default(), 99) {
         Ok(()) => println!("req_user_logout ok"),
         Err(err) => println!("req_user_logout err: {:?}", err),

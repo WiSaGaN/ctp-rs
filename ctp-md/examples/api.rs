@@ -5,29 +5,6 @@ use ctp_md::*;
 
 struct Spi;
 impl MdSpi for Spi {
-    fn on_front_connected(&mut self) {
-        println!("on_front_connected");
-    }
-
-    fn on_front_disconnected(&mut self, reason: DisconnectionReason) {
-        println!("on_front_disconnected: {:?}", reason);
-    }
-
-    #[allow(unused_variables)]
-    fn on_rsp_user_login(&mut self, rsp_user_login: Option<&Struct_CThostFtdcRspUserLoginField>, result: RspResult, request_id: i32, is_last: bool) {
-        println!("on_rsp_user_login: .., {:?}, {:?}", request_id, is_last);
-    }
-
-    #[allow(unused_variables)]
-    fn on_rsp_user_logout(&mut self, rsp_user_logout: Option<&Struct_CThostFtdcUserLogoutField>, result: RspResult, request_id: i32, is_last: bool) {
-        println!("on_rsp_user_logout: .., {:?}, {:?}", request_id, is_last);
-    }
-
-    #[allow(unused_variables)]
-    fn on_rsp_error(&mut self, result: RspResult, request_id: i32, is_last: bool) {
-        println!("on_rsp_error: {}, {:?}, {:?}", result.err().unwrap().msg, request_id, is_last);
-    }
-
     #[allow(unused_variables)]
     fn on_rsp_sub_market_data(&mut self, specific_instrument: Option<&Struct_CThostFtdcSpecificInstrumentField>, result: RspResult, request_id: i32, is_last: bool) {
         println!("on_rsp_sub_market_data: {}, {:?}, {:?}", specific_instrument_to_cstr(specific_instrument.unwrap()).to_str().expect("CThostFtdcSpecificInstrumentField has invalid UTF8 in InstrumentID"), request_id, is_last);

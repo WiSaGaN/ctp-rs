@@ -1,19 +1,12 @@
 #![feature(ptr_as_ref)]
 extern crate encoding;
 
-mod binding {
-#![allow(dead_code)]
-#![allow(non_camel_case_types)]
-#![allow(non_snake_case)]
-include!(concat!(env!("OUT_DIR"), "/struct.rs.in"));
-include!(concat!(env!("OUT_DIR"), "/data_type.rs.in"));
-}
+mod binding;
 
 use encoding::{ DecoderTrap, Encoding };
 use encoding::all::GB18030;
 use std::ascii::AsciiExt;
 use std::borrow::Cow;
-use std::fmt;
 use std::os::raw::c_int;
 
 pub use binding::*;

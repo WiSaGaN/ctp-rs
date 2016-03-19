@@ -40,6 +40,34 @@ fn new_login(broker_id: &str, user_id: &str, password: &str) -> Struct_CThostFtd
     login
 }
 
+fn new_logout(broker_id: &str, user_id: &str) -> Struct_CThostFtdcUserLogoutField {
+    let mut logout: Struct_CThostFtdcUserLogoutField = Default::default();
+    fill_cstr_array(&mut logout.BrokerID, broker_id);
+    fill_cstr_array(&mut logout.UserID, user_id);
+    logout
+}
+
+fn new_qry_settlement_info(broker_id: &str, investor_id: &str) -> Struct_CThostFtdcQrySettlementInfoField {
+    let mut f: Struct_CThostFtdcQrySettlementInfoField = Default::default();
+    fill_cstr_array(&mut f.BrokerID, broker_id);
+    fill_cstr_array(&mut f.InvestorID, investor_id);
+    f
+}
+
+fn new_settlement_info_confirm(broker_id: &str, investor_id: &str) -> Struct_CThostFtdcSettlementInfoConfirmField {
+    let mut f: Struct_CThostFtdcSettlementInfoConfirmField = Default::default();
+    fill_cstr_array(&mut f.BrokerID, broker_id);
+    fill_cstr_array(&mut f.InvestorID, investor_id);
+    f
+}
+
+fn new_qry_settlement_info_confirm(broker_id: &str, investor_id: &str) -> Struct_CThostFtdcQrySettlementInfoConfirmField {
+    let mut f: Struct_CThostFtdcQrySettlementInfoConfirmField = Default::default();
+    fill_cstr_array(&mut f.BrokerID, broker_id);
+    fill_cstr_array(&mut f.InvestorID, investor_id);
+    f
+}
+
 fn new_qry_instrument(pattern: &str) -> Struct_CThostFtdcQryInstrumentField {
     let mut f: Struct_CThostFtdcQryInstrumentField = Default::default();
     fill_cstr_array(&mut f.InstrumentID, pattern);
@@ -73,6 +101,7 @@ fn new_input_order_action(pattern: &str) -> Struct_CThostFtdcInputOrderActionFie
 }
 
 fn main() {
+    let mut last_request_id = 0;
     let flow_path = ::std::ffi::CString::new("").unwrap();
     let mut trader_api = TraderApi::new(flow_path);
     trader_api.register_spi(Box::new(Spi));
@@ -81,39 +110,65 @@ fn main() {
     trader_api.subscribe_public_topic(ResumeType::Quick);
     trader_api.init();
     std::thread::sleep(std::time::Duration::from_secs(1));
-    match trader_api.req_user_login(&new_login("9999", "036954", "lourlair"), 1) {
+    last_request_id += 1;
+    match trader_api.req_user_login(&new_login("9999", "036954", "lourlair"), last_request_id) {
         Ok(()) => println!("req_user_login ok"),
         Err(err) => println!("req_user_login err: {:?}", err),
     };
     std::thread::sleep(std::time::Duration::from_secs(1));
-    match trader_api.req_qry_instrument(&new_qry_instrument(""), 2) {
+    last_request_id += 1;
+    match trader_api.req_qry_instrument(&new_qry_instrument(""), last_request_id) {
         Ok(()) => println!("req_qry_instrument ok"),
         Err(err) => println!("req_qry_instrument err: {:?}", err),
     };
     std::thread::sleep(std::time::Duration::from_secs(1));
-    match trader_api.req_qry_order(&new_qry_order(""), 3) {
+    last_request_id += 1;
+    match trader_api.req_qry_settlement_info(&new_qry_settlement_info("9999", "036954"), last_request_id) {
+        Ok(()) => println!("req_qry_settlement_info ok"),
+        Err(err) => println!("req_qry_settlement_info err: {:?}", err),
+    };
+    std::thread::sleep(std::time::Duration::from_secs(1));
+    last_request_id += 1;
+    match trader_api.req_qry_settlement_info_confirm(&new_qry_settlement_info_confirm("9999", "036954"), last_request_id) {
+        Ok(()) => println!("req_qry_settlement_info_confirm ok"),
+        Err(err) => println!("req_qry_settlement_info_confirm err: {:?}", err),
+    };
+    std::thread::sleep(std::time::Duration::from_secs(1));
+    last_request_id += 1;
+    match trader_api.req_settlement_info_confirm(&new_settlement_info_confirm("9999", "036954"), last_request_id) {
+        Ok(()) => println!("req_settlement_info_confirm ok"),
+        Err(err) => println!("req_settlement_info_confirm err: {:?}", err),
+    };
+    std::thread::sleep(std::time::Duration::from_secs(1));
+    last_request_id += 1;
+    match trader_api.req_qry_order(&new_qry_order(""), last_request_id) {
         Ok(()) => println!("req_qry_order ok"),
         Err(err) => println!("req_qry_order err: {:?}", err),
     };
     std::thread::sleep(std::time::Duration::from_secs(1));
-    match trader_api.req_qry_trade(&new_qry_trade(""), 4) {
+    last_request_id += 1;
+    match trader_api.req_qry_trade(&new_qry_trade(""), last_request_id) {
         Ok(()) => println!("req_qry_trade ok"),
         Err(err) => println!("req_qry_trade err: {:?}", err),
     };
     std::thread::sleep(std::time::Duration::from_secs(1));
-    match trader_api.req_order_insert(&new_input_order(""), 5) {
+    last_request_id += 1;
+    match trader_api.req_order_insert(&new_input_order(""), last_request_id) {
         Ok(()) => println!("req_order_insert ok"),
         Err(err) => println!("req_order_insert err: {:?}", err),
     };
     std::thread::sleep(std::time::Duration::from_secs(1));
-    match trader_api.req_order_action(&new_input_order_action(""), 6) {
+    last_request_id += 1;
+    match trader_api.req_order_action(&new_input_order_action(""), last_request_id) {
         Ok(()) => println!("req_order_action ok"),
         Err(err) => println!("req_order_action err: {:?}", err),
     };
     std::thread::sleep(std::time::Duration::from_secs(1));
-    match trader_api.req_user_logout(&Default::default(), 99) {
+    /*
+    match trader_api.req_user_logout(&new_logout("9999", "036954"), 99) {
         Ok(()) => println!("req_user_logout ok"),
         Err(err) => println!("req_user_logout err: {:?}", err),
     };
     std::thread::sleep(std::time::Duration::from_secs(1));
+    */
 }

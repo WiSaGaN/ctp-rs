@@ -35,7 +35,6 @@ _ZN18CFtdcTraderApiImpl19ReqQryTradingNoticeEP31CThostFtdcQryTradingNoticeFieldi
 _ZN18CFtdcTraderApiImpl20ReqParkedOrderActionEP32CThostFtdcParkedOrderActionFieldi
 _ZN18CFtdcTraderApiImpl20ReqParkedOrderInsertEP26CThostFtdcParkedOrderFieldi
 _ZN18CFtdcTraderApiImpl20ReqQryEWarrantOffsetEP32CThostFtdcQryEWarrantOffsetFieldi
-_ZN18CFtdcTraderApiImpl20ReqQrySettlementInfoEP32CThostFtdcQrySettlementInfoFieldi
 _ZN18CFtdcTraderApiImpl20ReqQryTradingAccountEP32CThostFtdcQryTradingAccountFieldi
 _ZN18CFtdcTraderApiImpl20ReqQryTransferSerialEP32CThostFtdcQryTransferSerialFieldi
 _ZN18CFtdcTraderApiImpl20ReqRemoveParkedOrderEP32CThostFtdcRemoveParkedOrderFieldi
@@ -48,7 +47,6 @@ _ZN18CFtdcTraderApiImpl22ReqQueryMaxOrderVolumeEP34CThostFtdcQueryMaxOrderVolume
 _ZN18CFtdcTraderApiImpl23ReqQryParkedOrderActionEP35CThostFtdcQryParkedOrderActionFieldi
 _ZN18CFtdcTraderApiImpl24ReqQryBrokerTradingAlgosEP36CThostFtdcQryBrokerTradingAlgosFieldi
 _ZN18CFtdcTraderApiImpl24ReqQryExchangeMarginRateEP36CThostFtdcQryExchangeMarginRateFieldi
-_ZN18CFtdcTraderApiImpl24ReqSettlementInfoConfirmEP36CThostFtdcSettlementInfoConfirmFieldi
 _ZN18CFtdcTraderApiImpl25ReqQryBrokerTradingParamsEP37CThostFtdcQryBrokerTradingParamsFieldi
 _ZN18CFtdcTraderApiImpl25ReqQryCombInstrumentGuardEP37CThostFtdcQryCombInstrumentGuardFieldi
 _ZN18CFtdcTraderApiImpl25ReqQryOptionInstrCommRateEP37CThostFtdcQryOptionInstrCommRateFieldi
@@ -57,7 +55,6 @@ _ZN18CFtdcTraderApiImpl26ReqQryOptionInstrTradeCostEP38CThostFtdcQryOptionInstrT
 _ZN18CFtdcTraderApiImpl26ReqRemoveParkedOrderActionEP38CThostFtdcRemoveParkedOrderActionFieldi
 _ZN18CFtdcTraderApiImpl27ReqFromBankToFutureByFutureEP26CThostFtdcReqTransferFieldi
 _ZN18CFtdcTraderApiImpl27ReqFromFutureToBankByFutureEP26CThostFtdcReqTransferFieldi
-_ZN18CFtdcTraderApiImpl27ReqQrySettlementInfoConfirmEP39CThostFtdcQrySettlementInfoConfirmFieldi
 _ZN18CFtdcTraderApiImpl28ReqQryCFMMCTradingAccountKeyEP40CThostFtdcQryCFMMCTradingAccountKeyFieldi
 _ZN18CFtdcTraderApiImpl28ReqQryInvestorPositionDetailEP40CThostFtdcQryInvestorPositionDetailFieldi
 _ZN18CFtdcTraderApiImpl29ReqQryInstrumentOrderCommRateEP41CThostFtdcQryInstrumentOrderCommRateFieldi
@@ -88,9 +85,12 @@ extern "C" {
     fn _ZN18CFtdcTraderApiImpl13ReqUserLogoutEP25CThostFtdcUserLogoutFieldi(api: *mut c_void, pUserLogoutField: *const Struct_CThostFtdcUserLogoutField, nRequestID: c_int) -> c_int;
     fn _ZN18CFtdcTraderApiImpl14ReqOrderInsertEP25CThostFtdcInputOrderFieldi(api: *mut c_void, pInputOrder: *const Struct_CThostFtdcInputOrderField, nRequestID: c_int) -> c_int;
     fn _ZN18CFtdcTraderApiImpl14ReqOrderActionEP31CThostFtdcInputOrderActionFieldi(api: *mut c_void, pInputOrderAction: *const Struct_CThostFtdcInputOrderActionField, nRequestID: c_int) -> c_int;
+    fn _ZN18CFtdcTraderApiImpl24ReqSettlementInfoConfirmEP36CThostFtdcSettlementInfoConfirmFieldi(api: *mut c_void, pSettlementInfoConfirm: *const Struct_CThostFtdcSettlementInfoConfirmField, nRequestID: c_int) -> c_int;
     fn _ZN18CFtdcTraderApiImpl11ReqQryOrderEP23CThostFtdcQryOrderFieldi(api: *mut c_void, pQryOrder: *const Struct_CThostFtdcQryOrderField, nRequestID: c_int) -> c_int;
     fn _ZN18CFtdcTraderApiImpl11ReqQryTradeEP23CThostFtdcQryTradeFieldi(api: *mut c_void, pQryTrade: *const Struct_CThostFtdcQryTradeField, nRequestID: c_int) -> c_int;
     fn _ZN18CFtdcTraderApiImpl16ReqQryInstrumentEP28CThostFtdcQryInstrumentFieldi(api: *mut c_void, pQryInstrument: *const Struct_CThostFtdcQryInstrumentField, nRequestID: c_int) -> c_int;
+    fn _ZN18CFtdcTraderApiImpl20ReqQrySettlementInfoEP32CThostFtdcQrySettlementInfoFieldi(api: *mut c_void, pQrySettlementInfo: *const Struct_CThostFtdcQrySettlementInfoField, nRequestID: c_int) -> c_int;
+    fn _ZN18CFtdcTraderApiImpl27ReqQrySettlementInfoConfirmEP39CThostFtdcQrySettlementInfoConfirmFieldi(api: *mut c_void, pQrySettlementInfoConfirm: *const Struct_CThostFtdcQrySettlementInfoConfirmField, nRequestID: c_int) -> c_int;
 }
 
 pub struct TraderApi {
@@ -187,6 +187,10 @@ impl TraderApi {
         from_api_return_to_api_result(unsafe { _ZN18CFtdcTraderApiImpl14ReqOrderActionEP31CThostFtdcInputOrderActionFieldi(self.trader_api_ptr, input_order_action, request_id) })
     }
 
+    pub fn req_settlement_info_confirm(&mut self, settlement_info_confirm: &Struct_CThostFtdcSettlementInfoConfirmField, request_id: i32) -> ApiResult {
+        from_api_return_to_api_result(unsafe { _ZN18CFtdcTraderApiImpl24ReqSettlementInfoConfirmEP36CThostFtdcSettlementInfoConfirmFieldi(self.trader_api_ptr, settlement_info_confirm, request_id) })
+    }
+
     pub fn req_qry_order(&mut self, qry_order: &Struct_CThostFtdcQryOrderField, request_id: i32) -> ApiResult {
         from_api_return_to_api_result(unsafe { _ZN18CFtdcTraderApiImpl11ReqQryOrderEP23CThostFtdcQryOrderFieldi(self.trader_api_ptr, qry_order, request_id) })
     }
@@ -197,6 +201,14 @@ impl TraderApi {
 
     pub fn req_qry_instrument(&mut self, qry_instrument: &Struct_CThostFtdcQryInstrumentField, request_id: i32) -> ApiResult {
         from_api_return_to_api_result(unsafe { _ZN18CFtdcTraderApiImpl16ReqQryInstrumentEP28CThostFtdcQryInstrumentFieldi(self.trader_api_ptr, qry_instrument, request_id) })
+    }
+
+    pub fn req_qry_settlement_info(&mut self, qry_settlement_info: &Struct_CThostFtdcQrySettlementInfoField, request_id: i32) -> ApiResult {
+        from_api_return_to_api_result(unsafe { _ZN18CFtdcTraderApiImpl20ReqQrySettlementInfoEP32CThostFtdcQrySettlementInfoFieldi(self.trader_api_ptr, qry_settlement_info, request_id) })
+    }
+
+    pub fn req_qry_settlement_info_confirm(&mut self, qry_settlement_info_confirm: &Struct_CThostFtdcQrySettlementInfoConfirmField, request_id: i32) -> ApiResult {
+        from_api_return_to_api_result(unsafe { _ZN18CFtdcTraderApiImpl27ReqQrySettlementInfoConfirmEP39CThostFtdcQrySettlementInfoConfirmFieldi(self.trader_api_ptr, qry_settlement_info_confirm, request_id) })
     }
 }
 
@@ -253,6 +265,11 @@ pub trait TraderSpi {
     }
 
     #[allow(unused_variables)]
+    fn on_rsp_settlement_info_confirm(&mut self, settlement_info_confirm: Option<&Struct_CThostFtdcSettlementInfoConfirmField>, result: RspResult, request_id: i32, is_last: bool) {
+        println!("on_rsp_settlement_info_confirm: {:?}, {}, {:?}, {:?}", settlement_info_confirm.and_then(|_| Some(())), from_rsp_result_to_string(result), request_id, is_last);
+    }
+
+    #[allow(unused_variables)]
     fn on_rsp_qry_order(&mut self, order: Option<&Struct_CThostFtdcOrderField>, result: RspResult, request_id: i32, is_last: bool) {
         println!("on_rsp_qry_order: {:?}, {}, {:?}, {:?}", order.and_then(|_| Some(())), from_rsp_result_to_string(result), request_id, is_last);
     }
@@ -275,6 +292,16 @@ pub trait TraderSpi {
     #[allow(unused_variables)]
     fn on_rsp_qry_instrument(&mut self, instrument: Option<&Struct_CThostFtdcInstrumentField>, result: RspResult, request_id: i32, is_last: bool) {
         println!("on_rsp_qry_instrument: {:?}, {}, {:?}, {:?}", instrument.and_then(|_| Some(())), from_rsp_result_to_string(result), request_id, is_last);
+    }
+
+    #[allow(unused_variables)]
+    fn on_rsp_qry_settlement_info(&mut self, settlement_info: Option<&Struct_CThostFtdcSettlementInfoField>, result: RspResult, request_id: i32, is_last: bool) {
+        println!("on_rsp_qry_settlement_info: {:?}, {}, {:?}, {:?}", settlement_info.and_then(|_| Some(())), from_rsp_result_to_string(result), request_id, is_last);
+    }
+
+    #[allow(unused_variables)]
+    fn on_rsp_qry_settlement_info_confirm(&mut self, settlement_info_confirm: Option<&Struct_CThostFtdcSettlementInfoConfirmField>, result: RspResult, request_id: i32, is_last: bool) {
+        println!("on_rsp_qry_settlement_info_confirm: {:?}, {}, {:?}, {:?}", settlement_info_confirm.and_then(|_| Some(())), from_rsp_result_to_string(result), request_id, is_last);
     }
 
     #[allow(unused_variables)]
@@ -366,7 +393,10 @@ extern "C" fn spi_on_rsp_order_action(spi: *mut Struct_CThostFtdcTraderSpi, pInp
 extern "C" fn spi_on_rsp_query_max_order_volume(spi: *mut Struct_CThostFtdcTraderSpi, pQueryMaxOrderVolume: *const Struct_CThostFtdcQueryMaxOrderVolumeField, pRspInfo: *const Struct_CThostFtdcRspInfoField, nRequestID: c_int, bIsLast: c_bool) {}
 
 #[allow(non_snake_case, unused_variables)]
-extern "C" fn spi_on_rsp_settlement_info_confirm(spi: *mut Struct_CThostFtdcTraderSpi, pSettlementInfoConfirm: *const Struct_CThostFtdcSettlementInfoConfirmField, pRspInfo: *const Struct_CThostFtdcRspInfoField, nRequestID: c_int, bIsLast: c_bool) {}
+extern "C" fn spi_on_rsp_settlement_info_confirm(spi: *mut Struct_CThostFtdcTraderSpi, pSettlementInfoConfirm: *const Struct_CThostFtdcSettlementInfoConfirmField, pRspInfo: *const Struct_CThostFtdcRspInfoField, nRequestID: c_int, bIsLast: c_bool) {
+    let rsp_info = from_rsp_info_to_rsp_result(pRspInfo);
+    unsafe { transmute::<*mut TraderSpi, &mut TraderSpi>(transmute::<*mut Struct_CThostFtdcTraderSpi, &mut Struct_CThostFtdcTraderSpi>(spi).trader_spi_ptr).on_rsp_settlement_info_confirm(pSettlementInfoConfirm.as_ref(), rsp_info, nRequestID, bIsLast != 0) };
+}
 
 #[allow(non_snake_case, unused_variables)]
 extern "C" fn spi_on_rsp_remove_parked_order(spi: *mut Struct_CThostFtdcTraderSpi, pRemoveParkedOrder: *const Struct_CThostFtdcRemoveParkedOrderField, pRspInfo: *const Struct_CThostFtdcRspInfoField, nRequestID: c_int, bIsLast: c_bool) {}
@@ -438,7 +468,10 @@ extern "C" fn spi_on_rsp_qry_instrument(spi: *mut Struct_CThostFtdcTraderSpi, pI
 extern "C" fn spi_on_rsp_qry_depth_market_data(spi: *mut Struct_CThostFtdcTraderSpi, pDepthMarketData: *const Struct_CThostFtdcDepthMarketDataField, pRspInfo: *const Struct_CThostFtdcRspInfoField, nRequestID: c_int, bIsLast: c_bool) {}
 
 #[allow(non_snake_case, unused_variables)]
-extern "C" fn spi_on_rsp_qry_settlement_info(spi: *mut Struct_CThostFtdcTraderSpi, pSettlementInfo: *const Struct_CThostFtdcSettlementInfoField, pRspInfo: *const Struct_CThostFtdcRspInfoField, nRequestID: c_int, bIsLast: c_bool) {}
+extern "C" fn spi_on_rsp_qry_settlement_info(spi: *mut Struct_CThostFtdcTraderSpi, pSettlementInfo: *const Struct_CThostFtdcSettlementInfoField, pRspInfo: *const Struct_CThostFtdcRspInfoField, nRequestID: c_int, bIsLast: c_bool) {
+    let rsp_info = from_rsp_info_to_rsp_result(pRspInfo);
+    unsafe { transmute::<*mut TraderSpi, &mut TraderSpi>(transmute::<*mut Struct_CThostFtdcTraderSpi, &mut Struct_CThostFtdcTraderSpi>(spi).trader_spi_ptr).on_rsp_qry_settlement_info(pSettlementInfo.as_ref(), rsp_info, nRequestID, bIsLast != 0) };
+}
 
 #[allow(non_snake_case, unused_variables)]
 extern "C" fn spi_on_rsp_qry_transfer_bank(spi: *mut Struct_CThostFtdcTraderSpi, pTransferBank: *const Struct_CThostFtdcTransferBankField, pRspInfo: *const Struct_CThostFtdcRspInfoField, nRequestID: c_int, bIsLast: c_bool) {}
@@ -450,7 +483,10 @@ extern "C" fn spi_on_rsp_qry_investor_position_detail(spi: *mut Struct_CThostFtd
 extern "C" fn spi_on_rsp_qry_notice(spi: *mut Struct_CThostFtdcTraderSpi, pNotice: *const Struct_CThostFtdcNoticeField, pRspInfo: *const Struct_CThostFtdcRspInfoField, nRequestID: c_int, bIsLast: c_bool) {}
 
 #[allow(non_snake_case, unused_variables)]
-extern "C" fn spi_on_rsp_qry_settlement_info_confirm(spi: *mut Struct_CThostFtdcTraderSpi, pSettlementInfoConfirm: *const Struct_CThostFtdcSettlementInfoConfirmField, pRspInfo: *const Struct_CThostFtdcRspInfoField, nRequestID: c_int, bIsLast: c_bool) {}
+extern "C" fn spi_on_rsp_qry_settlement_info_confirm(spi: *mut Struct_CThostFtdcTraderSpi, pSettlementInfoConfirm: *const Struct_CThostFtdcSettlementInfoConfirmField, pRspInfo: *const Struct_CThostFtdcRspInfoField, nRequestID: c_int, bIsLast: c_bool) {
+    let rsp_info = from_rsp_info_to_rsp_result(pRspInfo);
+    unsafe { transmute::<*mut TraderSpi, &mut TraderSpi>(transmute::<*mut Struct_CThostFtdcTraderSpi, &mut Struct_CThostFtdcTraderSpi>(spi).trader_spi_ptr).on_rsp_qry_settlement_info_confirm(pSettlementInfoConfirm.as_ref(), rsp_info, nRequestID, bIsLast != 0) };
+}
 
 #[allow(non_snake_case, unused_variables)]
 extern "C" fn spi_on_rsp_qry_investor_position_combine_detail(spi: *mut Struct_CThostFtdcTraderSpi, pInvestorPositionCombineDetail: *const Struct_CThostFtdcInvestorPositionCombineDetailField, pRspInfo: *const Struct_CThostFtdcRspInfoField, nRequestID: c_int, bIsLast: c_bool) {}

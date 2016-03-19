@@ -241,67 +241,67 @@ pub trait TraderSpi {
 
     #[allow(unused_variables)]
     fn on_rsp_authenticate(&mut self, rsp_authenticate: Option<&Struct_CThostFtdcRspAuthenticateField>, result: RspResult, request_id: i32, is_last: bool) {
-        println!("on_rsp_authenticate: {:?}, {}, {:?}, {:?}", rsp_authenticate.and_then(|_| Some(())), from_rsp_result_to_string(result), request_id, is_last);
+        println!("on_rsp_authenticate: {:?}, {}, {:?}, {:?}", rsp_authenticate, from_rsp_result_to_string(result), request_id, is_last);
     }
 
     #[allow(unused_variables)]
     fn on_rsp_user_login(&mut self, rsp_user_login: Option<&Struct_CThostFtdcRspUserLoginField>, result: RspResult, request_id: i32, is_last: bool) {
-        println!("on_rsp_user_login: {:?}, {}, {:?}, {:?}", rsp_user_login.and_then(|_| Some(())), from_rsp_result_to_string(result), request_id, is_last);
+        println!("on_rsp_user_login: {:?}, {}, {:?}, {:?}", rsp_user_login, from_rsp_result_to_string(result), request_id, is_last);
     }
 
     #[allow(unused_variables)]
     fn on_rsp_user_logout(&mut self, rsp_user_logout: Option<&Struct_CThostFtdcUserLogoutField>, result: RspResult, request_id: i32, is_last: bool) {
-        println!("on_rsp_user_logout: {:?}, {}, {:?}, {:?}", rsp_user_logout.and_then(|_| Some(())), from_rsp_result_to_string(result), request_id, is_last);
+        println!("on_rsp_user_logout: {:?}, {}, {:?}, {:?}", rsp_user_logout, from_rsp_result_to_string(result), request_id, is_last);
     }
 
     #[allow(unused_variables)]
     fn on_rsp_order_insert(&mut self, input_order: Option<&Struct_CThostFtdcInputOrderField>, result: RspResult, request_id: i32, is_last: bool) {
-        println!("on_rsp_order_insert: {:?}, {}, {:?}, {:?}", input_order.and_then(|_| Some(())), from_rsp_result_to_string(result), request_id, is_last);
+        println!("on_rsp_order_insert: {:?}, {}, {:?}, {:?}", input_order, from_rsp_result_to_string(result), request_id, is_last);
     }
 
     #[allow(unused_variables)]
     fn on_rsp_order_action(&mut self, input_order_action: Option<&Struct_CThostFtdcInputOrderActionField>, result: RspResult, request_id: i32, is_last: bool) {
-        println!("on_rsp_order_action: {:?}, {}, {:?}, {:?}", input_order_action.and_then(|_| Some(())), from_rsp_result_to_string(result), request_id, is_last);
+        println!("on_rsp_order_action: {:?}, {}, {:?}, {:?}", input_order_action, from_rsp_result_to_string(result), request_id, is_last);
     }
 
     #[allow(unused_variables)]
     fn on_rsp_settlement_info_confirm(&mut self, settlement_info_confirm: Option<&Struct_CThostFtdcSettlementInfoConfirmField>, result: RspResult, request_id: i32, is_last: bool) {
-        println!("on_rsp_settlement_info_confirm: {:?}, {}, {:?}, {:?}", settlement_info_confirm.and_then(|_| Some(())), from_rsp_result_to_string(result), request_id, is_last);
+        println!("on_rsp_settlement_info_confirm: {:?}, {}, {:?}, {:?}", settlement_info_confirm, from_rsp_result_to_string(result), request_id, is_last);
     }
 
     #[allow(unused_variables)]
     fn on_rsp_qry_order(&mut self, order: Option<&Struct_CThostFtdcOrderField>, result: RspResult, request_id: i32, is_last: bool) {
-        println!("on_rsp_qry_order: {:?}, {}, {:?}, {:?}", order.and_then(|_| Some(())), from_rsp_result_to_string(result), request_id, is_last);
+        println!("on_rsp_qry_order: {:?}, {}, {:?}, {:?}", order, from_rsp_result_to_string(result), request_id, is_last);
     }
 
     #[allow(unused_variables)]
     fn on_rsp_qry_trade(&mut self, trade: Option<&Struct_CThostFtdcTradeField>, result: RspResult, request_id: i32, is_last: bool) {
-        println!("on_rsp_qry_trade: {:?}, {}, {:?}, {:?}", trade.and_then(|_| Some(())), from_rsp_result_to_string(result), request_id, is_last);
+        println!("on_rsp_qry_trade: {:?}, {}, {:?}, {:?}", trade, from_rsp_result_to_string(result), request_id, is_last);
     }
 
     #[allow(unused_variables)]
     fn on_err_rtn_order_insert(&mut self, input_order: Option<&Struct_CThostFtdcInputOrderField>, result: RspResult) {
-        println!("on_err_rtn_order_insert: {:?}, {}", input_order.and_then(|_| Some(())), from_rsp_result_to_string(result));
+        println!("on_err_rtn_order_insert: {:?}, {}", input_order, from_rsp_result_to_string(result));
     }
 
     #[allow(unused_variables)]
     fn on_err_rtn_order_action(&mut self, order_action: Option<&Struct_CThostFtdcOrderActionField>, result: RspResult) {
-        println!("on_err_rtn_order_action: {:?}, {}", order_action.and_then(|_| Some(())), from_rsp_result_to_string(result));
+        println!("on_err_rtn_order_action: {:?}, {}", order_action, from_rsp_result_to_string(result));
     }
 
     #[allow(unused_variables)]
     fn on_rsp_qry_instrument(&mut self, instrument: Option<&Struct_CThostFtdcInstrumentField>, result: RspResult, request_id: i32, is_last: bool) {
-        println!("on_rsp_qry_instrument: {:?}, {}, {:?}, {:?}", instrument.and_then(|_| Some(())), from_rsp_result_to_string(result), request_id, is_last);
+        println!("on_rsp_qry_instrument: {:?}, {}, {:?}, {:?}", instrument, from_rsp_result_to_string(result), request_id, is_last);
     }
 
     #[allow(unused_variables)]
     fn on_rsp_qry_settlement_info(&mut self, settlement_info: Option<&Struct_CThostFtdcSettlementInfoField>, result: RspResult, request_id: i32, is_last: bool) {
-        println!("on_rsp_qry_settlement_info: {:?}, {}, {:?}, {:?}", settlement_info.and_then(|_| Some(())), from_rsp_result_to_string(result), request_id, is_last);
+        println!("on_rsp_qry_settlement_info: {:?}, {}, {:?}, {:?}", settlement_info, from_rsp_result_to_string(result), request_id, is_last);
     }
 
     #[allow(unused_variables)]
     fn on_rsp_qry_settlement_info_confirm(&mut self, settlement_info_confirm: Option<&Struct_CThostFtdcSettlementInfoConfirmField>, result: RspResult, request_id: i32, is_last: bool) {
-        println!("on_rsp_qry_settlement_info_confirm: {:?}, {}, {:?}, {:?}", settlement_info_confirm.and_then(|_| Some(())), from_rsp_result_to_string(result), request_id, is_last);
+        println!("on_rsp_qry_settlement_info_confirm: {:?}, {}, {:?}, {:?}", settlement_info_confirm, from_rsp_result_to_string(result), request_id, is_last);
     }
 
     #[allow(unused_variables)]
@@ -311,22 +311,22 @@ pub trait TraderSpi {
 
     #[allow(unused_variables)]
     fn on_rtn_order(&mut self, order: Option<&Struct_CThostFtdcOrderField>) {
-        println!("on_rtn_order: {:?}", order.and_then(|_| Some(())));
+        println!("on_rtn_order: {:?}", order);
     }
 
     #[allow(unused_variables)]
     fn on_rtn_trade(&mut self, trade: Option<&Struct_CThostFtdcTradeField>) {
-        println!("on_rtn_trade: {:?}", trade.and_then(|_| Some(())));
+        println!("on_rtn_trade: {:?}", trade);
     }
 
     #[allow(unused_variables)]
     fn on_rtn_instrument_status(&mut self, instrument_status: Option<&Struct_CThostFtdcInstrumentStatusField>) {
-        println!("on_rtn_instrument_status: {:?}", instrument_status.and_then(|_| Some(())));
+        println!("on_rtn_instrument_status: {:?}", instrument_status);
     }
 
     #[allow(unused_variables)]
     fn on_rtn_trading_notice(&mut self, trading_notice_info: Option<&Struct_CThostFtdcTradingNoticeInfoField>) {
-        println!("on_rtn_trading_notice: {:?}", trading_notice_info.and_then(|_| Some(())));
+        println!("on_rtn_trading_notice: {:?}", trading_notice_info);
     }
 }
 

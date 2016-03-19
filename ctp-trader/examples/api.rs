@@ -1,35 +1,15 @@
 extern crate ctp_trader;
 
 use ctp_trader::*;
-use std::ffi::CStr;
-use std::os::raw::c_char;
 
 struct Spi;
 impl TraderSpi for Spi {
-    #[allow(unused_variables)]
-    fn on_rsp_qry_instrument(&mut self, instrument: Option<&Struct_CThostFtdcInstrumentField>, result: RspResult, request_id: i32, is_last: bool) {
-        let inst = instrument.unwrap();
-        unsafe {
-            println!("on_rsp_qry_instrument: {}, {}, {}, {}, {}, {:?}, {:?}",
-                 to_str(&inst.InstrumentID[..]),
-                 to_str(&inst.ExchangeID[..]),
-                 gb18030_cstr_to_string(CStr::from_ptr(inst.InstrumentName[..].as_ptr() as *const c_char)),
-                 to_str(&inst.ExchangeInstID[..]),
-                 to_str(&inst.ProductID[..]),
-                 request_id,
-                 is_last);
-        }
-    }
 }
 
 fn fill_cstr_array(array: &mut [u8], content: &str) {
     for (place, data) in array.split_last_mut().unwrap().1.iter_mut().zip(content.as_bytes().iter()) {
         *place = *data;
     }
-}
-
-unsafe fn to_str(array: &[u8]) -> &str {
-    CStr::from_ptr(array.as_ptr() as *const c_char).to_str().unwrap()
 }
 
 fn new_login(broker_id: &str, user_id: &str, password: &str) -> Struct_CThostFtdcReqUserLoginField {
@@ -121,7 +101,7 @@ fn main() {
         Ok(()) => println!("req_qry_instrument ok"),
         Err(err) => println!("req_qry_instrument err: {:?}", err),
     };
-    std::thread::sleep(std::time::Duration::from_secs(1));
+    std::thread::sleep(std::time::Duration::from_secs(2));
     last_request_id += 1;
     match trader_api.req_qry_settlement_info(&new_qry_settlement_info("9999", "036954"), last_request_id) {
         Ok(()) => println!("req_qry_settlement_info ok"),

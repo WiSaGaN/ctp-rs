@@ -88,6 +88,13 @@ pub struct RspError {
 #[must_use]
 pub type RspResult = Result<(), RspError>;
 
+pub fn from_rsp_result_to_string(rsp_result: RspResult) -> String {
+    match rsp_result {
+        Ok(()) => "Ok(())".to_string(),
+        Err(err) => format!("Err(RspError{{ id: {}, msg: {} }})", err.id, err.msg),
+    }
+}
+
 pub fn gb18030_cstr_to_string(cstr: &CStr) -> String {
     decode(cstr.to_bytes(), DecoderTrap::Replace, GB18030).0.unwrap_or_else(|e| e.into_owned())
 }

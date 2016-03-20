@@ -161,12 +161,12 @@ pub trait MdSpi {
 
     #[allow(unused_variables)]
     fn on_rsp_user_login(&mut self, rsp_user_login: Option<&Struct_CThostFtdcRspUserLoginField>, result: RspResult, request_id: i32, is_last: bool) {
-        println!("on_rsp_user_login: {:?}, {}, {:?}, {:?}", rsp_user_login.and_then(|_| Some(())), from_rsp_result_to_string(result), request_id, is_last);
+        println!("on_rsp_user_login: {:?}, {}, {:?}, {:?}", rsp_user_login, from_rsp_result_to_string(result), request_id, is_last);
     }
 
     #[allow(unused_variables)]
     fn on_rsp_user_logout(&mut self, rsp_user_logout: Option<&Struct_CThostFtdcUserLogoutField>, result: RspResult, request_id: i32, is_last: bool) {
-        println!("on_rsp_user_logout: {:?}, {}, {:?}, {:?}", rsp_user_logout.and_then(|_| Some(())), from_rsp_result_to_string(result), request_id, is_last);
+        println!("on_rsp_user_logout: {:?}, {}, {:?}, {:?}", rsp_user_logout, from_rsp_result_to_string(result), request_id, is_last);
     }
 
     #[allow(unused_variables)]
@@ -176,32 +176,32 @@ pub trait MdSpi {
 
     #[allow(unused_variables)]
     fn on_rsp_sub_market_data(&mut self, specific_instrument: Option<&Struct_CThostFtdcSpecificInstrumentField>, result: RspResult, request_id: i32, is_last: bool) {
-        println!("on_rsp_sub_market_data: {:?}, {}, {:?}, {:?}", specific_instrument.and_then(|_| Some(())), from_rsp_result_to_string(result), request_id, is_last);
+        println!("on_rsp_sub_market_data: {:?}, {}, {:?}, {:?}", specific_instrument, from_rsp_result_to_string(result), request_id, is_last);
     }
 
     #[allow(unused_variables)]
     fn on_rsp_un_sub_market_data(&mut self, specific_instrument: Option<&Struct_CThostFtdcSpecificInstrumentField>, result: RspResult, request_id: i32, is_last: bool) {
-        println!("on_rsp_un_sub_market_data: {:?}, {}, {:?}, {:?}", specific_instrument.and_then(|_| Some(())), from_rsp_result_to_string(result), request_id, is_last);
+        println!("on_rsp_un_sub_market_data: {:?}, {}, {:?}, {:?}", specific_instrument, from_rsp_result_to_string(result), request_id, is_last);
     }
 
     #[allow(unused_variables)]
     fn on_rsp_sub_for_quote_rsp(&mut self, specific_instrument: Option<&Struct_CThostFtdcSpecificInstrumentField>, result: RspResult, request_id: i32, is_last: bool) {
-        println!("on_rsp_sub_for_quote_rsp: {:?}, {}, {:?}, {:?}", specific_instrument.and_then(|_| Some(())), from_rsp_result_to_string(result), request_id, is_last);
+        println!("on_rsp_sub_for_quote_rsp: {:?}, {}, {:?}, {:?}", specific_instrument, from_rsp_result_to_string(result), request_id, is_last);
     }
 
     #[allow(unused_variables)]
     fn on_rsp_un_sub_for_quote_rsp(&mut self, specific_instrument: Option<&Struct_CThostFtdcSpecificInstrumentField>, result: RspResult, request_id: i32, is_last: bool) {
-        println!("on_rsp_un_sub_for_quote_rsp: {:?}, {}, {:?}, {:?}", specific_instrument.and_then(|_| Some(())), from_rsp_result_to_string(result), request_id, is_last);
+        println!("on_rsp_un_sub_for_quote_rsp: {:?}, {}, {:?}, {:?}", specific_instrument, from_rsp_result_to_string(result), request_id, is_last);
     }
 
     #[allow(unused_variables)]
     fn on_rtn_depth_market_data(&mut self, depth_market_data: Option<&Struct_CThostFtdcDepthMarketDataField>) {
-        println!("on_rtn_depth_market_data: {:?}", depth_market_data.and_then(|_| Some(())));
+        println!("on_rtn_depth_market_data: {:?}", depth_market_data);
     }
 
     #[allow(unused_variables)]
     fn on_rtn_for_quote_rsp(&mut self, for_quote_rsp: Option<&Struct_CThostFtdcForQuoteRspField>) {
-        println!("on_rtn_for_quote_rsp: {:?}", for_quote_rsp.and_then(|_| Some(())));
+        println!("on_rtn_for_quote_rsp: {:?}", for_quote_rsp);
     }
 }
 

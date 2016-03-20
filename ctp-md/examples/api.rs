@@ -1,41 +1,10 @@
 extern crate ctp_md;
 
-use std::ffi::{ CStr, CString };
+use std::ffi::CString;
 use ctp_md::*;
 
 struct Spi;
 impl MdSpi for Spi {
-    #[allow(unused_variables)]
-    fn on_rsp_sub_market_data(&mut self, specific_instrument: Option<&Struct_CThostFtdcSpecificInstrumentField>, result: RspResult, request_id: i32, is_last: bool) {
-        println!("on_rsp_sub_market_data: {}, {:?}, {:?}", specific_instrument_to_cstr(specific_instrument.unwrap()).to_str().expect("CThostFtdcSpecificInstrumentField has invalid UTF8 in InstrumentID"), request_id, is_last);
-    }
-
-    #[allow(unused_variables)]
-    fn on_rsp_un_sub_market_data(&mut self, specific_instrument: Option<&Struct_CThostFtdcSpecificInstrumentField>, result: RspResult, request_id: i32, is_last: bool) {
-        println!("on_rsp_un_sub_market_data: {}, {:?}, {:?}", specific_instrument_to_cstr(specific_instrument.unwrap()).to_str().expect("CThostFtdcSpecificInstrumentField has invalid UTF8 in InstrumentID"), request_id, is_last);
-    }
-
-    #[allow(unused_variables)]
-    fn on_rsp_sub_for_quote_rsp(&mut self, specific_instrument: Option<&Struct_CThostFtdcSpecificInstrumentField>, result: RspResult, request_id: i32, is_last: bool) {
-        println!("on_rsp_sub_for_quote_rsp: {}, {:?}, {:?}", specific_instrument_to_cstr(specific_instrument.unwrap()).to_str().expect("CThostFtdcSpecificInstrumentField has invalid UTF8 in InstrumentID"), request_id, is_last);
-    }
-
-    #[allow(unused_variables)]
-    fn on_rsp_un_sub_for_quote_rsp(&mut self, specific_instrument: Option<&Struct_CThostFtdcSpecificInstrumentField>, result: RspResult, request_id: i32, is_last: bool) {
-        println!("on_rsp_un_sub_for_quote_rsp: {}, {:?}, {:?}", specific_instrument_to_cstr(specific_instrument.unwrap()).to_str().expect("CThostFtdcSpecificInstrumentField has invalid UTF8 in InstrumentID"), request_id, is_last);
-    }
-
-    #[allow(unused_variables)]
-    fn on_rtn_depth_market_data(&mut self, depth_market_data: Option<&Struct_CThostFtdcDepthMarketDataField>) {
-        let md = depth_market_data.unwrap();
-        let instrument_id = unsafe { CStr::from_ptr(&md.InstrumentID as *const u8 as *const i8).to_str().unwrap() };
-        println!("on_rtn_depth_market_data: {:?}, {:?}, {:?}, {:?}, {:?}", instrument_id, md.BidPrice1, md.BidVolume1, md.AskPrice1, md.AskVolume1);
-    }
-
-    #[allow(unused_variables)]
-    fn on_rtn_for_quote_rsp(&mut self, for_quote_rsp: Option<&Struct_CThostFtdcForQuoteRspField>) {
-        println!("on_rtn_for_quote_rsp");
-    }
 }
 
 fn main() {

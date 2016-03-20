@@ -2,6 +2,10 @@ extern crate ctp_trader;
 
 use ctp_trader::*;
 
+const BROKER_ID: &'static str = "9999";
+const USER_ID: &'static str = "036954";
+const INVESTOR_ID: &'static str = "036954";
+
 struct Spi;
 impl TraderSpi for Spi {
 }
@@ -12,39 +16,32 @@ fn fill_cstr_array(array: &mut [u8], content: &str) {
     }
 }
 
-fn new_login(broker_id: &str, user_id: &str, password: &str) -> Struct_CThostFtdcReqUserLoginField {
-    let mut login: Struct_CThostFtdcReqUserLoginField = Default::default();
-    fill_cstr_array(&mut login.BrokerID, broker_id);
-    fill_cstr_array(&mut login.UserID, user_id);
-    fill_cstr_array(&mut login.Password, password);
-    login
+fn new_login(password: &str) -> Struct_CThostFtdcReqUserLoginField {
+    let mut f: Struct_CThostFtdcReqUserLoginField = Default::default();
+    fill_cstr_array(&mut f.BrokerID, BROKER_ID);
+    fill_cstr_array(&mut f.UserID, USER_ID);
+    fill_cstr_array(&mut f.Password, password);
+    f
 }
 
-fn new_logout(broker_id: &str, user_id: &str) -> Struct_CThostFtdcUserLogoutField {
-    let mut logout: Struct_CThostFtdcUserLogoutField = Default::default();
-    fill_cstr_array(&mut logout.BrokerID, broker_id);
-    fill_cstr_array(&mut logout.UserID, user_id);
-    logout
-}
-
-fn new_qry_settlement_info(broker_id: &str, investor_id: &str) -> Struct_CThostFtdcQrySettlementInfoField {
+fn new_qry_settlement_info() -> Struct_CThostFtdcQrySettlementInfoField {
     let mut f: Struct_CThostFtdcQrySettlementInfoField = Default::default();
-    fill_cstr_array(&mut f.BrokerID, broker_id);
-    fill_cstr_array(&mut f.InvestorID, investor_id);
+    fill_cstr_array(&mut f.BrokerID, BROKER_ID);
+    fill_cstr_array(&mut f.InvestorID, INVESTOR_ID);
     f
 }
 
-fn new_settlement_info_confirm(broker_id: &str, investor_id: &str) -> Struct_CThostFtdcSettlementInfoConfirmField {
+fn new_settlement_info_confirm() -> Struct_CThostFtdcSettlementInfoConfirmField {
     let mut f: Struct_CThostFtdcSettlementInfoConfirmField = Default::default();
-    fill_cstr_array(&mut f.BrokerID, broker_id);
-    fill_cstr_array(&mut f.InvestorID, investor_id);
+    fill_cstr_array(&mut f.BrokerID, BROKER_ID);
+    fill_cstr_array(&mut f.InvestorID, INVESTOR_ID);
     f
 }
 
-fn new_qry_settlement_info_confirm(broker_id: &str, investor_id: &str) -> Struct_CThostFtdcQrySettlementInfoConfirmField {
+fn new_qry_settlement_info_confirm() -> Struct_CThostFtdcQrySettlementInfoConfirmField {
     let mut f: Struct_CThostFtdcQrySettlementInfoConfirmField = Default::default();
-    fill_cstr_array(&mut f.BrokerID, broker_id);
-    fill_cstr_array(&mut f.InvestorID, investor_id);
+    fill_cstr_array(&mut f.BrokerID, BROKER_ID);
+    fill_cstr_array(&mut f.InvestorID, INVESTOR_ID);
     f
 }
 
@@ -54,15 +51,45 @@ fn new_qry_instrument(pattern: &str) -> Struct_CThostFtdcQryInstrumentField {
     f
 }
 
-fn new_qry_order(pattern: &str) -> Struct_CThostFtdcQryOrderField {
+fn new_qry_order() -> Struct_CThostFtdcQryOrderField {
     let mut f: Struct_CThostFtdcQryOrderField = Default::default();
-    fill_cstr_array(&mut f.InvestorID, pattern);
+    fill_cstr_array(&mut f.BrokerID, BROKER_ID);
+    fill_cstr_array(&mut f.InvestorID, INVESTOR_ID);
     f
 }
 
-fn new_qry_trade(pattern: &str) -> Struct_CThostFtdcQryTradeField {
+fn new_qry_trade() -> Struct_CThostFtdcQryTradeField {
     let mut f: Struct_CThostFtdcQryTradeField = Default::default();
-    fill_cstr_array(&mut f.InvestorID, pattern);
+    fill_cstr_array(&mut f.BrokerID, BROKER_ID);
+    fill_cstr_array(&mut f.InvestorID, INVESTOR_ID);
+    f
+}
+
+fn new_qry_investor_position() -> Struct_CThostFtdcQryInvestorPositionField {
+    let mut f: Struct_CThostFtdcQryInvestorPositionField = Default::default();
+    fill_cstr_array(&mut f.BrokerID, BROKER_ID);
+    fill_cstr_array(&mut f.InvestorID, INVESTOR_ID);
+    f
+}
+
+fn new_qry_trading_account() -> Struct_CThostFtdcQryTradingAccountField {
+    let mut f: Struct_CThostFtdcQryTradingAccountField = Default::default();
+    fill_cstr_array(&mut f.BrokerID, BROKER_ID);
+    fill_cstr_array(&mut f.InvestorID, INVESTOR_ID);
+    f
+}
+
+fn new_qry_investor() -> Struct_CThostFtdcQryInvestorField {
+    let mut f: Struct_CThostFtdcQryInvestorField = Default::default();
+    fill_cstr_array(&mut f.BrokerID, BROKER_ID);
+    fill_cstr_array(&mut f.InvestorID, INVESTOR_ID);
+    f
+}
+
+fn new_qry_trading_code() -> Struct_CThostFtdcQryTradingCodeField {
+    let mut f: Struct_CThostFtdcQryTradingCodeField = Default::default();
+    fill_cstr_array(&mut f.BrokerID, BROKER_ID);
+    fill_cstr_array(&mut f.InvestorID, INVESTOR_ID);
     f
 }
 
@@ -91,7 +118,7 @@ fn main() {
     trader_api.init();
     std::thread::sleep(std::time::Duration::from_secs(1));
     last_request_id += 1;
-    match trader_api.req_user_login(&new_login("9999", "036954", "lourlair"), last_request_id) {
+    match trader_api.req_user_login(&new_login("lourlair"), last_request_id) {
         Ok(()) => println!("req_user_login ok"),
         Err(err) => println!("req_user_login err: {:?}", err),
     };
@@ -103,33 +130,57 @@ fn main() {
     };
     std::thread::sleep(std::time::Duration::from_secs(2));
     last_request_id += 1;
-    match trader_api.req_qry_settlement_info(&new_qry_settlement_info("9999", "036954"), last_request_id) {
+    match trader_api.req_qry_settlement_info(&new_qry_settlement_info(), last_request_id) {
         Ok(()) => println!("req_qry_settlement_info ok"),
         Err(err) => println!("req_qry_settlement_info err: {:?}", err),
     };
     std::thread::sleep(std::time::Duration::from_secs(1));
     last_request_id += 1;
-    match trader_api.req_qry_settlement_info_confirm(&new_qry_settlement_info_confirm("9999", "036954"), last_request_id) {
+    match trader_api.req_qry_settlement_info_confirm(&new_qry_settlement_info_confirm(), last_request_id) {
         Ok(()) => println!("req_qry_settlement_info_confirm ok"),
         Err(err) => println!("req_qry_settlement_info_confirm err: {:?}", err),
     };
     std::thread::sleep(std::time::Duration::from_secs(1));
     last_request_id += 1;
-    match trader_api.req_settlement_info_confirm(&new_settlement_info_confirm("9999", "036954"), last_request_id) {
+    match trader_api.req_settlement_info_confirm(&new_settlement_info_confirm(), last_request_id) {
         Ok(()) => println!("req_settlement_info_confirm ok"),
         Err(err) => println!("req_settlement_info_confirm err: {:?}", err),
     };
     std::thread::sleep(std::time::Duration::from_secs(1));
     last_request_id += 1;
-    match trader_api.req_qry_order(&new_qry_order(""), last_request_id) {
+    match trader_api.req_qry_order(&new_qry_order(), last_request_id) {
         Ok(()) => println!("req_qry_order ok"),
         Err(err) => println!("req_qry_order err: {:?}", err),
     };
     std::thread::sleep(std::time::Duration::from_secs(1));
     last_request_id += 1;
-    match trader_api.req_qry_trade(&new_qry_trade(""), last_request_id) {
+    match trader_api.req_qry_trade(&new_qry_trade(), last_request_id) {
         Ok(()) => println!("req_qry_trade ok"),
         Err(err) => println!("req_qry_trade err: {:?}", err),
+    };
+    std::thread::sleep(std::time::Duration::from_secs(1));
+    last_request_id += 1;
+    match trader_api.req_qry_investor_position(&new_qry_investor_position(), last_request_id) {
+        Ok(()) => println!("req_qry_investor_position ok"),
+        Err(err) => println!("req_qry_investor_position err: {:?}", err),
+    };
+    std::thread::sleep(std::time::Duration::from_secs(1));
+    last_request_id += 1;
+    match trader_api.req_qry_trading_account(&new_qry_trading_account(), last_request_id) {
+        Ok(()) => println!("req_qry_trading_account ok"),
+        Err(err) => println!("req_qry_trading_account err: {:?}", err),
+    };
+    std::thread::sleep(std::time::Duration::from_secs(1));
+    last_request_id += 1;
+    match trader_api.req_qry_investor(&new_qry_investor(), last_request_id) {
+        Ok(()) => println!("req_qry_investor ok"),
+        Err(err) => println!("req_qry_investor err: {:?}", err),
+    };
+    std::thread::sleep(std::time::Duration::from_secs(1));
+    last_request_id += 1;
+    match trader_api.req_qry_trading_code(&new_qry_trading_code(), last_request_id) {
+        Ok(()) => println!("req_qry_trading_code ok"),
+        Err(err) => println!("req_qry_trading_code err: {:?}", err),
     };
     std::thread::sleep(std::time::Duration::from_secs(1));
     last_request_id += 1;
@@ -144,11 +195,4 @@ fn main() {
         Err(err) => println!("req_order_action err: {:?}", err),
     };
     std::thread::sleep(std::time::Duration::from_secs(1));
-    /*
-    match trader_api.req_user_logout(&new_logout("9999", "036954"), 99) {
-        Ok(()) => println!("req_user_logout ok"),
-        Err(err) => println!("req_user_logout err: {:?}", err),
-    };
-    std::thread::sleep(std::time::Duration::from_secs(1));
-    */
 }

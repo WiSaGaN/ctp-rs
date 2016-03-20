@@ -51,6 +51,18 @@ fn new_qry_instrument(pattern: &str) -> Struct_CThostFtdcQryInstrumentField {
     f
 }
 
+fn new_qry_exchange(pattern: &str) -> Struct_CThostFtdcQryExchangeField {
+    let mut f: Struct_CThostFtdcQryExchangeField = Default::default();
+    fill_cstr_array(&mut f.ExchangeID, pattern);
+    f
+}
+
+fn new_qry_product(pattern: &str) -> Struct_CThostFtdcQryProductField {
+    let mut f: Struct_CThostFtdcQryProductField = Default::default();
+    fill_cstr_array(&mut f.ProductID, pattern);
+    f
+}
+
 fn new_qry_order() -> Struct_CThostFtdcQryOrderField {
     let mut f: Struct_CThostFtdcQryOrderField = Default::default();
     fill_cstr_array(&mut f.BrokerID, BROKER_ID);
@@ -129,6 +141,18 @@ fn main() {
         Err(err) => println!("req_qry_instrument err: {:?}", err),
     };
     std::thread::sleep(std::time::Duration::from_secs(2));
+    last_request_id += 1;
+    match trader_api.req_qry_product(&new_qry_product(""), last_request_id) {
+        Ok(()) => println!("req_qry_product ok"),
+        Err(err) => println!("req_qry_product err: {:?}", err),
+    };
+    std::thread::sleep(std::time::Duration::from_secs(1));
+    last_request_id += 1;
+    match trader_api.req_qry_exchange(&new_qry_exchange(""), last_request_id) {
+        Ok(()) => println!("req_qry_exchange ok"),
+        Err(err) => println!("req_qry_exchange err: {:?}", err),
+    };
+    std::thread::sleep(std::time::Duration::from_secs(1));
     last_request_id += 1;
     match trader_api.req_qry_settlement_info(&new_qry_settlement_info(), last_request_id) {
         Ok(()) => println!("req_qry_settlement_info ok"),

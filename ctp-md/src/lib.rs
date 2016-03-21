@@ -146,10 +146,6 @@ fn cstring_vec_to_char_star_vec(cstring_vec: &Vec<CString>) -> Vec<*const c_char
     cstring_vec.iter().map(|cstring| cstring.as_ptr()).collect()
 }
 
-pub fn specific_instrument_to_cstr(i: &Struct_CThostFtdcSpecificInstrumentField) -> &CStr {
-    unsafe { CStr::from_ptr(&i.InstrumentID as *const u8 as *const c_char) }
-}
-
 pub trait MdSpi {
     fn on_front_connected(&mut self) {
         println!("on_front_connected");

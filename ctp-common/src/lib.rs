@@ -1,5 +1,6 @@
 #![feature(ptr_as_ref)]
 extern crate encoding;
+extern crate memchr;
 extern crate simple_error;
 extern crate time;
 
@@ -215,7 +216,29 @@ pub fn get_exchange_timestamp(md: &Struct_CThostFtdcDepthMarketDataField) -> Res
                   tm_utcoff: 8i32 * 60 * 60, // UTC+8
                   tm_nsec: nanosec };
     Ok(tm.to_timespec())
+}
 
+pub fn set_cstr_from_str(buffer: &mut [u8], text: &str) -> Result<(), SimpleError> {
+    if let Some(i) = memchr::memchr(0, text.as_bytes()) {
+        return Err(SimpleError::new(format!("null found in str at offset {} when filling cstr", i)));
+    }
+    if text.len() + 1 > buffer.len() {
+        return Err(SimpleError::new(format!("str len {} too long when filling cstr with buffer len {}", text.len(), buffer.len())));
+    }
+    unsafe {
+        std::ptr::copy_nonoverlapping(text.as_ptr(), buffer.as_mut_ptr(), text.len());
+        *buffer.get_unchecked_mut(text.len()) = 0u8;
+    }
+    Ok(())
+}
+
+pub fn set_cstr_from_str_truncate(buffer: &mut [u8], text: &str) {
+    for (place, data) in buffer.split_last_mut().expect("buffer len 0 in set_cstr_from_str_truncate").1.iter_mut().zip(text.as_bytes().iter()) {
+        *place = *data;
+    }
+    unsafe {
+        *buffer.get_unchecked_mut(text.len()) = 0u8;
+    }
 }
 
 #[cfg(test)]
@@ -224,6 +247,7 @@ mod tests {
     use time::Timespec;
     use super::gb18030_cstr_to_str;
     use super::get_exchange_timestamp;
+    use super::{ set_cstr_from_str, set_cstr_from_str_truncate };
     use super::Struct_CThostFtdcDepthMarketDataField;
 
     #[test]
@@ -262,6 +286,46 @@ mod tests {
     #[test]
     fn cstr_conversion_gb2312_cstr() {
         assert_eq!(gb18030_cstr_to_str(b"\xd5\xfd\xc8\xb7\0"), "正确");
+    }
+
+    #[test]
+    fn fill_cstr_with_str() {
+        let mut buffer: [u8; 8] = Default::default();
+        set_cstr_from_str(buffer.as_mut(), "hello").unwrap();
+        assert_eq!(buffer.as_ref(), b"hello\0\0\0");
+    }
+
+    #[test]
+    fn fill_cstr_with_long_str() {
+        let mut buffer: [u8; 1] = Default::default();
+        assert!(set_cstr_from_str(buffer.as_mut(), "hello").is_err());
+    }
+
+    #[test]
+    fn fill_cstr_with_str_containing_null() {
+        let mut buffer: [u8; 8] = Default::default();
+        assert!(set_cstr_from_str(buffer.as_mut(), "he\0llo").is_err());
+    }
+
+    #[test]
+    fn fill_cstr_with_str_truncate() {
+        let mut buffer: [u8; 8] = Default::default();
+        set_cstr_from_str_truncate(buffer.as_mut(), "hello");
+        assert_eq!(buffer.as_ref(), b"hello\0\0\0");
+    }
+
+    #[test]
+    #[should_panic]
+    fn fill_0_len_cstr_with_str_truncate_panic() {
+        let mut buffer: [u8; 0] = Default::default();
+        set_cstr_from_str_truncate(buffer.as_mut(), "hello");
+    }
+
+    #[test]
+    fn fill_cstr_with_long_str_truncate() {
+        let mut buffer: [u8; 6] = Default::default();
+        set_cstr_from_str_truncate(buffer.as_mut(), "hello world");
+        assert_eq!(buffer.as_ref(), b"hello\0");
     }
 
     #[test]

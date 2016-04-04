@@ -6,6 +6,7 @@ build = "build.rs"
 
 [dependencies]
 encoding = "0.2"
+memchr = "0.1"
 simple-error = "0.1"
 time = "0.1"
 

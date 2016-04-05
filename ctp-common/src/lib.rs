@@ -16,6 +16,28 @@ use time::{ Timespec, Tm };
 
 pub use binding::*;
 
+pub fn ascii_cstr_to_str(s: &[u8]) -> Result<&str, SimpleError> {
+    match s.last() {
+        Some(&0u8) => {
+            let len = memchr::memchr(0, s).unwrap();
+            let ascii_s = &s[0..len];
+            if ascii_s.is_ascii() {
+                unsafe {
+                    Ok(std::str::from_utf8_unchecked(ascii_s))
+                }
+            } else {
+                Err(SimpleError::new("cstr is not ascii"))
+            }
+        },
+        Some(&c) => {
+            Err(SimpleError::new(format!("cstr should terminate with null instead of {:#x}", c)))
+        },
+        None => {
+            Err(SimpleError::new("cstr cannot have 0 length"))
+        }
+    }
+}
+
 pub fn gb18030_cstr_to_str<'a>(v: &'a [u8]) -> Cow<'a, str> {
     let slice = v.split(|&c| c == 0u8).next().unwrap();
     if slice.is_ascii() {
@@ -245,10 +267,31 @@ pub fn set_cstr_from_str_truncate(buffer: &mut [u8], text: &str) {
 mod tests {
     use std::borrow::Cow;
     use time::Timespec;
+    use super::ascii_cstr_to_str;
     use super::gb18030_cstr_to_str;
     use super::get_exchange_timestamp;
     use super::{ set_cstr_from_str, set_cstr_from_str_truncate };
     use super::Struct_CThostFtdcDepthMarketDataField;
+
+    #[test]
+    fn len_0_ascii_cstr_to_str() {
+        assert!(ascii_cstr_to_str(b"").is_err());
+    }
+
+    #[test]
+    fn ascii_cstr_to_str_trivial() {
+        assert_eq!(ascii_cstr_to_str(b"hello\0"), Ok("hello"));
+    }
+
+    #[test]
+    fn non_null_terminated_ascii_cstr_to_str() {
+        assert!(ascii_cstr_to_str(b"hello").is_err());
+    }
+
+    #[test]
+    fn non_ascii_cstr_to_str() {
+        assert!(ascii_cstr_to_str(b"\xd5\xfd\xc8\xb7\0").is_err());
+    }
 
     #[test]
     fn cstr_conversion_empty_str() {

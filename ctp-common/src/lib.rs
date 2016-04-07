@@ -146,8 +146,10 @@ pub fn from_rsp_info_to_rsp_result(rsp_info: *const Struct_CThostFtdcRspInfoFiel
     }
 }
 
-pub fn get_exchange_timestamp(md: &Struct_CThostFtdcDepthMarketDataField) -> Result<Timespec, SimpleError> {
-    let year = match ::std::str::from_utf8(&md.TradingDay[0..4]) {
+pub fn to_exchange_timestamp(trading_day: &TThostFtdcDateType,
+                              update_time: &TThostFtdcTimeType,
+                              update_millisec: &TThostFtdcMillisecType) -> Result<Timespec, SimpleError> {
+    let year = match ::std::str::from_utf8(&trading_day[0..4]) {
         Ok(year_str) => {
             match year_str.parse::<u16>() {
                 Ok(year) => year,
@@ -160,7 +162,7 @@ pub fn get_exchange_timestamp(md: &Struct_CThostFtdcDepthMarketDataField) -> Res
             return Err(SimpleError::new(format!("year not utf8, {}", err)));
         },
     };
-    let month = match ::std::str::from_utf8(&md.TradingDay[4..6]) {
+    let month = match ::std::str::from_utf8(&trading_day[4..6]) {
         Ok(month_str) => {
             match month_str.parse::<u8>() {
                 Ok(month) => month,
@@ -173,7 +175,7 @@ pub fn get_exchange_timestamp(md: &Struct_CThostFtdcDepthMarketDataField) -> Res
             return Err(SimpleError::new(format!("month not utf8, {}", err)));
         },
     };
-    let day = match ::std::str::from_utf8(&md.TradingDay[6..8]) {
+    let day = match ::std::str::from_utf8(&trading_day[6..8]) {
         Ok(day_str) => {
             match day_str.parse::<u8>() {
                 Ok(day) => day,
@@ -186,7 +188,7 @@ pub fn get_exchange_timestamp(md: &Struct_CThostFtdcDepthMarketDataField) -> Res
             return Err(SimpleError::new(format!("day not utf8, {}", err)));
         },
     };
-    let hour = match ::std::str::from_utf8(&md.UpdateTime[0..2]) {
+    let hour = match ::std::str::from_utf8(&update_time[0..2]) {
         Ok(hour_str) => {
             match hour_str.parse::<u8>() {
                 Ok(hour) => hour,
@@ -199,7 +201,7 @@ pub fn get_exchange_timestamp(md: &Struct_CThostFtdcDepthMarketDataField) -> Res
             return Err(SimpleError::new(format!("hour not utf8, {}", err)));
         },
     };
-    let minute = match ::std::str::from_utf8(&md.UpdateTime[3..5]) {
+    let minute = match ::std::str::from_utf8(&update_time[3..5]) {
         Ok(minute_str) => {
             match minute_str.parse::<u8>() {
                 Ok(minute) => minute,
@@ -212,7 +214,7 @@ pub fn get_exchange_timestamp(md: &Struct_CThostFtdcDepthMarketDataField) -> Res
             return Err(SimpleError::new(format!("minute not utf8, {}", err)));
         },
     };
-    let second = match ::std::str::from_utf8(&md.UpdateTime[6..8]) {
+    let second = match ::std::str::from_utf8(&update_time[6..8]) {
         Ok(second_str) => {
             match second_str.parse::<u8>() {
                 Ok(second) => second,
@@ -225,7 +227,7 @@ pub fn get_exchange_timestamp(md: &Struct_CThostFtdcDepthMarketDataField) -> Res
             return Err(SimpleError::new(format!("second not utf8, {}", err)));
         },
     };
-    let nanosec = md.UpdateMillisec as i32 * 1000 * 1000;
+    let nanosec = *update_millisec as i32 * 1000 * 1000;
     let tm = Tm { tm_sec: second as i32,
                   tm_min: minute as i32,
                   tm_hour: hour as i32,
@@ -269,7 +271,7 @@ mod tests {
     use time::Timespec;
     use super::ascii_cstr_to_str;
     use super::gb18030_cstr_to_str;
-    use super::get_exchange_timestamp;
+    use super::to_exchange_timestamp;
     use super::{ set_cstr_from_str, set_cstr_from_str_truncate };
     use super::Struct_CThostFtdcDepthMarketDataField;
 
@@ -377,7 +379,7 @@ mod tests {
         md.TradingDay = *b"19700101\0";
         md.UpdateTime = *b"08:00:00\0";
         md.UpdateMillisec = 0;
-        let ts = get_exchange_timestamp(&md);
+        let ts = to_exchange_timestamp(&md.TradingDay, &md.UpdateTime, &md.UpdateMillisec);
         assert_eq!(Ok(Timespec{ sec: 0, nsec: 0 }), ts);
     }
 }

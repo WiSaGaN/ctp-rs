@@ -230,14 +230,14 @@ pub fn to_exchange_timestamp(trading_day: &TThostFtdcDateType,
     let nanosec = *update_millisec as i32 * 1000 * 1000;
     let tm = Tm { tm_sec: second as i32,
                   tm_min: minute as i32,
-                  tm_hour: hour as i32,
+                  tm_hour: hour as i32 - 8, // UTC+8
                   tm_mday: day as i32,
                   tm_mon: month as i32 - 1,
                   tm_year: year as i32 - 1900,
                   tm_wday: 0i32,
                   tm_yday: 0i32,
                   tm_isdst: 0i32,
-                  tm_utcoff: 8i32 * 60 * 60, // UTC+8
+                  tm_utcoff: 0i32,
                   tm_nsec: nanosec };
     Ok(tm.to_timespec())
 }
@@ -379,7 +379,11 @@ mod tests {
         md.TradingDay = *b"19700101\0";
         md.UpdateTime = *b"08:00:00\0";
         md.UpdateMillisec = 0;
-        let ts = to_exchange_timestamp(&md.TradingDay, &md.UpdateTime, &md.UpdateMillisec);
-        assert_eq!(Ok(Timespec{ sec: 0, nsec: 0 }), ts);
+        let ts1 = to_exchange_timestamp(&md.TradingDay, &md.UpdateTime, &md.UpdateMillisec);
+        assert_eq!(Ok(Timespec{ sec: 0, nsec: 0 }), ts1);
+        md.TradingDay = *b"19700102\0";
+        md.UpdateTime = *b"00:00:00\0";
+        let ts2 = to_exchange_timestamp(&md.TradingDay, &md.UpdateTime, &md.UpdateMillisec);
+        assert_eq!(Ok(Timespec{ sec: 57600, nsec: 0 }), ts2);
     }
 }

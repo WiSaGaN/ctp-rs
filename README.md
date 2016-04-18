@@ -1,25 +1,29 @@
 # ctp-rs
 
-This is a Rust wrapper of CTP API. CTP is a popular trading system in Chinese futures market. Rust is a safe, concurrent, practical language.
+A Rust wrapper of CTP API.
 
 ## Background
 
-CTP API contains a set of C++ classes. Due to CTP's popularity in China, several language bindings ranging from C# to Python have been created. Rust has native FFI support for C, but does not support C++ directly. Contrary in using an intermediate C wrapper for Rust binding, this Rust wrapper includes a handcrafted C++ calling interface in Rust for virtual function calls and virtual tables in callbacks.
+CTP is a popular trading system in Chinese futures market. Finding a CTP trading system to connect to is easy in Chinese futures market. As a result, large portions of individual investors implement their trading strategies against CTP.
 
-This git repository contains 3 Rust crates: ctp-common, ctp-md, ctp-trader, where ctp-md and ctp-trader both depend on ctp-common. ctp-md and ctp-trader can be used either separately or together.
+CTP API is an offical C++ API that manages connections to CTP trading system. Several language bindings for CTP API ranging from C# to Python have been created. Rust has native FFI support for C, but does not support C++ directly. This wrapper aims to provide an easy to use Rust binding of CTP API.
+
+In contrast to conventional Rust binding for C++ that uses intermediate C wrapper, this Rust wrapper includes a handcrafted C++ calling interface in Rust for virtual function calls and virtual tables in callbacks. This makes the Rust interface cleaner and faster than alternatives.
+
+This git repository contains 3 Rust crates: `ctp-common`, `ctp-md`, `ctp-trader1. `ctp-md` and `ctp-trader` both depend on `ctp-common`, but can be used separately.
 
 ### ctp-common
 
-This crate contains constants, types, and structs in original C++ API, as well as some conversions to more Rust style data types.
+Common datatypes including constants, structs in original C++ API, as well as some conversions to idiomatic Rust data types.
 
 ### ctp-md
 
-This crate is the wrapper for MD API. A run-time dependency of `thostmduserapi.so` is needed for Rust application that uses this crate.
+Wrapper for market data API. A run-time dependency of `thostmduserapi.so` is needed for Rust application that uses this crate.
 
 ### ctp-trader
 
-This crate is the wrapper for Trader API. A run-time dependency of `thosttraderapi.so` is needed for Rust application that uses this crate.
+Wrapper for trader API. A run-time dependency of `thosttraderapi.so` is needed for Rust application that uses this crate.
 
 ## OS support
 
-Currently only supports Linux x86_64
+Currently these 3 crates only support Linux x86_64

@@ -1,4 +1,3 @@
-#![feature(ptr_as_ref)]
 extern crate ctp_common;
 
 use std::ffi::{ CStr, CString };

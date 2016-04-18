@@ -1,4 +1,3 @@
-#![feature(ptr_as_ref)]
 extern crate encoding;
 extern crate memchr;
 extern crate simple_error;

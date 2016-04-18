@@ -1,5 +1,7 @@
 # ctp-rs
 
+[![Build Status](https://travis-ci.org/WiSaGaN/ctp-rs.svg?branch=master)](https://travis-ci.org/WiSaGaN/ctp-rs)
+
 A Rust wrapper of CTP API.
 
 ## Background

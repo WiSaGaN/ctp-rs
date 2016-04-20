@@ -12,7 +12,7 @@ CTP API is an offical C++ API that manages connections to CTP trading system. Se
 
 In contrast to conventional Rust binding for C++ that uses intermediate C wrapper, this Rust wrapper includes a handcrafted C++ calling interface in Rust for virtual function calls and virtual tables in callbacks. This makes the Rust interface cleaner and faster than alternatives.
 
-This git repository contains 3 Rust crates: `ctp-common`, `ctp-md`, `ctp-trader1. `ctp-md` and `ctp-trader` both depend on `ctp-common`, but can be used separately.
+This git repository contains 3 Rust crates: `ctp-common`, `ctp-md`, `ctp-trader`. `ctp-md` and `ctp-trader` both depend on `ctp-common`, but can be used separately.
 
 ### ctp-common
 

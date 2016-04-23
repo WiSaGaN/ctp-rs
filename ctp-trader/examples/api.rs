@@ -9,98 +9,92 @@ struct Spi;
 impl TraderSpi for Spi {
 }
 
-fn fill_cstr_array(array: &mut [u8], content: &str) {
-    for (place, data) in array.split_last_mut().unwrap().1.iter_mut().zip(content.as_bytes().iter()) {
-        *place = *data;
-    }
-}
-
 fn new_login(user_id: &str, password: &str) -> Struct_CThostFtdcReqUserLoginField {
     let mut f: Struct_CThostFtdcReqUserLoginField = Default::default();
-    fill_cstr_array(&mut f.BrokerID, BROKER_ID);
-    fill_cstr_array(&mut f.UserID, user_id);
-    fill_cstr_array(&mut f.Password, password);
+    set_cstr_from_str_truncate(&mut f.BrokerID, BROKER_ID);
+    set_cstr_from_str_truncate(&mut f.UserID, user_id);
+    set_cstr_from_str_truncate(&mut f.Password, password);
     f
 }
 
 fn new_qry_settlement_info(user_id: &str) -> Struct_CThostFtdcQrySettlementInfoField {
     let mut f: Struct_CThostFtdcQrySettlementInfoField = Default::default();
-    fill_cstr_array(&mut f.BrokerID, BROKER_ID);
-    fill_cstr_array(&mut f.InvestorID, user_id);
+    set_cstr_from_str_truncate(&mut f.BrokerID, BROKER_ID);
+    set_cstr_from_str_truncate(&mut f.InvestorID, user_id);
     f
 }
 
 fn new_settlement_info_confirm(user_id: &str) -> Struct_CThostFtdcSettlementInfoConfirmField {
     let mut f: Struct_CThostFtdcSettlementInfoConfirmField = Default::default();
-    fill_cstr_array(&mut f.BrokerID, BROKER_ID);
-    fill_cstr_array(&mut f.InvestorID, user_id);
+    set_cstr_from_str_truncate(&mut f.BrokerID, BROKER_ID);
+    set_cstr_from_str_truncate(&mut f.InvestorID, user_id);
     f
 }
 
 fn new_qry_settlement_info_confirm(user_id: &str) -> Struct_CThostFtdcQrySettlementInfoConfirmField {
     let mut f: Struct_CThostFtdcQrySettlementInfoConfirmField = Default::default();
-    fill_cstr_array(&mut f.BrokerID, BROKER_ID);
-    fill_cstr_array(&mut f.InvestorID, user_id);
+    set_cstr_from_str_truncate(&mut f.BrokerID, BROKER_ID);
+    set_cstr_from_str_truncate(&mut f.InvestorID, user_id);
     f
 }
 
 fn new_qry_instrument(pattern: &str) -> Struct_CThostFtdcQryInstrumentField {
     let mut f: Struct_CThostFtdcQryInstrumentField = Default::default();
-    fill_cstr_array(&mut f.InstrumentID, pattern);
+    set_cstr_from_str_truncate(&mut f.InstrumentID, pattern);
     f
 }
 
 fn new_qry_exchange(pattern: &str) -> Struct_CThostFtdcQryExchangeField {
     let mut f: Struct_CThostFtdcQryExchangeField = Default::default();
-    fill_cstr_array(&mut f.ExchangeID, pattern);
+    set_cstr_from_str_truncate(&mut f.ExchangeID, pattern);
     f
 }
 
 fn new_qry_product(pattern: &str) -> Struct_CThostFtdcQryProductField {
     let mut f: Struct_CThostFtdcQryProductField = Default::default();
-    fill_cstr_array(&mut f.ProductID, pattern);
+    set_cstr_from_str_truncate(&mut f.ProductID, pattern);
     f
 }
 
 fn new_qry_order(user_id: &str) -> Struct_CThostFtdcQryOrderField {
     let mut f: Struct_CThostFtdcQryOrderField = Default::default();
-    fill_cstr_array(&mut f.BrokerID, BROKER_ID);
-    fill_cstr_array(&mut f.InvestorID, user_id);
+    set_cstr_from_str_truncate(&mut f.BrokerID, BROKER_ID);
+    set_cstr_from_str_truncate(&mut f.InvestorID, user_id);
     f
 }
 
 fn new_qry_trade(user_id: &str) -> Struct_CThostFtdcQryTradeField {
     let mut f: Struct_CThostFtdcQryTradeField = Default::default();
-    fill_cstr_array(&mut f.BrokerID, BROKER_ID);
-    fill_cstr_array(&mut f.InvestorID, user_id);
+    set_cstr_from_str_truncate(&mut f.BrokerID, BROKER_ID);
+    set_cstr_from_str_truncate(&mut f.InvestorID, user_id);
     f
 }
 
 fn new_qry_investor_position(user_id: &str) -> Struct_CThostFtdcQryInvestorPositionField {
     let mut f: Struct_CThostFtdcQryInvestorPositionField = Default::default();
-    fill_cstr_array(&mut f.BrokerID, BROKER_ID);
-    fill_cstr_array(&mut f.InvestorID, user_id);
+    set_cstr_from_str_truncate(&mut f.BrokerID, BROKER_ID);
+    set_cstr_from_str_truncate(&mut f.InvestorID, user_id);
     f
 }
 
 fn new_qry_trading_account(user_id: &str) -> Struct_CThostFtdcQryTradingAccountField {
     let mut f: Struct_CThostFtdcQryTradingAccountField = Default::default();
-    fill_cstr_array(&mut f.BrokerID, BROKER_ID);
-    fill_cstr_array(&mut f.InvestorID, user_id);
+    set_cstr_from_str_truncate(&mut f.BrokerID, BROKER_ID);
+    set_cstr_from_str_truncate(&mut f.InvestorID, user_id);
     f
 }
 
 fn new_qry_investor(user_id: &str) -> Struct_CThostFtdcQryInvestorField {
     let mut f: Struct_CThostFtdcQryInvestorField = Default::default();
-    fill_cstr_array(&mut f.BrokerID, BROKER_ID);
-    fill_cstr_array(&mut f.InvestorID, user_id);
+    set_cstr_from_str_truncate(&mut f.BrokerID, BROKER_ID);
+    set_cstr_from_str_truncate(&mut f.InvestorID, user_id);
     f
 }
 
 fn new_qry_trading_code(user_id: &str) -> Struct_CThostFtdcQryTradingCodeField {
     let mut f: Struct_CThostFtdcQryTradingCodeField = Default::default();
-    fill_cstr_array(&mut f.BrokerID, BROKER_ID);
-    fill_cstr_array(&mut f.InvestorID, user_id);
+    set_cstr_from_str_truncate(&mut f.BrokerID, BROKER_ID);
+    set_cstr_from_str_truncate(&mut f.InvestorID, user_id);
     f
 }
 
@@ -122,7 +116,7 @@ fn main() {
     println!("Going to connect to simnow {} with broker_id {}", TRADER_FRONT, BROKER_ID);
     let mut user_id = String::new();
     print!("user_id: ");
-    std::io::stdout().flush();
+    std::io::stdout().flush().unwrap();
     match std::io::stdin().read_line(&mut user_id) {
         Ok(_) => (),
         Err(e) => {
@@ -132,7 +126,7 @@ fn main() {
     user_id = user_id.trim_right().to_string();
     let mut password = String::new();
     print!("password: ");
-    std::io::stdout().flush();
+    std::io::stdout().flush().unwrap();
     match std::io::stdin().read_line(&mut password) {
         Ok(_) => (),
         Err(e) => {

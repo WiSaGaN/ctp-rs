@@ -5,7 +5,7 @@ include!(concat!(env!("OUT_DIR"), "/struct.rs.in"));
 include!(concat!(env!("OUT_DIR"), "/data_type.rs.in"));
 
 use std::fmt;
-use super::gb18030_cstr_to_str;
+use super::{ gb18030_cstr_to_str, normalize_double };
 
 impl fmt::Debug for Struct_CThostFtdcRspAuthenticateField {
     fn fmt(&self, fmt: &mut fmt::Formatter) -> fmt::Result {
@@ -473,27 +473,27 @@ impl fmt::Debug for Struct_CThostFtdcDepthMarketDataField {
             .field("InstrumentID", &gb18030_cstr_to_str(&self.InstrumentID))
             .field("ExchangeID", &gb18030_cstr_to_str(&self.ExchangeID))
             .field("ExchangeInstID", &gb18030_cstr_to_str(&self.ExchangeInstID))
-            .field("LastPrice", &self.LastPrice)
-            .field("PreSettlementPrice", &self.PreSettlementPrice)
-            .field("PreClosePrice", &self.PreClosePrice)
+            .field("LastPrice", &normalize_double(self.LastPrice))
+            .field("PreSettlementPrice", &normalize_double(self.PreSettlementPrice))
+            .field("PreClosePrice", &normalize_double(self.PreClosePrice))
             .field("PreOpenInterest", &self.PreOpenInterest)
-            .field("OpenPrice", &self.OpenPrice)
-            .field("HighestPrice", &self.HighestPrice)
-            .field("LowestPrice", &self.LowestPrice)
+            .field("OpenPrice", &normalize_double(self.OpenPrice))
+            .field("HighestPrice", &normalize_double(self.HighestPrice))
+            .field("LowestPrice", &normalize_double(self.LowestPrice))
             .field("Volume", &self.Volume)
             .field("Turnover", &self.Turnover)
             .field("OpenInterest", &self.OpenInterest)
-            .field("ClosePrice", &self.ClosePrice)
-            .field("SettlementPrice", &self.SettlementPrice)
-            .field("UpperLimitPrice", &self.UpperLimitPrice)
-            .field("LowerLimitPrice", &self.LowerLimitPrice)
-            .field("PreDelta", &self.PreDelta)
-            .field("CurrDelta", &self.CurrDelta)
+            .field("ClosePrice", &normalize_double(self.ClosePrice))
+            .field("SettlementPrice", &normalize_double(self.SettlementPrice))
+            .field("UpperLimitPrice", &normalize_double(self.UpperLimitPrice))
+            .field("LowerLimitPrice", &normalize_double(self.LowerLimitPrice))
+            .field("PreDelta", &normalize_double(self.PreDelta))
+            .field("CurrDelta", &normalize_double(self.CurrDelta))
             .field("UpdateTime", &gb18030_cstr_to_str(&self.UpdateTime))
             .field("UpdateMillisec", &self.UpdateMillisec)
-            .field("BidPrice1", &self.BidPrice1)
+            .field("BidPrice1", &normalize_double(self.BidPrice1))
             .field("BidVolume1", &self.BidVolume1)
-            .field("AskPrice1", &self.AskPrice1)
+            .field("AskPrice1", &normalize_double(self.AskPrice1))
             .field("AskVolume1", &self.AskVolume1);
         if !(self.BidVolume2 == 0 &&
              self.AskVolume2 == 0 &&
@@ -503,24 +503,24 @@ impl fmt::Debug for Struct_CThostFtdcDepthMarketDataField {
              self.AskVolume4 == 0 &&
              self.BidVolume5 == 0 &&
              self.AskVolume5 == 0) {
-                 debug.field("BidPrice2", &self.BidPrice2)
+                 debug.field("BidPrice2", &normalize_double(self.BidPrice2))
                      .field("BidVolume2", &self.BidVolume2)
-                     .field("AskPrice2", &self.AskPrice2)
+                     .field("AskPrice2", &normalize_double(self.AskPrice2))
                      .field("AskVolume2", &self.AskVolume2)
-                     .field("BidPrice3", &self.BidPrice3)
+                     .field("BidPrice3", &normalize_double(self.BidPrice3))
                      .field("BidVolume3", &self.BidVolume3)
-                     .field("AskPrice3", &self.AskPrice3)
+                     .field("AskPrice3", &normalize_double(self.AskPrice3))
                      .field("AskVolume3", &self.AskVolume3)
-                     .field("BidPrice4", &self.BidPrice4)
+                     .field("BidPrice4", &normalize_double(self.BidPrice4))
                      .field("BidVolume4", &self.BidVolume4)
-                     .field("AskPrice4", &self.AskPrice4)
+                     .field("AskPrice4", &normalize_double(self.AskPrice4))
                      .field("AskVolume4", &self.AskVolume4)
-                     .field("BidPrice5", &self.BidPrice5)
+                     .field("BidPrice5", &normalize_double(self.BidPrice5))
                      .field("BidVolume5", &self.BidVolume5)
-                     .field("AskPrice5", &self.AskPrice5)
+                     .field("AskPrice5", &normalize_double(self.AskPrice5))
                      .field("AskVolume5", &self.AskVolume5);
              }
-        debug.field("AveragePrice", &self.AveragePrice)
+        debug.field("AveragePrice", &normalize_double(self.AveragePrice))
             .field("ActionDay", &gb18030_cstr_to_str(&self.ActionDay))
             .finish()
     }

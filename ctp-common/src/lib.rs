@@ -264,6 +264,14 @@ pub fn set_cstr_from_str_truncate(buffer: &mut [u8], text: &str) {
     }
 }
 
+pub fn normalize_double(d: f64) -> Option<f64> {
+    if d == std::f64::MAX {
+        None
+    } else {
+        Some(d)
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use std::borrow::Cow;

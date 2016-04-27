@@ -28,7 +28,7 @@ fn main() {
         if line.starts_with("#define") {
             let tokens: Vec<&str> = line.split_whitespace().collect();
             if tokens.len() == 3 {
-                let name = unsafe { tokens.get_unchecked(1) }.to_uppercase();
+                let name = unsafe { tokens.get_unchecked(1) };
                 let value = unsafe { tokens.get_unchecked(2) };
                 if value.starts_with("'") && value.ends_with("'") && value.len() == 3 {
                     type_output.write(format!("pub const {}: u8 = b{};\n", name, value).as_bytes()).expect("cannot write data_type file");

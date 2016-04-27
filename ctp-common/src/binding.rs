@@ -1,11 +1,12 @@
 #![allow(dead_code)]
 #![allow(non_camel_case_types)]
 #![allow(non_snake_case)]
+#![allow(non_upper_case_globals)]
 include!(concat!(env!("OUT_DIR"), "/struct.rs.in"));
 include!(concat!(env!("OUT_DIR"), "/data_type.rs.in"));
 
-pub const THOST_FTDC_BOOL_TRUE: c_int = 1;
-pub const THOST_FTDC_BOOL_FALSE: c_int = 0;
+pub const THOST_FTDC_BOOL_True: c_int = 1;
+pub const THOST_FTDC_BOOL_False: c_int = 0;
 
 use std::fmt;
 use std::os::raw::c_int;

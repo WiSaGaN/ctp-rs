@@ -101,14 +101,14 @@ fn new_qry_trading_code(user_id: &str) -> Struct_CThostFtdcQryTradingCodeField {
 fn new_input_order(pattern: &str) -> Struct_CThostFtdcInputOrderField {
     let mut f: Struct_CThostFtdcInputOrderField = Default::default();
     f.TimeCondition = THOST_FTDC_TC_GFD;
-    f.OrderPriceType = THOST_FTDC_OPT_LIMITPRICE;
+    f.OrderPriceType = THOST_FTDC_OPT_LimitPrice;
     f.LimitPrice = 1f64;
     f
 }
 
 fn new_input_order_action(pattern: &str) -> Struct_CThostFtdcInputOrderActionField {
     let mut f: Struct_CThostFtdcInputOrderActionField = Default::default();
-    f.ActionFlag = THOST_FTDC_AF_DELETE;
+    f.ActionFlag = THOST_FTDC_AF_Delete;
     f
 }
 

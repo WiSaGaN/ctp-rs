@@ -5,11 +5,10 @@
 include!(concat!(env!("OUT_DIR"), "/struct.rs.in"));
 include!(concat!(env!("OUT_DIR"), "/data_type.rs.in"));
 
-pub const THOST_FTDC_BOOL_True: c_int = 1;
-pub const THOST_FTDC_BOOL_False: c_int = 0;
+pub const THOST_FTDC_BOOL_True: TThostFtdcBoolType = 1;
+pub const THOST_FTDC_BOOL_False: TThostFtdcBoolType = 0;
 
 use std::fmt;
-use std::os::raw::c_int;
 use super::{ gb18030_cstr_to_str, normalize_double };
 
 impl fmt::Debug for Struct_CThostFtdcRspAuthenticateField {

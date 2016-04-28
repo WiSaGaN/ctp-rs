@@ -8,6 +8,8 @@ include!(concat!(env!("OUT_DIR"), "/data_type.rs.in"));
 pub const THOST_FTDC_BOOL_True: TThostFtdcBoolType = 1;
 pub const THOST_FTDC_BOOL_False: TThostFtdcBoolType = 0;
 
+pub const THOST_FTDC_COMB_FLAG_LENGTH: usize = 5;
+
 use std::fmt;
 use super::{ gb18030_cstr_to_str, normalize_double };
 

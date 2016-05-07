@@ -144,6 +144,13 @@ pub fn from_rsp_info_to_rsp_result(rsp_info: *const Struct_CThostFtdcRspInfoFiel
     }
 }
 
+pub fn is_terminal_order_status(order_status: TThostFtdcOrderStatusType) -> bool {
+    return order_status == THOST_FTDC_OST_AllTraded ||
+        order_status == THOST_FTDC_OST_PartTradedNotQueueing ||
+        order_status == THOST_FTDC_OST_NoTradeNotQueueing ||
+        order_status == THOST_FTDC_OST_Canceled;
+}
+
 pub fn to_exchange_timestamp(trading_day: &TThostFtdcDateType,
                               update_time: &TThostFtdcTimeType,
                               update_millisec: &TThostFtdcMillisecType) -> Result<Timespec, SimpleError> {

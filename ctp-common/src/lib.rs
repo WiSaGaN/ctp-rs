@@ -118,14 +118,13 @@ pub struct RspError {
     pub msg: String,
 }
 
-
 #[must_use]
 pub type RspResult = Result<(), RspError>;
 
-pub fn from_rsp_result_to_string(rsp_result: RspResult) -> String {
+pub fn from_rsp_result_to_string(rsp_result: &RspResult) -> String {
     match rsp_result {
-        Ok(()) => "Ok(())".to_string(),
-        Err(err) => format!("Err(RspError{{ id: {}, msg: {} }})", err.id, err.msg),
+        &Ok(()) => "Ok(())".to_string(),
+        &Err(ref err) => format!("Err(RspError{{ id: {}, msg: {} }})", err.id, err.msg),
     }
 }
 

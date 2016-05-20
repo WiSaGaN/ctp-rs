@@ -23,6 +23,23 @@ impl fmt::Debug for Struct_CThostFtdcRspAuthenticateField {
     }
 }
 
+impl fmt::Debug for Struct_CThostFtdcReqUserLoginField {
+    fn fmt(&self, fmt: &mut fmt::Formatter) -> fmt::Result {
+        fmt.debug_struct("Struct_CThostFtdcReqUserLoginField")
+            .field("TradingDay", &gb18030_cstr_to_str(&self.TradingDay))
+            .field("BrokerID", &gb18030_cstr_to_str(&self.BrokerID))
+            .field("UserID", &gb18030_cstr_to_str(&self.UserID))
+            .field("Password", &gb18030_cstr_to_str(&self.Password))
+            .field("UserProductInfo", &gb18030_cstr_to_str(&self.UserProductInfo))
+            .field("InterfaceProductInfo", &gb18030_cstr_to_str(&self.InterfaceProductInfo))
+            .field("ProtocolInfo", &gb18030_cstr_to_str(&self.ProtocolInfo))
+            .field("MacAddress", &gb18030_cstr_to_str(&self.MacAddress))
+            .field("OneTimePassword", &gb18030_cstr_to_str(&self.OneTimePassword))
+            .field("ClientIPAddress", &gb18030_cstr_to_str(&self.ClientIPAddress))
+            .finish()
+    }
+}
+
 impl fmt::Debug for Struct_CThostFtdcRspUserLoginField {
     fn fmt(&self, fmt: &mut fmt::Formatter) -> fmt::Result {
         fmt.debug_struct("Struct_CThostFtdcRspUserLoginField")

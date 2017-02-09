@@ -19,10 +19,10 @@ fn main() {
         Err(err) => println!("req_user_login err: {:?}", err),
     };
     std::thread::sleep(std::time::Duration::from_secs(1));
-    let instrument_ids = vec!(CString::new("IF1603").unwrap(),
-                              CString::new("au1612").unwrap(),
-                              CString::new("m1609").unwrap(),
-                              CString::new("CF609").unwrap());
+    let instrument_ids = vec!(CString::new("IF1703").unwrap(),
+                              CString::new("au1712").unwrap(),
+                              CString::new("m1709").unwrap(),
+                              CString::new("CF709").unwrap());
     match md_api.subscribe_market_data(instrument_ids.clone()) {
         Ok(()) => println!("subscribe_market_data ok"),
         Err(err) => println!("subscribe_market_data err: {:?}", err),

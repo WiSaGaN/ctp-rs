@@ -98,11 +98,24 @@ fn new_qry_trading_code(user_id: &str) -> Struct_CThostFtdcQryTradingCodeField {
     f
 }
 
-fn new_input_order(pattern: &str) -> Struct_CThostFtdcInputOrderField {
+fn new_input_order(user_id: &str, pattern: &str) -> Struct_CThostFtdcInputOrderField {
     let mut f: Struct_CThostFtdcInputOrderField = Default::default();
-    f.TimeCondition = THOST_FTDC_TC_GFD;
+    set_cstr_from_str_truncate(&mut f.BrokerID, BROKER_ID);
+    set_cstr_from_str_truncate(&mut f.InvestorID, user_id);
+    set_cstr_from_str_truncate(&mut f.InstrumentID, "IF1703");
+    set_cstr_from_str_truncate(&mut f.UserID, user_id);
+    f.Direction = THOST_FTDC_D_Buy;
     f.OrderPriceType = THOST_FTDC_OPT_LimitPrice;
     f.LimitPrice = 1f64;
+    f.VolumeTotalOriginal = 1;
+    f.CombOffsetFlag[0] = THOST_FTDC_OF_Open;
+    f.CombHedgeFlag[0] = THOST_FTDC_HF_Speculation;
+    f.TimeCondition = THOST_FTDC_TC_GFD;
+    f.VolumeCondition = THOST_FTDC_VC_AV;
+    f.MinVolume = 1;
+    f.ContingentCondition = THOST_FTDC_CC_Immediately;
+    f.ForceCloseReason = THOST_FTDC_FCC_NotForceClose;
+    f.RequestID = 20;
     f
 }
 
@@ -222,7 +235,7 @@ fn main() {
     };
     std::thread::sleep(std::time::Duration::from_secs(1));
     last_request_id += 1;
-    match trader_api.req_order_insert(&new_input_order(""), last_request_id) {
+    match trader_api.req_order_insert(&new_input_order(&user_id, ""), last_request_id) {
         Ok(()) => println!("req_order_insert ok"),
         Err(err) => println!("req_order_insert err: {:?}", err),
     };

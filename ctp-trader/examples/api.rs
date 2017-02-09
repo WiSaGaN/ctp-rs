@@ -98,7 +98,7 @@ fn new_qry_trading_code(user_id: &str) -> Struct_CThostFtdcQryTradingCodeField {
     f
 }
 
-fn new_input_order(user_id: &str, pattern: &str) -> Struct_CThostFtdcInputOrderField {
+fn new_input_order(user_id: &str) -> Struct_CThostFtdcInputOrderField {
     let mut f: Struct_CThostFtdcInputOrderField = Default::default();
     set_cstr_from_str_truncate(&mut f.BrokerID, BROKER_ID);
     set_cstr_from_str_truncate(&mut f.InvestorID, user_id);
@@ -119,7 +119,7 @@ fn new_input_order(user_id: &str, pattern: &str) -> Struct_CThostFtdcInputOrderF
     f
 }
 
-fn new_input_order_action(pattern: &str) -> Struct_CThostFtdcInputOrderActionField {
+fn new_input_order_action() -> Struct_CThostFtdcInputOrderActionField {
     let mut f: Struct_CThostFtdcInputOrderActionField = Default::default();
     f.ActionFlag = THOST_FTDC_AF_Delete;
     f
@@ -235,13 +235,13 @@ fn main() {
     };
     std::thread::sleep(std::time::Duration::from_secs(1));
     last_request_id += 1;
-    match trader_api.req_order_insert(&new_input_order(&user_id, ""), last_request_id) {
+    match trader_api.req_order_insert(&new_input_order(&user_id), last_request_id) {
         Ok(()) => println!("req_order_insert ok"),
         Err(err) => println!("req_order_insert err: {:?}", err),
     };
     std::thread::sleep(std::time::Duration::from_secs(1));
     last_request_id += 1;
-    match trader_api.req_order_action(&new_input_order_action(""), last_request_id) {
+    match trader_api.req_order_action(&new_input_order_action(), last_request_id) {
         Ok(()) => println!("req_order_action ok"),
         Err(err) => println!("req_order_action err: {:?}", err),
     };

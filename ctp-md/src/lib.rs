@@ -54,8 +54,7 @@ impl MdApi {
 
     pub fn get_trading_day<'a>(&mut self) -> &'a CStr {
         let trading_day_cstr = unsafe { _ZN14CFtdcMdApiImpl13GetTradingDayEv(self.md_api_ptr) };
-        let trading_day = unsafe { CStr::from_ptr(trading_day_cstr) };
-        trading_day
+        unsafe { CStr::from_ptr(trading_day_cstr) }
     }
 
     pub fn register_front(&mut self, front_socket_address: CString) {
@@ -82,35 +81,32 @@ impl MdApi {
         let spi_ptr = Box::into_raw(Box::new(new_spi(md_spi_ptr)));
         unsafe { _ZN14CFtdcMdApiImpl11RegisterSpiEP15CThostFtdcMdSpi(self.md_api_ptr, spi_ptr as *mut c_void) };
         self.registered_spi = Some(spi_ptr);
-        match last_registered_spi_ptr {
-            Some(last_registered_spi_ptr) => {
-                unsafe {
-                    let last_registered_spi = Box::from_raw(last_registered_spi_ptr);
-                    drop(last_registered_spi.md_spi_ptr);
-                    drop(last_registered_spi);
-                }
-            },
-            None => (),
+        if let Some(last_registered_spi_ptr) = last_registered_spi_ptr {
+            unsafe {
+                let last_registered_spi = Box::from_raw(last_registered_spi_ptr);
+                drop(last_registered_spi.md_spi_ptr);
+                drop(last_registered_spi);
+            }
         };
     }
 
     pub fn subscribe_market_data(&mut self, instrument_ids: Vec<CString>) -> ApiResult {
-        let v = cstring_vec_to_char_star_vec(&instrument_ids);
+        let v = cstring_slice_to_char_star_vec(&instrument_ids);
         from_api_return_to_api_result(unsafe { _ZN14CFtdcMdApiImpl19SubscribeMarketDataEPPci(self.md_api_ptr, v.as_ptr(), v.len() as c_int) })
     }
 
     pub fn unsubscribe_market_data(&mut self, instrument_ids: Vec<CString>) -> ApiResult {
-        let v = cstring_vec_to_char_star_vec(&instrument_ids);
+        let v = cstring_slice_to_char_star_vec(&instrument_ids);
         from_api_return_to_api_result(unsafe { _ZN14CFtdcMdApiImpl21UnSubscribeMarketDataEPPci(self.md_api_ptr, v.as_ptr(), v.len() as c_int) })
     }
 
     pub fn subscribe_for_quote_rsp(&mut self, instrument_ids: Vec<CString>) -> ApiResult {
-        let v = cstring_vec_to_char_star_vec(&instrument_ids);
+        let v = cstring_slice_to_char_star_vec(&instrument_ids);
         from_api_return_to_api_result(unsafe { _ZN14CFtdcMdApiImpl20SubscribeForQuoteRspEPPci(self.md_api_ptr, v.as_ptr(), v.len() as c_int) })
     }
 
     pub fn unsubscribe_for_quote_rsp(&mut self, instrument_ids: Vec<CString>) -> ApiResult {
-        let v = cstring_vec_to_char_star_vec(&instrument_ids);
+        let v = cstring_slice_to_char_star_vec(&instrument_ids);
         from_api_return_to_api_result(unsafe { _ZN14CFtdcMdApiImpl22UnSubscribeForQuoteRspEPPci(self.md_api_ptr, v.as_ptr(), v.len() as c_int) })
     }
 
@@ -126,22 +122,19 @@ impl MdApi {
 impl Drop for MdApi {
     fn drop(&mut self) {
         let last_registered_spi_ptr = self.registered_spi.take();
-        match last_registered_spi_ptr {
-            Some(last_registered_spi_ptr) => {
-                unsafe {
-                    _ZN14CFtdcMdApiImpl11RegisterSpiEP15CThostFtdcMdSpi(self.md_api_ptr, ::std::ptr::null_mut::<c_void>());
-                    let last_registered_spi = Box::from_raw(last_registered_spi_ptr);
-                    drop(last_registered_spi.md_spi_ptr);
-                    drop(last_registered_spi);
-                }
-            },
-            None => (),
+        if let Some(last_registered_spi_ptr) =  last_registered_spi_ptr {
+            unsafe {
+                _ZN14CFtdcMdApiImpl11RegisterSpiEP15CThostFtdcMdSpi(self.md_api_ptr, ::std::ptr::null_mut::<c_void>());
+                let last_registered_spi = Box::from_raw(last_registered_spi_ptr);
+                drop(last_registered_spi.md_spi_ptr);
+                drop(last_registered_spi);
+            }
         };
         unsafe { _ZN14CFtdcMdApiImpl7ReleaseEv(self.md_api_ptr) };
     }
 }
 
-fn cstring_vec_to_char_star_vec(cstring_vec: &Vec<CString>) -> Vec<*const c_char> {
+fn cstring_slice_to_char_star_vec(cstring_vec: &[CString]) -> Vec<*const c_char> {
     cstring_vec.iter().map(|cstring| cstring.as_ptr()).collect()
 }
 
@@ -273,17 +266,29 @@ extern "C" fn spi_on_rtn_for_quote_rsp(spi: *mut Struct_CThostFtdcMdSpi, pForQuo
 #[repr(C)]
 #[derive(Debug)]
 struct SpiVTable {
+    #[allow(non_snake_case)]
     on_front_connected: extern "C" fn(spi: *mut Struct_CThostFtdcMdSpi),
+    #[allow(non_snake_case)]
     on_front_disconnected: extern "C" fn(spi: *mut Struct_CThostFtdcMdSpi, nReason: c_int),
+    #[allow(non_snake_case)]
     on_heart_beat_warning: extern "C" fn(spi: *mut Struct_CThostFtdcMdSpi, nTimeLapse: c_int),
+    #[allow(non_snake_case)]
     on_rsp_user_login: extern "C" fn(spi: *mut Struct_CThostFtdcMdSpi, pRspUserLogin: *const Struct_CThostFtdcRspUserLoginField, pRspInfo: *const Struct_CThostFtdcRspInfoField, nRequestID: c_int, bIsLast: c_bool),
+    #[allow(non_snake_case)]
     on_rsp_user_logout: extern "C" fn(spi: *mut Struct_CThostFtdcMdSpi, pUserLogout: *const Struct_CThostFtdcUserLogoutField, pRspInfo: *const Struct_CThostFtdcRspInfoField, nRequestID: c_int, bIsLast: c_bool),
+    #[allow(non_snake_case)]
     on_rsp_error: extern "C" fn(spi: *mut Struct_CThostFtdcMdSpi, pRspInfo: *const Struct_CThostFtdcRspInfoField, nRequestID: c_int, bIsLast: c_bool),
+    #[allow(non_snake_case)]
     on_rsp_sub_market_data: extern "C" fn(spi: *mut Struct_CThostFtdcMdSpi, pSpecificInstrument: *const Struct_CThostFtdcSpecificInstrumentField, pRspInfo: *const Struct_CThostFtdcRspInfoField, nRequestID: c_int, bIsLast: c_bool),
+    #[allow(non_snake_case)]
     on_rsp_un_sub_market_data: extern "C" fn(spi: *mut Struct_CThostFtdcMdSpi, pSpecificInstrument: *const Struct_CThostFtdcSpecificInstrumentField, pRspInfo: *const Struct_CThostFtdcRspInfoField, nRequestID: c_int, bIsLast: c_bool),
+    #[allow(non_snake_case)]
     on_rsp_sub_for_quote_rsp: extern "C" fn(spi: *mut Struct_CThostFtdcMdSpi, pSpecificInstrument: *const Struct_CThostFtdcSpecificInstrumentField, pRspInfo: *const Struct_CThostFtdcRspInfoField, nRequestID: c_int, bIsLast: c_bool),
+    #[allow(non_snake_case)]
     on_rsp_un_sub_for_quote_rsp: extern "C" fn(spi: *mut Struct_CThostFtdcMdSpi, pSpecificInstrument: *const Struct_CThostFtdcSpecificInstrumentField, pRspInfo: *const Struct_CThostFtdcRspInfoField, nRequestID: c_int, bIsLast: c_bool),
+    #[allow(non_snake_case)]
     on_rtn_depth_market_data: extern "C" fn(spi: *mut Struct_CThostFtdcMdSpi, pDepthMarketData: *const Struct_CThostFtdcDepthMarketDataField ),
+    #[allow(non_snake_case)]
     on_rtn_for_quote_rsp: extern "C" fn(spi: *mut Struct_CThostFtdcMdSpi, pForQuoteRsp: *const Struct_CThostFtdcForQuoteRspField ),
 }
 

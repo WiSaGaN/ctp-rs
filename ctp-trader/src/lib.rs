@@ -118,8 +118,7 @@ impl TraderApi {
 
     pub fn get_trading_day<'a>(&mut self) -> &'a CStr {
         let trading_day_cstr = unsafe { _ZN18CFtdcTraderApiImpl13GetTradingDayEv(self.trader_api_ptr) };
-        let trading_day = unsafe { CStr::from_ptr(trading_day_cstr) };
-        trading_day
+        unsafe { CStr::from_ptr(trading_day_cstr) }
     }
 
     pub fn register_front(&mut self, front_socket_address: CString) {
@@ -146,15 +145,12 @@ impl TraderApi {
         let spi_ptr = Box::into_raw(Box::new(new_spi(trader_spi_ptr)));
         unsafe { _ZN18CFtdcTraderApiImpl11RegisterSpiEP19CThostFtdcTraderSpi(self.trader_api_ptr, spi_ptr as *mut c_void) };
         self.registered_spi = Some(spi_ptr);
-        match last_registered_spi_ptr {
-            Some(last_registered_spi_ptr) => {
-                unsafe {
-                    let last_registered_spi = Box::from_raw(last_registered_spi_ptr);
-                    drop(last_registered_spi.trader_spi_ptr);
-                    drop(last_registered_spi);
-                }
-            },
-            None => (),
+        if let Some(last_registered_spi_ptr) = last_registered_spi_ptr {
+            unsafe {
+                let last_registered_spi = Box::from_raw(last_registered_spi_ptr);
+                drop(last_registered_spi.trader_spi_ptr);
+                drop(last_registered_spi);
+            }
         };
     }
 
@@ -238,16 +234,13 @@ impl TraderApi {
 impl Drop for TraderApi {
     fn drop(&mut self) {
         let last_registered_spi_ptr = self.registered_spi.take();
-        match last_registered_spi_ptr {
-            Some(last_registered_spi_ptr) => {
-                unsafe {
-                    _ZN18CFtdcTraderApiImpl11RegisterSpiEP19CThostFtdcTraderSpi(self.trader_api_ptr, ::std::ptr::null_mut::<c_void>());
-                    let last_registered_spi = Box::from_raw(last_registered_spi_ptr);
-                    drop(last_registered_spi.trader_spi_ptr);
-                    drop(last_registered_spi);
-                }
-            },
-            None => (),
+        if let Some(last_registered_spi_ptr) = last_registered_spi_ptr {
+            unsafe {
+                _ZN18CFtdcTraderApiImpl11RegisterSpiEP19CThostFtdcTraderSpi(self.trader_api_ptr, ::std::ptr::null_mut::<c_void>());
+                let last_registered_spi = Box::from_raw(last_registered_spi_ptr);
+                drop(last_registered_spi.trader_spi_ptr);
+                drop(last_registered_spi);
+            }
         };
         unsafe { _ZN18CFtdcTraderApiImpl7ReleaseEv(self.trader_api_ptr) };
     }
@@ -756,111 +749,217 @@ extern "C" fn spi_on_rtn_change_account_by_bank(spi: *mut Struct_CThostFtdcTrade
 #[repr(C)]
 #[derive(Debug)]
 struct SpiVTable {
+    #[allow(non_snake_case)]
     on_front_connected: extern "C" fn(spi: *mut Struct_CThostFtdcTraderSpi),
+    #[allow(non_snake_case)]
     on_front_disconnected: extern "C" fn(spi: *mut Struct_CThostFtdcTraderSpi, nReason: c_int),
+    #[allow(non_snake_case)]
     on_heart_beat_warning: extern "C" fn(spi: *mut Struct_CThostFtdcTraderSpi, nTimeLapse: c_int),
+    #[allow(non_snake_case)]
     on_rsp_authenticate: extern "C" fn (spi: *mut Struct_CThostFtdcTraderSpi, pRspAuthenticateField: *const Struct_CThostFtdcRspAuthenticateField, pRspInfo: *const Struct_CThostFtdcRspInfoField, nRequestID: c_int, bIsLast: c_bool),
+    #[allow(non_snake_case)]
     on_rsp_user_login: extern "C" fn(spi: *mut Struct_CThostFtdcTraderSpi, pRspUserLogin: *const Struct_CThostFtdcRspUserLoginField, pRspInfo: *const Struct_CThostFtdcRspInfoField, nRequestID: c_int, bIsLast: c_bool),
+    #[allow(non_snake_case)]
     on_rsp_user_logout: extern "C" fn(spi: *mut Struct_CThostFtdcTraderSpi, pUserLogout: *const Struct_CThostFtdcUserLogoutField, pRspInfo: *const Struct_CThostFtdcRspInfoField, nRequestID: c_int, bIsLast: c_bool),
+    #[allow(non_snake_case)]
     on_rsp_user_password_update: extern "C" fn(spi: *mut Struct_CThostFtdcTraderSpi, pUserPasswordUpdate: *const Struct_CThostFtdcUserPasswordUpdateField, pRspInfo: *const Struct_CThostFtdcRspInfoField, nRequestID: c_int, bIsLast: c_bool),
+    #[allow(non_snake_case)]
     on_rsp_trading_account_password_update: extern "C" fn(spi: *mut Struct_CThostFtdcTraderSpi, pTradingAccountPasswordUpdate: *const Struct_CThostFtdcTradingAccountPasswordUpdateField, pRspInfo: *const Struct_CThostFtdcRspInfoField, nRequestID: c_int, bIsLast: c_bool),
+    #[allow(non_snake_case)]
     on_rsp_order_insert: extern "C" fn(spi: *mut Struct_CThostFtdcTraderSpi, pInputOrder: *const Struct_CThostFtdcInputOrderField, pRspInfo: *const Struct_CThostFtdcRspInfoField, nRequestID: c_int, bIsLast: c_bool),
+    #[allow(non_snake_case)]
     on_rsp_parked_order_insert: extern "C" fn(spi: *mut Struct_CThostFtdcTraderSpi, pParkedOrder: *const Struct_CThostFtdcParkedOrderField, pRspInfo: *const Struct_CThostFtdcRspInfoField, nRequestID: c_int, bIsLast: c_bool),
+    #[allow(non_snake_case)]
     on_rsp_parked_order_action: extern "C" fn(spi: *mut Struct_CThostFtdcTraderSpi, pParkedOrderAction: *const Struct_CThostFtdcParkedOrderActionField, pRspInfo: *const Struct_CThostFtdcRspInfoField, nRequestID: c_int, bIsLast: c_bool),
+    #[allow(non_snake_case)]
     on_rsp_order_action: extern "C" fn(spi: *mut Struct_CThostFtdcTraderSpi, pInputOrderAction: *const Struct_CThostFtdcInputOrderActionField, pRspInfo: *const Struct_CThostFtdcRspInfoField, nRequestID: c_int, bIsLast: c_bool),
+    #[allow(non_snake_case)]
     on_rsp_query_max_order_volume: extern "C" fn(spi: *mut Struct_CThostFtdcTraderSpi, pQueryMaxOrderVolume: *const Struct_CThostFtdcQueryMaxOrderVolumeField, pRspInfo: *const Struct_CThostFtdcRspInfoField, nRequestID: c_int, bIsLast: c_bool),
+    #[allow(non_snake_case)]
     on_rsp_settlement_info_confirm: extern "C" fn(spi: *mut Struct_CThostFtdcTraderSpi, pSettlementInfoConfirm: *const Struct_CThostFtdcSettlementInfoConfirmField, pRspInfo: *const Struct_CThostFtdcRspInfoField, nRequestID: c_int, bIsLast: c_bool),
+    #[allow(non_snake_case)]
     on_rsp_remove_parked_order: extern "C" fn(spi: *mut Struct_CThostFtdcTraderSpi, pRemoveParkedOrder: *const Struct_CThostFtdcRemoveParkedOrderField, pRspInfo: *const Struct_CThostFtdcRspInfoField, nRequestID: c_int, bIsLast: c_bool),
+    #[allow(non_snake_case)]
     on_rsp_remove_parked_order_action: extern "C" fn(spi: *mut Struct_CThostFtdcTraderSpi, pRemoveParkedOrderAction: *const Struct_CThostFtdcRemoveParkedOrderActionField, pRspInfo: *const Struct_CThostFtdcRspInfoField, nRequestID: c_int, bIsLast: c_bool),
+    #[allow(non_snake_case)]
     on_rsp_exec_order_insert: extern "C" fn(spi: *mut Struct_CThostFtdcTraderSpi, pInputExecOrder: *const Struct_CThostFtdcInputExecOrderField, pRspInfo: *const Struct_CThostFtdcRspInfoField, nRequestID: c_int, bIsLast: c_bool),
+    #[allow(non_snake_case)]
     on_rsp_exec_order_action: extern "C" fn(spi: *mut Struct_CThostFtdcTraderSpi, pInputExecOrderAction: *const Struct_CThostFtdcInputExecOrderActionField, pRspInfo: *const Struct_CThostFtdcRspInfoField, nRequestID: c_int, bIsLast: c_bool),
+    #[allow(non_snake_case)]
     on_rsp_for_quote_insert: extern "C" fn(spi: *mut Struct_CThostFtdcTraderSpi, pInputForQuote: *const Struct_CThostFtdcInputForQuoteField, pRspInfo: *const Struct_CThostFtdcRspInfoField, nRequestID: c_int, bIsLast: c_bool),
+    #[allow(non_snake_case)]
     on_rsp_quote_insert: extern "C" fn(spi: *mut Struct_CThostFtdcTraderSpi, pInputQuote: *const Struct_CThostFtdcInputQuoteField, pRspInfo: *const Struct_CThostFtdcRspInfoField, nRequestID: c_int, bIsLast: c_bool),
+    #[allow(non_snake_case)]
     on_rsp_quote_action: extern "C" fn(spi: *mut Struct_CThostFtdcTraderSpi, pInputQuoteAction: *const Struct_CThostFtdcInputQuoteActionField, pRspInfo: *const Struct_CThostFtdcRspInfoField, nRequestID: c_int, bIsLast: c_bool),
+    #[allow(non_snake_case)]
     on_rsp_comb_action_insert: extern "C" fn(spi: *mut Struct_CThostFtdcTraderSpi, pInputCombAction: *const Struct_CThostFtdcInputCombActionField, pRspInfo: *const Struct_CThostFtdcRspInfoField, nRequestID: c_int, bIsLast: c_bool),
+    #[allow(non_snake_case)]
     on_rsp_qry_order: extern "C" fn(spi: *mut Struct_CThostFtdcTraderSpi, pOrder: *const Struct_CThostFtdcOrderField, pRspInfo: *const Struct_CThostFtdcRspInfoField, nRequestID: c_int, bIsLast: c_bool),
+    #[allow(non_snake_case)]
     on_rsp_qry_trade: extern "C" fn(spi: *mut Struct_CThostFtdcTraderSpi, pTrade: *const Struct_CThostFtdcTradeField, pRspInfo: *const Struct_CThostFtdcRspInfoField, nRequestID: c_int, bIsLast: c_bool),
+    #[allow(non_snake_case)]
     on_rsp_qry_investor_position: extern "C" fn(spi: *mut Struct_CThostFtdcTraderSpi, pInvestorPosition: *const Struct_CThostFtdcInvestorPositionField, pRspInfo: *const Struct_CThostFtdcRspInfoField, nRequestID: c_int, bIsLast: c_bool),
+    #[allow(non_snake_case)]
     on_rsp_qry_trading_account: extern "C" fn(spi: *mut Struct_CThostFtdcTraderSpi, pTradingAccount: *const Struct_CThostFtdcTradingAccountField, pRspInfo: *const Struct_CThostFtdcRspInfoField, nRequestID: c_int, bIsLast: c_bool),
+    #[allow(non_snake_case)]
     on_rsp_qry_investor: extern "C" fn(spi: *mut Struct_CThostFtdcTraderSpi, pInvestor: *const Struct_CThostFtdcInvestorField, pRspInfo: *const Struct_CThostFtdcRspInfoField, nRequestID: c_int, bIsLast: c_bool),
+    #[allow(non_snake_case)]
     on_rsp_qry_trading_code: extern "C" fn(spi: *mut Struct_CThostFtdcTraderSpi, pTradingCode: *const Struct_CThostFtdcTradingCodeField, pRspInfo: *const Struct_CThostFtdcRspInfoField, nRequestID: c_int, bIsLast: c_bool),
+    #[allow(non_snake_case)]
     on_rsp_qry_instrument_margin_rate: extern "C" fn(spi: *mut Struct_CThostFtdcTraderSpi, pInstrumentMarginRate: *const Struct_CThostFtdcInstrumentMarginRateField, pRspInfo: *const Struct_CThostFtdcRspInfoField, nRequestID: c_int, bIsLast: c_bool),
+    #[allow(non_snake_case)]
     on_rsp_qry_instrument_commission_rate: extern "C" fn(spi: *mut Struct_CThostFtdcTraderSpi, pInstrumentCommissionRate: *const Struct_CThostFtdcInstrumentCommissionRateField, pRspInfo: *const Struct_CThostFtdcRspInfoField, nRequestID: c_int, bIsLast: c_bool),
+    #[allow(non_snake_case)]
     on_rsp_qry_exchange: extern "C" fn(spi: *mut Struct_CThostFtdcTraderSpi, pExchange: *const Struct_CThostFtdcExchangeField, pRspInfo: *const Struct_CThostFtdcRspInfoField, nRequestID: c_int, bIsLast: c_bool),
+    #[allow(non_snake_case)]
     on_rsp_qry_product: extern "C" fn(spi: *mut Struct_CThostFtdcTraderSpi, pProduct: *const Struct_CThostFtdcProductField, pRspInfo: *const Struct_CThostFtdcRspInfoField, nRequestID: c_int, bIsLast: c_bool),
+    #[allow(non_snake_case)]
     on_rsp_qry_instrument: extern "C" fn(spi: *mut Struct_CThostFtdcTraderSpi, pInstrument: *const Struct_CThostFtdcInstrumentField, pRspInfo: *const Struct_CThostFtdcRspInfoField, nRequestID: c_int, bIsLast: c_bool),
+    #[allow(non_snake_case)]
     on_rsp_qry_depth_market_data: extern "C" fn(spi: *mut Struct_CThostFtdcTraderSpi, pDepthMarketData: *const Struct_CThostFtdcDepthMarketDataField, pRspInfo: *const Struct_CThostFtdcRspInfoField, nRequestID: c_int, bIsLast: c_bool),
+    #[allow(non_snake_case)]
     on_rsp_qry_settlement_info: extern "C" fn(spi: *mut Struct_CThostFtdcTraderSpi, pSettlementInfo: *const Struct_CThostFtdcSettlementInfoField, pRspInfo: *const Struct_CThostFtdcRspInfoField, nRequestID: c_int, bIsLast: c_bool),
+    #[allow(non_snake_case)]
     on_rsp_qry_transfer_bank: extern "C" fn(spi: *mut Struct_CThostFtdcTraderSpi, pTransferBank: *const Struct_CThostFtdcTransferBankField, pRspInfo: *const Struct_CThostFtdcRspInfoField, nRequestID: c_int, bIsLast: c_bool),
+    #[allow(non_snake_case)]
     on_rsp_qry_investor_position_detail: extern "C" fn(spi: *mut Struct_CThostFtdcTraderSpi, pInvestorPositionDetail: *const Struct_CThostFtdcInvestorPositionDetailField, pRspInfo: *const Struct_CThostFtdcRspInfoField, nRequestID: c_int, bIsLast: c_bool),
+    #[allow(non_snake_case)]
     on_rsp_qry_notice: extern "C" fn(spi: *mut Struct_CThostFtdcTraderSpi, pNotice: *const Struct_CThostFtdcNoticeField, pRspInfo: *const Struct_CThostFtdcRspInfoField, nRequestID: c_int, bIsLast: c_bool),
+    #[allow(non_snake_case)]
     on_rsp_qry_settlement_info_confirm: extern "C" fn(spi: *mut Struct_CThostFtdcTraderSpi, pSettlementInfoConfirm: *const Struct_CThostFtdcSettlementInfoConfirmField, pRspInfo: *const Struct_CThostFtdcRspInfoField, nRequestID: c_int, bIsLast: c_bool),
+    #[allow(non_snake_case)]
     on_rsp_qry_investor_position_combine_detail: extern "C" fn(spi: *mut Struct_CThostFtdcTraderSpi, pInvestorPositionCombineDetail: *const Struct_CThostFtdcInvestorPositionCombineDetailField, pRspInfo: *const Struct_CThostFtdcRspInfoField, nRequestID: c_int, bIsLast: c_bool),
+    #[allow(non_snake_case)]
     on_rsp_qry_cfmmc_trading_account_key: extern "C" fn(spi: *mut Struct_CThostFtdcTraderSpi, pCFMMCTradingAccountKey: *const Struct_CThostFtdcCFMMCTradingAccountKeyField, pRspInfo: *const Struct_CThostFtdcRspInfoField, nRequestID: c_int, bIsLast: c_bool),
+    #[allow(non_snake_case)]
     on_rsp_qry_e_warrant_offset: extern "C" fn(spi: *mut Struct_CThostFtdcTraderSpi, pEWarrantOffset: *const Struct_CThostFtdcEWarrantOffsetField, pRspInfo: *const Struct_CThostFtdcRspInfoField, nRequestID: c_int, bIsLast: c_bool),
+    #[allow(non_snake_case)]
     on_rsp_qry_investor_product_group_margin: extern "C" fn(spi: *mut Struct_CThostFtdcTraderSpi, pInvestorProductGroupMargin: *const Struct_CThostFtdcInvestorProductGroupMarginField, pRspInfo: *const Struct_CThostFtdcRspInfoField, nRequestID: c_int, bIsLast: c_bool),
+    #[allow(non_snake_case)]
     on_rsp_qry_exchange_margin_rate: extern "C" fn(spi: *mut Struct_CThostFtdcTraderSpi, pExchangeMarginRate: *const Struct_CThostFtdcExchangeMarginRateField, pRspInfo: *const Struct_CThostFtdcRspInfoField, nRequestID: c_int, bIsLast: c_bool),
+    #[allow(non_snake_case)]
     on_rsp_qry_exchange_margin_rate_adjust: extern "C" fn(spi: *mut Struct_CThostFtdcTraderSpi, pExchangeMarginRateAdjust: *const Struct_CThostFtdcExchangeMarginRateAdjustField, pRspInfo: *const Struct_CThostFtdcRspInfoField, nRequestID: c_int, bIsLast: c_bool),
+    #[allow(non_snake_case)]
     on_rsp_qry_exchange_rate: extern "C" fn(spi: *mut Struct_CThostFtdcTraderSpi, pExchangeRate: *const Struct_CThostFtdcExchangeRateField, pRspInfo: *const Struct_CThostFtdcRspInfoField, nRequestID: c_int, bIsLast: c_bool),
+    #[allow(non_snake_case)]
     on_rsp_qry_sec_agent_acid_map: extern "C" fn(spi: *mut Struct_CThostFtdcTraderSpi, pSecAgentACIDMap: *const Struct_CThostFtdcSecAgentACIDMapField, pRspInfo: *const Struct_CThostFtdcRspInfoField, nRequestID: c_int, bIsLast: c_bool),
+    #[allow(non_snake_case)]
     on_rsp_qry_product_group: extern "C" fn(spi: *mut Struct_CThostFtdcTraderSpi, pProductGroup: *const Struct_CThostFtdcProductGroupField, pRspInfo: *const Struct_CThostFtdcRspInfoField, nRequestID: c_int, bIsLast: c_bool),
+    #[allow(non_snake_case)]
     on_rsp_qry_instrument_order_comm_rate: extern "C" fn(spi: *mut Struct_CThostFtdcTraderSpi, pInstrumentOrderCommRate: *const Struct_CThostFtdcInstrumentOrderCommRateField, pRspInfo: *const Struct_CThostFtdcRspInfoField, nRequestID: c_int, bIsLast: c_bool),
+    #[allow(non_snake_case)]
     on_rsp_qry_option_instr_trade_cost: extern "C" fn(spi: *mut Struct_CThostFtdcTraderSpi, pOptionInstrTradeCost: *const Struct_CThostFtdcOptionInstrTradeCostField, pRspInfo: *const Struct_CThostFtdcRspInfoField, nRequestID: c_int, bIsLast: c_bool),
+    #[allow(non_snake_case)]
     on_rsp_qry_option_instr_comm_rate: extern "C" fn(spi: *mut Struct_CThostFtdcTraderSpi, pOptionInstrCommRate: *const Struct_CThostFtdcOptionInstrCommRateField, pRspInfo: *const Struct_CThostFtdcRspInfoField, nRequestID: c_int, bIsLast: c_bool),
+    #[allow(non_snake_case)]
     on_rsp_qry_exec_order: extern "C" fn(spi: *mut Struct_CThostFtdcTraderSpi, pExecOrder: *const Struct_CThostFtdcExecOrderField, pRspInfo: *const Struct_CThostFtdcRspInfoField, nRequestID: c_int, bIsLast: c_bool),
+    #[allow(non_snake_case)]
     on_rsp_qry_for_quote: extern "C" fn(spi: *mut Struct_CThostFtdcTraderSpi, pForQuote: *const Struct_CThostFtdcForQuoteField, pRspInfo: *const Struct_CThostFtdcRspInfoField, nRequestID: c_int, bIsLast: c_bool),
+    #[allow(non_snake_case)]
     on_rsp_qry_quote: extern "C" fn(spi: *mut Struct_CThostFtdcTraderSpi, pQuote: *const Struct_CThostFtdcQuoteField, pRspInfo: *const Struct_CThostFtdcRspInfoField, nRequestID: c_int, bIsLast: c_bool),
+    #[allow(non_snake_case)]
     on_rsp_qry_comb_instrument_guard: extern "C" fn(spi: *mut Struct_CThostFtdcTraderSpi, pCombInstrumentGuard: *const Struct_CThostFtdcCombInstrumentGuardField, pRspInfo: *const Struct_CThostFtdcRspInfoField, nRequestID: c_int, bIsLast: c_bool),
+    #[allow(non_snake_case)]
     on_rsp_qry_comb_action: extern "C" fn(spi: *mut Struct_CThostFtdcTraderSpi, pCombAction: *const Struct_CThostFtdcCombActionField, pRspInfo: *const Struct_CThostFtdcRspInfoField, nRequestID: c_int, bIsLast: c_bool),
+    #[allow(non_snake_case)]
     on_rsp_qry_transfer_serial: extern "C" fn(spi: *mut Struct_CThostFtdcTraderSpi, pTransferSerial: *const Struct_CThostFtdcTransferSerialField, pRspInfo: *const Struct_CThostFtdcRspInfoField, nRequestID: c_int, bIsLast: c_bool),
+    #[allow(non_snake_case)]
     on_rsp_qry_accountregister: extern "C" fn(spi: *mut Struct_CThostFtdcTraderSpi, pAccountregister: *const Struct_CThostFtdcAccountregisterField, pRspInfo: *const Struct_CThostFtdcRspInfoField, nRequestID: c_int, bIsLast: c_bool),
+    #[allow(non_snake_case)]
     on_rsp_error: extern "C" fn(spi: *mut Struct_CThostFtdcTraderSpi, pRspInfo: *const Struct_CThostFtdcRspInfoField, nRequestID: c_int, bIsLast: c_bool),
+    #[allow(non_snake_case)]
     on_rtn_order: extern "C" fn(spi: *mut Struct_CThostFtdcTraderSpi, pOrder: *const Struct_CThostFtdcOrderField),
+    #[allow(non_snake_case)]
     on_rtn_trade: extern "C" fn(spi: *mut Struct_CThostFtdcTraderSpi, pTrade: *const Struct_CThostFtdcTradeField),
+    #[allow(non_snake_case)]
     on_err_rtn_order_insert: extern "C" fn(spi: *mut Struct_CThostFtdcTraderSpi, pInputOrder: *const Struct_CThostFtdcInputOrderField, pRspInfo: *const Struct_CThostFtdcRspInfoField),
+    #[allow(non_snake_case)]
     on_err_rtn_order_action: extern "C" fn(spi: *mut Struct_CThostFtdcTraderSpi, pOrderAction: *const Struct_CThostFtdcOrderActionField, pRspInfo: *const Struct_CThostFtdcRspInfoField),
+    #[allow(non_snake_case)]
     on_rtn_instrument_status: extern "C" fn(spi: *mut Struct_CThostFtdcTraderSpi, pInstrumentStatus: *const Struct_CThostFtdcInstrumentStatusField),
+    #[allow(non_snake_case)]
     on_rtn_trading_notice: extern "C" fn(spi: *mut Struct_CThostFtdcTraderSpi, pTradingNoticeInfo: *const Struct_CThostFtdcTradingNoticeInfoField),
+    #[allow(non_snake_case)]
     on_rtn_error_conditional_order: extern "C" fn(spi: *mut Struct_CThostFtdcTraderSpi, pErrorConditionalOrder: *const Struct_CThostFtdcErrorConditionalOrderField),
+    #[allow(non_snake_case)]
     on_rtn_exec_order: extern "C" fn(spi: *mut Struct_CThostFtdcTraderSpi, pExecOrder: *const Struct_CThostFtdcExecOrderField),
+    #[allow(non_snake_case)]
     on_err_rtn_exec_order_insert: extern "C" fn(spi: *mut Struct_CThostFtdcTraderSpi, pInputExecOrder: *const Struct_CThostFtdcInputExecOrderField, pRspInfo: *const Struct_CThostFtdcRspInfoField),
+    #[allow(non_snake_case)]
     on_err_rtn_exec_order_action: extern "C" fn(spi: *mut Struct_CThostFtdcTraderSpi, pExecOrderAction: *const Struct_CThostFtdcExecOrderActionField, pRspInfo: *const Struct_CThostFtdcRspInfoField),
+    #[allow(non_snake_case)]
     on_err_rtn_for_quote_insert: extern "C" fn(spi: *mut Struct_CThostFtdcTraderSpi, pInputForQuote: *const Struct_CThostFtdcInputForQuoteField, pRspInfo: *const Struct_CThostFtdcRspInfoField),
+    #[allow(non_snake_case)]
     on_rtn_quote: extern "C" fn(spi: *mut Struct_CThostFtdcTraderSpi, pQuote: *const Struct_CThostFtdcQuoteField),
+    #[allow(non_snake_case)]
     on_err_rtn_quote_insert: extern "C" fn(spi: *mut Struct_CThostFtdcTraderSpi, pInputQuote: *const Struct_CThostFtdcInputQuoteField, pRspInfo: *const Struct_CThostFtdcRspInfoField),
+    #[allow(non_snake_case)]
     on_err_rtn_quote_action: extern "C" fn(spi: *mut Struct_CThostFtdcTraderSpi, pQuoteAction: *const Struct_CThostFtdcQuoteActionField, pRspInfo: *const Struct_CThostFtdcRspInfoField),
+    #[allow(non_snake_case)]
     on_rtn_for_quote_rsp: extern "C" fn(spi: *mut Struct_CThostFtdcTraderSpi, pForQuoteRsp: *const Struct_CThostFtdcForQuoteRspField),
+    #[allow(non_snake_case)]
     on_rtn_cfmmc_trading_account_token: extern "C" fn(spi: *mut Struct_CThostFtdcTraderSpi, pCFMMCTradingAccountToken: *const Struct_CThostFtdcCFMMCTradingAccountTokenField),
+    #[allow(non_snake_case)]
     on_rtn_comb_action: extern "C" fn(spi: *mut Struct_CThostFtdcTraderSpi, pCombAction: *const Struct_CThostFtdcCombActionField),
+    #[allow(non_snake_case)]
     on_err_rtn_comb_action_insert: extern "C" fn(spi: *mut Struct_CThostFtdcTraderSpi, pInputCombAction: *const Struct_CThostFtdcInputCombActionField, pRspInfo: *const Struct_CThostFtdcRspInfoField),
+    #[allow(non_snake_case)]
     on_rsp_qry_contract_bank: extern "C" fn(spi: *mut Struct_CThostFtdcTraderSpi, pContractBank: *const Struct_CThostFtdcContractBankField, pRspInfo: *const Struct_CThostFtdcRspInfoField, nRequestID: c_int, bIsLast: c_bool),
+    #[allow(non_snake_case)]
     on_rsp_qry_parked_order: extern "C" fn(spi: *mut Struct_CThostFtdcTraderSpi, pParkedOrder: *const Struct_CThostFtdcParkedOrderField, pRspInfo: *const Struct_CThostFtdcRspInfoField, nRequestID: c_int, bIsLast: c_bool),
+    #[allow(non_snake_case)]
     on_rsp_qry_parked_order_action: extern "C" fn(spi: *mut Struct_CThostFtdcTraderSpi, pParkedOrderAction: *const Struct_CThostFtdcParkedOrderActionField, pRspInfo: *const Struct_CThostFtdcRspInfoField, nRequestID: c_int, bIsLast: c_bool),
+    #[allow(non_snake_case)]
     on_rsp_qry_trading_notice: extern "C" fn(spi: *mut Struct_CThostFtdcTraderSpi, pTradingNotice: *const Struct_CThostFtdcTradingNoticeField, pRspInfo: *const Struct_CThostFtdcRspInfoField, nRequestID: c_int, bIsLast: c_bool),
+    #[allow(non_snake_case)]
     on_rsp_qry_broker_trading_params: extern "C" fn(spi: *mut Struct_CThostFtdcTraderSpi, pBrokerTradingParams: *const Struct_CThostFtdcBrokerTradingParamsField, pRspInfo: *const Struct_CThostFtdcRspInfoField, nRequestID: c_int, bIsLast: c_bool),
+    #[allow(non_snake_case)]
     on_rsp_qry_broker_trading_algos: extern "C" fn(spi: *mut Struct_CThostFtdcTraderSpi, pBrokerTradingAlgos: *const Struct_CThostFtdcBrokerTradingAlgosField, pRspInfo: *const Struct_CThostFtdcRspInfoField, nRequestID: c_int, bIsLast: c_bool),
+    #[allow(non_snake_case)]
     on_rsp_query_cfmmc_trading_account_token: extern "C" fn(spi: *mut Struct_CThostFtdcTraderSpi, pQueryCFMMCTradingAccountToken: *const Struct_CThostFtdcQueryCFMMCTradingAccountTokenField, pRspInfo: *const Struct_CThostFtdcRspInfoField, nRequestID: c_int, bIsLast: c_bool),
+    #[allow(non_snake_case)]
     on_rtn_from_bank_to_future_by_bank: extern "C" fn(spi: *mut Struct_CThostFtdcTraderSpi, pRspTransfer: *const Struct_CThostFtdcRspTransferField),
+    #[allow(non_snake_case)]
     on_rtn_from_future_to_bank_by_bank: extern "C" fn(spi: *mut Struct_CThostFtdcTraderSpi, pRspTransfer: *const Struct_CThostFtdcRspTransferField),
+    #[allow(non_snake_case)]
     on_rtn_repeal_from_bank_to_future_by_bank: extern "C" fn(spi: *mut Struct_CThostFtdcTraderSpi, pRspRepeal: *const Struct_CThostFtdcRspRepealField),
+    #[allow(non_snake_case)]
     on_rtn_repeal_from_future_to_bank_by_bank: extern "C" fn(spi: *mut Struct_CThostFtdcTraderSpi, pRspRepeal: *const Struct_CThostFtdcRspRepealField),
+    #[allow(non_snake_case)]
     on_rtn_from_bank_to_future_by_future: extern "C" fn(spi: *mut Struct_CThostFtdcTraderSpi, pRspTransfer: *const Struct_CThostFtdcRspTransferField),
+    #[allow(non_snake_case)]
     on_rtn_from_future_to_bank_by_future: extern "C" fn(spi: *mut Struct_CThostFtdcTraderSpi, pRspTransfer: *const Struct_CThostFtdcRspTransferField),
+    #[allow(non_snake_case)]
     on_rtn_repeal_from_bank_to_future_by_future_manual: extern "C" fn(spi: *mut Struct_CThostFtdcTraderSpi, pRspRepeal: *const Struct_CThostFtdcRspRepealField),
+    #[allow(non_snake_case)]
     on_rtn_repeal_from_future_to_bank_by_future_manual: extern "C" fn(spi: *mut Struct_CThostFtdcTraderSpi, pRspRepeal: *const Struct_CThostFtdcRspRepealField),
+    #[allow(non_snake_case)]
     on_rtn_query_bank_balance_by_future: extern "C" fn(spi: *mut Struct_CThostFtdcTraderSpi, pNotifyQueryAccount: *const Struct_CThostFtdcNotifyQueryAccountField),
+    #[allow(non_snake_case)]
     on_err_rtn_bank_to_future_by_future: extern "C" fn(spi: *mut Struct_CThostFtdcTraderSpi, pReqTransfer: *const Struct_CThostFtdcReqTransferField, pRspInfo: *const Struct_CThostFtdcRspInfoField),
+    #[allow(non_snake_case)]
     on_err_rtn_future_to_bank_by_future: extern "C" fn(spi: *mut Struct_CThostFtdcTraderSpi, pReqTransfer: *const Struct_CThostFtdcReqTransferField, pRspInfo: *const Struct_CThostFtdcRspInfoField),
+    #[allow(non_snake_case)]
     on_err_rtn_repeal_bank_to_future_by_future_manual: extern "C" fn(spi: *mut Struct_CThostFtdcTraderSpi, pReqRepeal: *const Struct_CThostFtdcReqRepealField, pRspInfo: *const Struct_CThostFtdcRspInfoField),
+    #[allow(non_snake_case)]
     on_err_rtn_repeal_future_to_bank_by_future_manual: extern "C" fn(spi: *mut Struct_CThostFtdcTraderSpi, pReqRepeal: *const Struct_CThostFtdcReqRepealField, pRspInfo: *const Struct_CThostFtdcRspInfoField),
+    #[allow(non_snake_case)]
     on_err_rtn_query_bank_balance_by_future: extern "C" fn(spi: *mut Struct_CThostFtdcTraderSpi, pReqQueryAccount: *const Struct_CThostFtdcReqQueryAccountField, pRspInfo: *const Struct_CThostFtdcRspInfoField),
+    #[allow(non_snake_case)]
     on_rtn_repeal_from_bank_to_future_by_future: extern "C" fn(spi: *mut Struct_CThostFtdcTraderSpi, pRspRepeal: *const Struct_CThostFtdcRspRepealField),
+    #[allow(non_snake_case)]
     on_rtn_repeal_from_future_to_bank_by_future: extern "C" fn(spi: *mut Struct_CThostFtdcTraderSpi, pRspRepeal: *const Struct_CThostFtdcRspRepealField),
+    #[allow(non_snake_case)]
     on_rsp_from_bank_to_future_by_future: extern "C" fn(spi: *mut Struct_CThostFtdcTraderSpi, pReqTransfer: *const Struct_CThostFtdcReqTransferField, pRspInfo: *const Struct_CThostFtdcRspInfoField, nRequestID: c_int, bIsLast: c_bool),
+    #[allow(non_snake_case)]
     on_rsp_from_future_to_bank_by_future: extern "C" fn(spi: *mut Struct_CThostFtdcTraderSpi, pReqTransfer: *const Struct_CThostFtdcReqTransferField, pRspInfo: *const Struct_CThostFtdcRspInfoField, nRequestID: c_int, bIsLast: c_bool),
+    #[allow(non_snake_case)]
     on_rsp_query_bank_account_money_by_future: extern "C" fn(spi: *mut Struct_CThostFtdcTraderSpi, pReqQueryAccount: *const Struct_CThostFtdcReqQueryAccountField, pRspInfo: *const Struct_CThostFtdcRspInfoField, nRequestID: c_int, bIsLast: c_bool),
+    #[allow(non_snake_case)]
     on_rtn_open_account_by_bank: extern "C" fn(spi: *mut Struct_CThostFtdcTraderSpi, pOpenAccount: *const Struct_CThostFtdcOpenAccountField),
+    #[allow(non_snake_case)]
     on_rtn_cancel_account_by_bank: extern "C" fn(spi: *mut Struct_CThostFtdcTraderSpi, pCancelAccount: *const Struct_CThostFtdcCancelAccountField),
+    #[allow(non_snake_case)]
     on_rtn_change_account_by_bank: extern "C" fn(spi: *mut Struct_CThostFtdcTraderSpi, pChangeAccount: *const Struct_CThostFtdcChangeAccountField),
 }
 

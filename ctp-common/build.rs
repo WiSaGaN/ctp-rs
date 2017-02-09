@@ -3,7 +3,7 @@ extern crate encoding;
 
 use encoding::{ decode, DecoderTrap };
 use encoding::all::GB18030;
-use std::io::{ BufRead, Read, Write };
+use std::io::{ Read, Write };
 use std::path::Path;
 
 pub fn gb18030_bytes_to_string(bytes: &[u8]) -> String {

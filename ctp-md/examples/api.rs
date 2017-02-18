@@ -23,12 +23,12 @@ fn main() {
                               CString::new("au1712").unwrap(),
                               CString::new("m1709").unwrap(),
                               CString::new("CF709").unwrap());
-    match md_api.subscribe_market_data(instrument_ids.clone()) {
+    match md_api.subscribe_market_data(&instrument_ids.clone()) {
         Ok(()) => println!("subscribe_market_data ok"),
         Err(err) => println!("subscribe_market_data err: {:?}", err),
     };
     std::thread::sleep(std::time::Duration::from_secs(1));
-    match md_api.subscribe_for_quote_rsp(instrument_ids) {
+    match md_api.subscribe_for_quote_rsp(&instrument_ids) {
         Ok(()) => println!("subscribe_for_quote_rsp ok"),
         Err(err) => println!("subscribe_for_quote_rsp err: {:?}", err),
     };

@@ -90,23 +90,23 @@ impl MdApi {
         };
     }
 
-    pub fn subscribe_market_data(&mut self, instrument_ids: Vec<CString>) -> ApiResult {
-        let v = cstring_slice_to_char_star_vec(&instrument_ids);
+    pub fn subscribe_market_data(&mut self, instrument_ids: &[CString]) -> ApiResult {
+        let v = cstring_slice_to_char_star_vec(instrument_ids);
         from_api_return_to_api_result(unsafe { _ZN14CFtdcMdApiImpl19SubscribeMarketDataEPPci(self.md_api_ptr, v.as_ptr(), v.len() as c_int) })
     }
 
-    pub fn unsubscribe_market_data(&mut self, instrument_ids: Vec<CString>) -> ApiResult {
-        let v = cstring_slice_to_char_star_vec(&instrument_ids);
+    pub fn unsubscribe_market_data(&mut self, instrument_ids: &[CString]) -> ApiResult {
+        let v = cstring_slice_to_char_star_vec(instrument_ids);
         from_api_return_to_api_result(unsafe { _ZN14CFtdcMdApiImpl21UnSubscribeMarketDataEPPci(self.md_api_ptr, v.as_ptr(), v.len() as c_int) })
     }
 
-    pub fn subscribe_for_quote_rsp(&mut self, instrument_ids: Vec<CString>) -> ApiResult {
-        let v = cstring_slice_to_char_star_vec(&instrument_ids);
+    pub fn subscribe_for_quote_rsp(&mut self, instrument_ids: &[CString]) -> ApiResult {
+        let v = cstring_slice_to_char_star_vec(instrument_ids);
         from_api_return_to_api_result(unsafe { _ZN14CFtdcMdApiImpl20SubscribeForQuoteRspEPPci(self.md_api_ptr, v.as_ptr(), v.len() as c_int) })
     }
 
-    pub fn unsubscribe_for_quote_rsp(&mut self, instrument_ids: Vec<CString>) -> ApiResult {
-        let v = cstring_slice_to_char_star_vec(&instrument_ids);
+    pub fn unsubscribe_for_quote_rsp(&mut self, instrument_ids: &[CString]) -> ApiResult {
+        let v = cstring_slice_to_char_star_vec(instrument_ids);
         from_api_return_to_api_result(unsafe { _ZN14CFtdcMdApiImpl22UnSubscribeForQuoteRspEPPci(self.md_api_ptr, v.as_ptr(), v.len() as c_int) })
     }
 

@@ -62,6 +62,19 @@ pub fn maybe_char(c: u8) -> Option<char> {
     }
 }
 
+#[derive(Clone, Copy, Debug, Eq, Hash, Ord, PartialEq, PartialOrd)]
+pub struct OrderIdLocalTrio {
+    pub front_id: TThostFtdcFrontIDType,
+    pub session_id: TThostFtdcSessionIDType,
+    pub order_ref: TThostFtdcOrderRefType,
+}
+
+#[derive(Clone, Copy, Debug, Eq, Hash, Ord, PartialEq, PartialOrd)]
+pub struct OrderIdExchangeDuo {
+    pub exchange_id: TThostFtdcExchangeIDType,
+    pub order_sys_id: TThostFtdcOrderSysIDType,
+}
+
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub enum ResumeType {
     Restart = Enum_THOST_TE_RESUME_TYPE::THOST_TERT_RESTART as isize,
@@ -161,6 +174,10 @@ pub fn is_terminal_order_status(order_status: TThostFtdcOrderStatusType) -> bool
         order_status == THOST_FTDC_OST_PartTradedNotQueueing ||
         order_status == THOST_FTDC_OST_NoTradeNotQueueing ||
         order_status == THOST_FTDC_OST_Canceled;
+}
+
+pub fn is_valid_order_sys_id(order_sys_id: &TThostFtdcOrderSysIDType) -> bool {
+    return order_sys_id[0] != b'\0';
 }
 
 pub fn to_exchange_timestamp(trading_day: &TThostFtdcDateType,

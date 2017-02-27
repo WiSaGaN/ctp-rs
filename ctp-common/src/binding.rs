@@ -11,7 +11,7 @@ pub const THOST_FTDC_BOOL_False: TThostFtdcBoolType = 0;
 pub const THOST_FTDC_COMB_FLAG_LENGTH: usize = 5;
 
 use std::fmt;
-use super::{ gb18030_cstr_to_str, normalize_double, reduce_comb_flags };
+use super::{ gb18030_cstr_to_str, normalize_double, reduce_comb_flags, maybe_char };
 
 impl fmt::Debug for Struct_CThostFtdcRspAuthenticateField {
     fn fmt(&self, fmt: &mut fmt::Formatter) -> fmt::Result {
@@ -108,7 +108,7 @@ impl fmt::Debug for Struct_CThostFtdcInstrumentField {
             .field("MaxMarginSideAlgorithm", &char::from(self.MaxMarginSideAlgorithm))
             .field("UnderlyingInstrID", &gb18030_cstr_to_str(&self.UnderlyingInstrID))
             .field("StrikePrice", &normalize_double(self.StrikePrice))
-            .field("OptionsType", &char::from(self.OptionsType))
+            .field("OptionsType", &maybe_char(self.OptionsType))
             .field("UnderlyingMultiple", &normalize_double(self.UnderlyingMultiple))
             .field("CombinationType", &char::from(self.CombinationType))
             .finish()
@@ -122,10 +122,10 @@ impl fmt::Debug for Struct_CThostFtdcInstrumentStatusField {
             .field("ExchangeInstID", &gb18030_cstr_to_str(&self.ExchangeInstID))
             .field("SettlementGroupID", &gb18030_cstr_to_str(&self.SettlementGroupID))
             .field("InstrumentID", &gb18030_cstr_to_str(&self.InstrumentID))
-            .field("InstrumentStatus", &self.InstrumentStatus)
+            .field("InstrumentStatus", &char::from(self.InstrumentStatus))
             .field("TradingSegmentSN", &self.TradingSegmentSN)
             .field("EnterTime", &gb18030_cstr_to_str(&self.EnterTime))
-            .field("EnterReason", &self.EnterReason)
+            .field("EnterReason", &char::from(self.EnterReason))
             .finish()
     }
 }

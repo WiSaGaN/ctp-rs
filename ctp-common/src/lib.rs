@@ -54,6 +54,14 @@ pub fn reduce_comb_flags(flags: &[u8]) -> String {
     flags.iter().filter(|&&c| c != 0).map(|&c| char::from(c)).collect()
 }
 
+pub fn maybe_char(c: u8) -> Option<char> {
+    if c != 0u8 {
+        Some(char::from(c))
+    } else {
+        None
+    }
+}
+
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub enum ResumeType {
     Restart = Enum_THOST_TE_RESUME_TYPE::THOST_TERT_RESTART as isize,

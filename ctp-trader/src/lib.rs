@@ -9,57 +9,6 @@ type c_bool = std::os::raw::c_uchar;
 
 pub use ctp_common::*;
 
-/*
-_ZN18CFtdcTraderApiImpl11ReqQryQuoteEP23CThostFtdcQryQuoteFieldi
-_ZN18CFtdcTraderApiImpl12ReqQryNoticeEP24CThostFtdcQryNoticeFieldi
-_ZN18CFtdcTraderApiImpl14ReqQryForQuoteEP26CThostFtdcQryForQuoteFieldi
-_ZN18CFtdcTraderApiImpl14ReqQuoteActionEP31CThostFtdcInputQuoteActionFieldi
-_ZN18CFtdcTraderApiImpl14ReqQuoteInsertEP25CThostFtdcInputQuoteFieldi
-_ZN18CFtdcTraderApiImpl15ReqQryExecOrderEP27CThostFtdcQryExecOrderFieldi
-_ZN18CFtdcTraderApiImpl16ReqQryCombActionEP28CThostFtdcQryCombActionFieldi
-_ZN18CFtdcTraderApiImpl17ReqForQuoteInsertEP28CThostFtdcInputForQuoteFieldi
-_ZN18CFtdcTraderApiImpl17ReqQryParkedOrderEP29CThostFtdcQryParkedOrderFieldi
-_ZN18CFtdcTraderApiImpl18ReqExecOrderActionEP35CThostFtdcInputExecOrderActionFieldi
-_ZN18CFtdcTraderApiImpl18ReqExecOrderInsertEP29CThostFtdcInputExecOrderFieldi
-_ZN18CFtdcTraderApiImpl18ReqQryContractBankEP30CThostFtdcQryContractBankFieldi
-_ZN18CFtdcTraderApiImpl18ReqQryExchangeRateEP30CThostFtdcQryExchangeRateFieldi
-_ZN18CFtdcTraderApiImpl18ReqQryProductGroupEP30CThostFtdcQryProductGroupFieldi
-_ZN18CFtdcTraderApiImpl18ReqQryTransferBankEP30CThostFtdcQryTransferBankFieldi
-_ZN18CFtdcTraderApiImpl19ReqCombActionInsertEP30CThostFtdcInputCombActionFieldi
-_ZN18CFtdcTraderApiImpl19ReqQryTradingNoticeEP31CThostFtdcQryTradingNoticeFieldi
-_ZN18CFtdcTraderApiImpl20ReqParkedOrderActionEP32CThostFtdcParkedOrderActionFieldi
-_ZN18CFtdcTraderApiImpl20ReqParkedOrderInsertEP26CThostFtdcParkedOrderFieldi
-_ZN18CFtdcTraderApiImpl20ReqQryEWarrantOffsetEP32CThostFtdcQryEWarrantOffsetFieldi
-_ZN18CFtdcTraderApiImpl20ReqQryTransferSerialEP32CThostFtdcQryTransferSerialFieldi
-_ZN18CFtdcTraderApiImpl20ReqRemoveParkedOrderEP32CThostFtdcRemoveParkedOrderFieldi
-_ZN18CFtdcTraderApiImpl21ReqQryAccountregisterEP33CThostFtdcQryAccountregisterFieldi
-_ZN18CFtdcTraderApiImpl21ReqQryDepthMarketDataEP33CThostFtdcQryDepthMarketDataFieldi
-_ZN18CFtdcTraderApiImpl21ReqQrySecAgentACIDMapEP33CThostFtdcQrySecAgentACIDMapFieldi
-_ZN18CFtdcTraderApiImpl21ReqUserPasswordUpdateEP33CThostFtdcUserPasswordUpdateFieldi
-_ZN18CFtdcTraderApiImpl22ReqQueryMaxOrderVolumeEP34CThostFtdcQueryMaxOrderVolumeFieldi
-_ZN18CFtdcTraderApiImpl23ReqQryParkedOrderActionEP35CThostFtdcQryParkedOrderActionFieldi
-_ZN18CFtdcTraderApiImpl24ReqQryBrokerTradingAlgosEP36CThostFtdcQryBrokerTradingAlgosFieldi
-_ZN18CFtdcTraderApiImpl24ReqQryExchangeMarginRateEP36CThostFtdcQryExchangeMarginRateFieldi
-_ZN18CFtdcTraderApiImpl25ReqQryBrokerTradingParamsEP37CThostFtdcQryBrokerTradingParamsFieldi
-_ZN18CFtdcTraderApiImpl25ReqQryCombInstrumentGuardEP37CThostFtdcQryCombInstrumentGuardFieldi
-_ZN18CFtdcTraderApiImpl25ReqQryOptionInstrCommRateEP37CThostFtdcQryOptionInstrCommRateFieldi
-_ZN18CFtdcTraderApiImpl26ReqQryInstrumentMarginRateEP38CThostFtdcQryInstrumentMarginRateFieldi
-_ZN18CFtdcTraderApiImpl26ReqQryOptionInstrTradeCostEP38CThostFtdcQryOptionInstrTradeCostFieldi
-_ZN18CFtdcTraderApiImpl26ReqRemoveParkedOrderActionEP38CThostFtdcRemoveParkedOrderActionFieldi
-_ZN18CFtdcTraderApiImpl27ReqFromBankToFutureByFutureEP26CThostFtdcReqTransferFieldi
-_ZN18CFtdcTraderApiImpl27ReqFromFutureToBankByFutureEP26CThostFtdcReqTransferFieldi
-_ZN18CFtdcTraderApiImpl28ReqQryCFMMCTradingAccountKeyEP40CThostFtdcQryCFMMCTradingAccountKeyFieldi
-_ZN18CFtdcTraderApiImpl28ReqQryInvestorPositionDetailEP40CThostFtdcQryInvestorPositionDetailFieldi
-_ZN18CFtdcTraderApiImpl29ReqQryInstrumentOrderCommRateEP41CThostFtdcQryInstrumentOrderCommRateFieldi
-_ZN18CFtdcTraderApiImpl30ReqQryExchangeMarginRateAdjustEP42CThostFtdcQryExchangeMarginRateAdjustFieldi
-_ZN18CFtdcTraderApiImpl30ReqQryInstrumentCommissionRateEP42CThostFtdcQryInstrumentCommissionRateFieldi
-_ZN18CFtdcTraderApiImpl31ReqTradingAccountPasswordUpdateEP43CThostFtdcTradingAccountPasswordUpdateFieldi
-_ZN18CFtdcTraderApiImpl32ReqQryInvestorProductGroupMarginEP44CThostFtdcQryInvestorProductGroupMarginFieldi
-_ZN18CFtdcTraderApiImpl32ReqQueryBankAccountMoneyByFutureEP30CThostFtdcReqQueryAccountFieldi
-_ZN18CFtdcTraderApiImpl32ReqQueryCFMMCTradingAccountTokenEP44CThostFtdcQueryCFMMCTradingAccountTokenFieldi
-_ZN18CFtdcTraderApiImpl35ReqQryInvestorPositionCombineDetailEP47CThostFtdcQryInvestorPositionCombineDetailFieldi
-*/
-
 #[link(name = "thosttraderapi")]
 extern "C" {
     fn _ZN19CThostFtdcTraderApi19CreateFtdcTraderApiEPKc(pszFlowPath: *const c_char) -> *mut c_void;
@@ -76,20 +25,68 @@ extern "C" {
     fn _ZN18CFtdcTraderApiImpl15ReqAuthenticateEP30CThostFtdcReqAuthenticateFieldi(api: *mut c_void, pReqAuthenticateField: *const Struct_CThostFtdcReqAuthenticateField, nRequestID: c_int) -> c_int;
     fn _ZN18CFtdcTraderApiImpl12ReqUserLoginEP27CThostFtdcReqUserLoginFieldi(api: *mut c_void, pReqUserLoginField: *const Struct_CThostFtdcReqUserLoginField, nRequestID: c_int) -> c_int;
     fn _ZN18CFtdcTraderApiImpl13ReqUserLogoutEP25CThostFtdcUserLogoutFieldi(api: *mut c_void, pUserLogoutField: *const Struct_CThostFtdcUserLogoutField, nRequestID: c_int) -> c_int;
+	fn _ZN18CFtdcTraderApiImpl21ReqUserPasswordUpdateEP33CThostFtdcUserPasswordUpdateFieldi(api: *mut c_void, pUserPasswordUpdate: *const Struct_CThostFtdcUserPasswordUpdateField, nRequestID: c_int) -> c_int;
+	fn _ZN18CFtdcTraderApiImpl31ReqTradingAccountPasswordUpdateEP43CThostFtdcTradingAccountPasswordUpdateFieldi(api: *mut c_void, pTradingAccountPasswordUpdate: *const Struct_CThostFtdcTradingAccountPasswordUpdateField, nRequestID: c_int) -> c_int;
     fn _ZN18CFtdcTraderApiImpl14ReqOrderInsertEP25CThostFtdcInputOrderFieldi(api: *mut c_void, pInputOrder: *const Struct_CThostFtdcInputOrderField, nRequestID: c_int) -> c_int;
+	fn _ZN18CFtdcTraderApiImpl20ReqParkedOrderInsertEP26CThostFtdcParkedOrderFieldi(api: *mut c_void, pParkedOrder: *const Struct_CThostFtdcParkedOrderField, nRequestID: c_int) -> c_int;
+	fn _ZN18CFtdcTraderApiImpl20ReqParkedOrderActionEP32CThostFtdcParkedOrderActionFieldi(api: *mut c_void, pParkedOrderAction: *const Struct_CThostFtdcParkedOrderActionField, nRequestID: c_int) -> c_int;
     fn _ZN18CFtdcTraderApiImpl14ReqOrderActionEP31CThostFtdcInputOrderActionFieldi(api: *mut c_void, pInputOrderAction: *const Struct_CThostFtdcInputOrderActionField, nRequestID: c_int) -> c_int;
+	fn _ZN18CFtdcTraderApiImpl22ReqQueryMaxOrderVolumeEP34CThostFtdcQueryMaxOrderVolumeFieldi(api: *mut c_void, pQueryMaxOrderVolume: *const Struct_CThostFtdcQueryMaxOrderVolumeField, nRequestID: c_int) -> c_int;
     fn _ZN18CFtdcTraderApiImpl24ReqSettlementInfoConfirmEP36CThostFtdcSettlementInfoConfirmFieldi(api: *mut c_void, pSettlementInfoConfirm: *const Struct_CThostFtdcSettlementInfoConfirmField, nRequestID: c_int) -> c_int;
+	fn _ZN18CFtdcTraderApiImpl20ReqRemoveParkedOrderEP32CThostFtdcRemoveParkedOrderFieldi(api: *mut c_void, pRemoveParkedOrder: *const Struct_CThostFtdcRemoveParkedOrderField, nRequestID: c_int) -> c_int;
+	fn _ZN18CFtdcTraderApiImpl26ReqRemoveParkedOrderActionEP38CThostFtdcRemoveParkedOrderActionFieldi(api: *mut c_void, pRemoveParkedOrderAction: *const Struct_CThostFtdcRemoveParkedOrderActionField, nRequestID: c_int) -> c_int;
+	fn _ZN18CFtdcTraderApiImpl18ReqExecOrderInsertEP29CThostFtdcInputExecOrderFieldi(api: *mut c_void, pInputExecOrder: *const Struct_CThostFtdcInputExecOrderField, nRequestID: c_int) -> c_int;
+	fn _ZN18CFtdcTraderApiImpl18ReqExecOrderActionEP35CThostFtdcInputExecOrderActionFieldi(api: *mut c_void, pInputExecOrderAction: *const Struct_CThostFtdcInputExecOrderActionField, nRequestID: c_int) -> c_int;
+	fn _ZN18CFtdcTraderApiImpl17ReqForQuoteInsertEP28CThostFtdcInputForQuoteFieldi(api: *mut c_void, pInputForQuote: *const Struct_CThostFtdcInputForQuoteField, nRequestID: c_int) -> c_int;
+	fn _ZN18CFtdcTraderApiImpl14ReqQuoteInsertEP25CThostFtdcInputQuoteFieldi(api: *mut c_void, pInputQuote: *const Struct_CThostFtdcInputQuoteField, nRequestID: c_int) -> c_int;
+	fn _ZN18CFtdcTraderApiImpl14ReqQuoteActionEP31CThostFtdcInputQuoteActionFieldi(api: *mut c_void, pInputQuoteAction: *const Struct_CThostFtdcInputQuoteActionField, nRequestID: c_int) -> c_int;
+	fn _ZN18CFtdcTraderApiImpl19ReqCombActionInsertEP30CThostFtdcInputCombActionFieldi(api: *mut c_void, pInputCombAction: *const Struct_CThostFtdcInputCombActionField, nRequestID: c_int) -> c_int;
     fn _ZN18CFtdcTraderApiImpl11ReqQryOrderEP23CThostFtdcQryOrderFieldi(api: *mut c_void, pQryOrder: *const Struct_CThostFtdcQryOrderField, nRequestID: c_int) -> c_int;
     fn _ZN18CFtdcTraderApiImpl11ReqQryTradeEP23CThostFtdcQryTradeFieldi(api: *mut c_void, pQryTrade: *const Struct_CThostFtdcQryTradeField, nRequestID: c_int) -> c_int;
     fn _ZN18CFtdcTraderApiImpl22ReqQryInvestorPositionEP34CThostFtdcQryInvestorPositionFieldi(api: *mut c_void, pQryInvestorPosition: *const Struct_CThostFtdcQryInvestorPositionField, nRequestID: c_int) -> c_int;
     fn _ZN18CFtdcTraderApiImpl20ReqQryTradingAccountEP32CThostFtdcQryTradingAccountFieldi(api: *mut c_void, pQryTradingAccount: *const Struct_CThostFtdcQryTradingAccountField, nRequestID: c_int) -> c_int;
     fn _ZN18CFtdcTraderApiImpl14ReqQryInvestorEP26CThostFtdcQryInvestorFieldi(api: *mut c_void, pQryInvestor: *const Struct_CThostFtdcQryInvestorField, nRequestID: c_int) -> c_int;
     fn _ZN18CFtdcTraderApiImpl17ReqQryTradingCodeEP29CThostFtdcQryTradingCodeFieldi(api: *mut c_void, pQryTradingCode: *const Struct_CThostFtdcQryTradingCodeField, nRequestID: c_int) -> c_int;
+	fn _ZN18CFtdcTraderApiImpl26ReqQryInstrumentMarginRateEP38CThostFtdcQryInstrumentMarginRateFieldi(api: *mut c_void, pQryInstrumentMarginRate: *const Struct_CThostFtdcQryInstrumentMarginRateField, nRequestID: c_int) -> c_int;
+	fn _ZN18CFtdcTraderApiImpl30ReqQryInstrumentCommissionRateEP42CThostFtdcQryInstrumentCommissionRateFieldi(api: *mut c_void, pQryInstrumentCommissionRate: *const Struct_CThostFtdcQryInstrumentCommissionRateField, nRequestID: c_int) -> c_int;
     fn _ZN18CFtdcTraderApiImpl14ReqQryExchangeEP26CThostFtdcQryExchangeFieldi(api: *mut c_void, pQryExchange: *const Struct_CThostFtdcQryExchangeField, nRequestID: c_int) -> c_int;
     fn _ZN18CFtdcTraderApiImpl13ReqQryProductEP25CThostFtdcQryProductFieldi(api: *mut c_void, pQryProduct: *const Struct_CThostFtdcQryProductField, nRequestID: c_int) -> c_int;
     fn _ZN18CFtdcTraderApiImpl16ReqQryInstrumentEP28CThostFtdcQryInstrumentFieldi(api: *mut c_void, pQryInstrument: *const Struct_CThostFtdcQryInstrumentField, nRequestID: c_int) -> c_int;
+	fn _ZN18CFtdcTraderApiImpl21ReqQryDepthMarketDataEP33CThostFtdcQryDepthMarketDataFieldi(api: *mut c_void, pQryDepthMarketData: *const Struct_CThostFtdcQryDepthMarketDataField, nRequestID: c_int) -> c_int;
     fn _ZN18CFtdcTraderApiImpl20ReqQrySettlementInfoEP32CThostFtdcQrySettlementInfoFieldi(api: *mut c_void, pQrySettlementInfo: *const Struct_CThostFtdcQrySettlementInfoField, nRequestID: c_int) -> c_int;
+	fn _ZN18CFtdcTraderApiImpl18ReqQryTransferBankEP30CThostFtdcQryTransferBankFieldi(api: *mut c_void, pQryTransferBank: *const Struct_CThostFtdcQryTransferBankField, nRequestID: c_int) -> c_int;
+	fn _ZN18CFtdcTraderApiImpl28ReqQryInvestorPositionDetailEP40CThostFtdcQryInvestorPositionDetailFieldi(api: *mut c_void, pQryInvestorPositionDetail: *const Struct_CThostFtdcQryInvestorPositionDetailField, nRequestID: c_int) -> c_int;
+	fn _ZN18CFtdcTraderApiImpl12ReqQryNoticeEP24CThostFtdcQryNoticeFieldi(api: *mut c_void, pQryNotice: *const Struct_CThostFtdcQryNoticeField, nRequestID: c_int) -> c_int;
     fn _ZN18CFtdcTraderApiImpl27ReqQrySettlementInfoConfirmEP39CThostFtdcQrySettlementInfoConfirmFieldi(api: *mut c_void, pQrySettlementInfoConfirm: *const Struct_CThostFtdcQrySettlementInfoConfirmField, nRequestID: c_int) -> c_int;
+	fn _ZN18CFtdcTraderApiImpl35ReqQryInvestorPositionCombineDetailEP47CThostFtdcQryInvestorPositionCombineDetailFieldi(api: *mut c_void, pQryInvestorPositionCombineDetail: *const Struct_CThostFtdcQryInvestorPositionCombineDetailField, nRequestID: c_int) -> c_int;
+	fn _ZN18CFtdcTraderApiImpl28ReqQryCFMMCTradingAccountKeyEP40CThostFtdcQryCFMMCTradingAccountKeyFieldi(api: *mut c_void, pQryCFMMCTradingAccountKey: *const Struct_CThostFtdcQryCFMMCTradingAccountKeyField, nRequestID: c_int) -> c_int;
+	fn _ZN18CFtdcTraderApiImpl20ReqQryEWarrantOffsetEP32CThostFtdcQryEWarrantOffsetFieldi(api: *mut c_void, pQryEWarrantOffset: *const Struct_CThostFtdcQryEWarrantOffsetField, nRequestID: c_int) -> c_int;
+	fn _ZN18CFtdcTraderApiImpl32ReqQryInvestorProductGroupMarginEP44CThostFtdcQryInvestorProductGroupMarginFieldi(api: *mut c_void, pQryInvestorProductGroupMargin: *const Struct_CThostFtdcQryInvestorProductGroupMarginField, nRequestID: c_int) -> c_int;
+	fn _ZN18CFtdcTraderApiImpl24ReqQryExchangeMarginRateEP36CThostFtdcQryExchangeMarginRateFieldi(api: *mut c_void, pQryExchangeMarginRate: *const Struct_CThostFtdcQryExchangeMarginRateField, nRequestID: c_int) -> c_int;
+	fn _ZN18CFtdcTraderApiImpl30ReqQryExchangeMarginRateAdjustEP42CThostFtdcQryExchangeMarginRateAdjustFieldi(api: *mut c_void, pQryExchangeMarginRateAdjust: *const Struct_CThostFtdcQryExchangeMarginRateAdjustField, nRequestID: c_int) -> c_int;
+	fn _ZN18CFtdcTraderApiImpl18ReqQryExchangeRateEP30CThostFtdcQryExchangeRateFieldi(api: *mut c_void, pQryExchangeRate: *const Struct_CThostFtdcQryExchangeRateField, nRequestID: c_int) -> c_int;
+	fn _ZN18CFtdcTraderApiImpl21ReqQrySecAgentACIDMapEP33CThostFtdcQrySecAgentACIDMapFieldi(api: *mut c_void, pQrySecAgentACIDMap: *const Struct_CThostFtdcQrySecAgentACIDMapField, nRequestID: c_int) -> c_int;
+	fn _ZN18CFtdcTraderApiImpl18ReqQryProductGroupEP30CThostFtdcQryProductGroupFieldi(api: *mut c_void, pQryProductGroup: *const Struct_CThostFtdcQryProductGroupField, nRequestID: c_int) -> c_int;
+	fn _ZN18CFtdcTraderApiImpl29ReqQryInstrumentOrderCommRateEP41CThostFtdcQryInstrumentOrderCommRateFieldi(api: *mut c_void, pQryInstrumentOrderCommRate: *const Struct_CThostFtdcQryInstrumentOrderCommRateField, nRequestID: c_int) -> c_int;
+	fn _ZN18CFtdcTraderApiImpl26ReqQryOptionInstrTradeCostEP38CThostFtdcQryOptionInstrTradeCostFieldi(api: *mut c_void, pQryOptionInstrTradeCost: *const Struct_CThostFtdcQryOptionInstrTradeCostField, nRequestID: c_int) -> c_int;
+	fn _ZN18CFtdcTraderApiImpl25ReqQryOptionInstrCommRateEP37CThostFtdcQryOptionInstrCommRateFieldi(api: *mut c_void, pQryOptionInstrCommRate: *const Struct_CThostFtdcQryOptionInstrCommRateField, nRequestID: c_int) -> c_int;
+	fn _ZN18CFtdcTraderApiImpl15ReqQryExecOrderEP27CThostFtdcQryExecOrderFieldi(api: *mut c_void, pQryExecOrder: *const Struct_CThostFtdcQryExecOrderField, nRequestID: c_int) -> c_int;
+	fn _ZN18CFtdcTraderApiImpl14ReqQryForQuoteEP26CThostFtdcQryForQuoteFieldi(api: *mut c_void, pQryForQuote: *const Struct_CThostFtdcQryForQuoteField, nRequestID: c_int) -> c_int;
+	fn _ZN18CFtdcTraderApiImpl11ReqQryQuoteEP23CThostFtdcQryQuoteFieldi(api: *mut c_void, pQryQuote: *const Struct_CThostFtdcQryQuoteField, nRequestID: c_int) -> c_int;
+	fn _ZN18CFtdcTraderApiImpl25ReqQryCombInstrumentGuardEP37CThostFtdcQryCombInstrumentGuardFieldi(api: *mut c_void, pQryCombInstrumentGuard: *const Struct_CThostFtdcQryCombInstrumentGuardField, nRequestID: c_int) -> c_int;
+	fn _ZN18CFtdcTraderApiImpl16ReqQryCombActionEP28CThostFtdcQryCombActionFieldi(api: *mut c_void, pQryCombAction: *const Struct_CThostFtdcQryCombActionField, nRequestID: c_int) -> c_int;
+	fn _ZN18CFtdcTraderApiImpl20ReqQryTransferSerialEP32CThostFtdcQryTransferSerialFieldi(api: *mut c_void, pQryTransferSerial: *const Struct_CThostFtdcQryTransferSerialField, nRequestID: c_int) -> c_int;
+	fn _ZN18CFtdcTraderApiImpl21ReqQryAccountregisterEP33CThostFtdcQryAccountregisterFieldi(api: *mut c_void, pQryAccountregister: *const Struct_CThostFtdcQryAccountregisterField, nRequestID: c_int) -> c_int;
+	fn _ZN18CFtdcTraderApiImpl18ReqQryContractBankEP30CThostFtdcQryContractBankFieldi(api: *mut c_void, pQryContractBank: *const Struct_CThostFtdcQryContractBankField, nRequestID: c_int) -> c_int;
+	fn _ZN18CFtdcTraderApiImpl17ReqQryParkedOrderEP29CThostFtdcQryParkedOrderFieldi(api: *mut c_void, pQryParkedOrder: *const Struct_CThostFtdcQryParkedOrderField, nRequestID: c_int) -> c_int;
+	fn _ZN18CFtdcTraderApiImpl23ReqQryParkedOrderActionEP35CThostFtdcQryParkedOrderActionFieldi(api: *mut c_void, pQryParkedOrderAction: *const Struct_CThostFtdcQryParkedOrderActionField, nRequestID: c_int) -> c_int;
+	fn _ZN18CFtdcTraderApiImpl19ReqQryTradingNoticeEP31CThostFtdcQryTradingNoticeFieldi(api: *mut c_void, pQryTradingNotice: *const Struct_CThostFtdcQryTradingNoticeField, nRequestID: c_int) -> c_int;
+	fn _ZN18CFtdcTraderApiImpl25ReqQryBrokerTradingParamsEP37CThostFtdcQryBrokerTradingParamsFieldi(api: *mut c_void, pQryBrokerTradingParams: *const Struct_CThostFtdcQryBrokerTradingParamsField, nRequestID: c_int) -> c_int;
+	fn _ZN18CFtdcTraderApiImpl24ReqQryBrokerTradingAlgosEP36CThostFtdcQryBrokerTradingAlgosFieldi(api: *mut c_void, pQryBrokerTradingAlgos: *const Struct_CThostFtdcQryBrokerTradingAlgosField, nRequestID: c_int) -> c_int;
+	fn _ZN18CFtdcTraderApiImpl32ReqQueryCFMMCTradingAccountTokenEP44CThostFtdcQueryCFMMCTradingAccountTokenFieldi(api: *mut c_void, pQueryCFMMCTradingAccountToken: *const Struct_CThostFtdcQueryCFMMCTradingAccountTokenField, nRequestID: c_int) -> c_int;
+	fn _ZN18CFtdcTraderApiImpl27ReqFromBankToFutureByFutureEP26CThostFtdcReqTransferFieldi(api: *mut c_void, pReqTransfer: *const Struct_CThostFtdcReqTransferField, nRequestID: c_int) -> c_int;
+	fn _ZN18CFtdcTraderApiImpl27ReqFromFutureToBankByFutureEP26CThostFtdcReqTransferFieldi(api: *mut c_void, pReqTransfer: *const Struct_CThostFtdcReqTransferField, nRequestID: c_int) -> c_int;
+	fn _ZN18CFtdcTraderApiImpl32ReqQueryBankAccountMoneyByFutureEP30CThostFtdcReqQueryAccountFieldi(api: *mut c_void, pReqQueryAccount: *const Struct_CThostFtdcReqQueryAccountField, nRequestID: c_int) -> c_int;
 }
 
 pub struct TraderApi {
@@ -210,6 +207,14 @@ impl TraderApi {
         from_api_return_to_api_result(unsafe { _ZN18CFtdcTraderApiImpl17ReqQryTradingCodeEP29CThostFtdcQryTradingCodeFieldi(self.trader_api_ptr, qry_trading_code, request_id) })
     }
 
+    pub fn req_qry_instrument_margin_rate(&mut self, qry_instrument_margin_rate: &Struct_CThostFtdcQryInstrumentMarginRateField, request_id: i32) -> ApiResult {
+        from_api_return_to_api_result(unsafe { _ZN18CFtdcTraderApiImpl26ReqQryInstrumentMarginRateEP38CThostFtdcQryInstrumentMarginRateFieldi(self.trader_api_ptr, qry_instrument_margin_rate, request_id) })
+    }
+
+    pub fn req_qry_instrument_commission_rate(&mut self, qry_instrument_commission_rate: &Struct_CThostFtdcQryInstrumentCommissionRateField, request_id: i32) -> ApiResult {
+        from_api_return_to_api_result(unsafe { _ZN18CFtdcTraderApiImpl30ReqQryInstrumentCommissionRateEP42CThostFtdcQryInstrumentCommissionRateFieldi(self.trader_api_ptr, qry_instrument_commission_rate, request_id) })
+    }
+
     pub fn req_qry_exchange(&mut self, qry_exchange: &Struct_CThostFtdcQryExchangeField, request_id: i32) -> ApiResult {
         from_api_return_to_api_result(unsafe { _ZN18CFtdcTraderApiImpl14ReqQryExchangeEP26CThostFtdcQryExchangeFieldi(self.trader_api_ptr, qry_exchange, request_id) })
     }
@@ -228,6 +233,18 @@ impl TraderApi {
 
     pub fn req_qry_settlement_info_confirm(&mut self, qry_settlement_info_confirm: &Struct_CThostFtdcQrySettlementInfoConfirmField, request_id: i32) -> ApiResult {
         from_api_return_to_api_result(unsafe { _ZN18CFtdcTraderApiImpl27ReqQrySettlementInfoConfirmEP39CThostFtdcQrySettlementInfoConfirmFieldi(self.trader_api_ptr, qry_settlement_info_confirm, request_id) })
+    }
+
+    pub fn req_qry_exchange_margin_rate(&mut self, qry_exchange_margin_rate: &Struct_CThostFtdcQryExchangeMarginRateField, request_id: i32) -> ApiResult {
+        from_api_return_to_api_result(unsafe { _ZN18CFtdcTraderApiImpl24ReqQryExchangeMarginRateEP36CThostFtdcQryExchangeMarginRateFieldi(self.trader_api_ptr, qry_exchange_margin_rate, request_id) })
+    }
+
+    pub fn req_qry_exchange_margin_rate_adjust(&mut self, qry_exchange_margin_rate_adjust: &Struct_CThostFtdcQryExchangeMarginRateAdjustField, request_id: i32) -> ApiResult {
+        from_api_return_to_api_result(unsafe { _ZN18CFtdcTraderApiImpl30ReqQryExchangeMarginRateAdjustEP42CThostFtdcQryExchangeMarginRateAdjustFieldi(self.trader_api_ptr, qry_exchange_margin_rate_adjust, request_id) })
+    }
+
+    pub fn req_qry_exchange_rate(&mut self, qry_exchange_rate: &Struct_CThostFtdcQryExchangeRateField, request_id: i32) -> ApiResult {
+        from_api_return_to_api_result(unsafe { _ZN18CFtdcTraderApiImpl18ReqQryExchangeRateEP30CThostFtdcQryExchangeRateFieldi(self.trader_api_ptr, qry_exchange_rate, request_id) })
     }
 }
 
@@ -303,6 +320,14 @@ pub trait TraderSpi {
         println!("on_rsp_qry_trading_code: {:?}, {}, {:?}, {:?}", trading_code, from_rsp_result_to_string(&result), request_id, is_last);
     }
 
+	fn on_rsp_qry_instrument_margin_rate(&mut self, instrument_margin_rate: Option<&Struct_CThostFtdcInstrumentMarginRateField>, result: RspResult, request_id: i32, is_last: bool) {
+        println!("on_rsp_qry_instrument_margin_rate: {:?}, {}, {:?}, {:?}", instrument_margin_rate, from_rsp_result_to_string(&result), request_id, is_last);
+    }
+
+	fn on_rsp_qry_instrument_commission_rate(&mut self, instrument_commission_rate: Option<&Struct_CThostFtdcInstrumentCommissionRateField>, result: RspResult, request_id: i32, is_last: bool) {
+        println!("on_rsp_qry_instrument_commission_rate: {:?}, {}, {:?}, {:?}", instrument_commission_rate, from_rsp_result_to_string(&result), request_id, is_last);
+    }
+
     fn on_rsp_qry_exchange(&mut self, exchange: Option<&Struct_CThostFtdcExchangeField>, result: RspResult, request_id: i32, is_last: bool) {
         println!("on_rsp_qry_exchange: {:?}, {}, {:?}, {:?}", exchange, from_rsp_result_to_string(&result), request_id, is_last);
     }
@@ -321,6 +346,18 @@ pub trait TraderSpi {
 
     fn on_rsp_qry_settlement_info_confirm(&mut self, settlement_info_confirm: Option<&Struct_CThostFtdcSettlementInfoConfirmField>, result: RspResult, request_id: i32, is_last: bool) {
         println!("on_rsp_qry_settlement_info_confirm: {:?}, {}, {:?}, {:?}", settlement_info_confirm, from_rsp_result_to_string(&result), request_id, is_last);
+    }
+
+	fn on_rsp_qry_exchange_margin_rate(&mut self, exchange_margin_rate: Option<&Struct_CThostFtdcExchangeMarginRateField>, result: RspResult, request_id: i32, is_last: bool) {
+        println!("on_rsp_qry_exchange_margin_rate: {:?}, {}, {:?}, {:?}", exchange_margin_rate, from_rsp_result_to_string(&result), request_id, is_last);
+    }
+
+	fn on_rsp_qry_exchange_margin_rate_adjust(&mut self, exchange_margin_rate_adjust: Option<&Struct_CThostFtdcExchangeMarginRateAdjustField>, result: RspResult, request_id: i32, is_last: bool) {
+        println!("on_rsp_qry_exchange_margin_rate_adjust: {:?}, {}, {:?}, {:?}", exchange_margin_rate_adjust, from_rsp_result_to_string(&result), request_id, is_last);
+    }
+
+	fn on_rsp_qry_exchange_rate(&mut self, exchange_rate: Option<&Struct_CThostFtdcExchangeRateField>, result: RspResult, request_id: i32, is_last: bool) {
+        println!("on_rsp_qry_exchange_rate: {:?}, {}, {:?}, {:?}", exchange_rate, from_rsp_result_to_string(&result), request_id, is_last);
     }
 
     fn on_rsp_error(&mut self, result: RspResult, request_id: i32, is_last: bool) {
@@ -481,10 +518,16 @@ extern "C" fn spi_on_rsp_qry_trading_code(spi: *mut Struct_CThostFtdcTraderSpi, 
 }
 
 #[allow(non_snake_case, unused_variables)]
-extern "C" fn spi_on_rsp_qry_instrument_margin_rate(spi: *mut Struct_CThostFtdcTraderSpi, pInstrumentMarginRate: *const Struct_CThostFtdcInstrumentMarginRateField, pRspInfo: *const Struct_CThostFtdcRspInfoField, nRequestID: c_int, bIsLast: c_bool) {}
+extern "C" fn spi_on_rsp_qry_instrument_margin_rate(spi: *mut Struct_CThostFtdcTraderSpi, pInstrumentMarginRate: *const Struct_CThostFtdcInstrumentMarginRateField, pRspInfo: *const Struct_CThostFtdcRspInfoField, nRequestID: c_int, bIsLast: c_bool) {
+    let rsp_info = from_rsp_info_to_rsp_result(pRspInfo);
+    unsafe { transmute::<*mut TraderSpi, &mut TraderSpi>(transmute::<*mut Struct_CThostFtdcTraderSpi, &mut Struct_CThostFtdcTraderSpi>(spi).trader_spi_ptr).on_rsp_qry_instrument_margin_rate(pInstrumentMarginRate.as_ref(), rsp_info, nRequestID, bIsLast != 0) };
+}
 
 #[allow(non_snake_case, unused_variables)]
-extern "C" fn spi_on_rsp_qry_instrument_commission_rate(spi: *mut Struct_CThostFtdcTraderSpi, pInstrumentCommissionRate: *const Struct_CThostFtdcInstrumentCommissionRateField, pRspInfo: *const Struct_CThostFtdcRspInfoField, nRequestID: c_int, bIsLast: c_bool) {}
+extern "C" fn spi_on_rsp_qry_instrument_commission_rate(spi: *mut Struct_CThostFtdcTraderSpi, pInstrumentCommissionRate: *const Struct_CThostFtdcInstrumentCommissionRateField, pRspInfo: *const Struct_CThostFtdcRspInfoField, nRequestID: c_int, bIsLast: c_bool) {
+    let rsp_info = from_rsp_info_to_rsp_result(pRspInfo);
+    unsafe { transmute::<*mut TraderSpi, &mut TraderSpi>(transmute::<*mut Struct_CThostFtdcTraderSpi, &mut Struct_CThostFtdcTraderSpi>(spi).trader_spi_ptr).on_rsp_qry_instrument_commission_rate(pInstrumentCommissionRate.as_ref(), rsp_info, nRequestID, bIsLast != 0) };
+}
 
 #[allow(non_snake_case, unused_variables)]
 extern "C" fn spi_on_rsp_qry_exchange(spi: *mut Struct_CThostFtdcTraderSpi, pExchange: *const Struct_CThostFtdcExchangeField, pRspInfo: *const Struct_CThostFtdcRspInfoField, nRequestID: c_int, bIsLast: c_bool) {
@@ -541,13 +584,22 @@ extern "C" fn spi_on_rsp_qry_e_warrant_offset(spi: *mut Struct_CThostFtdcTraderS
 extern "C" fn spi_on_rsp_qry_investor_product_group_margin(spi: *mut Struct_CThostFtdcTraderSpi, pInvestorProductGroupMargin: *const Struct_CThostFtdcInvestorProductGroupMarginField, pRspInfo: *const Struct_CThostFtdcRspInfoField, nRequestID: c_int, bIsLast: c_bool) {}
 
 #[allow(non_snake_case, unused_variables)]
-extern "C" fn spi_on_rsp_qry_exchange_margin_rate(spi: *mut Struct_CThostFtdcTraderSpi, pExchangeMarginRate: *const Struct_CThostFtdcExchangeMarginRateField, pRspInfo: *const Struct_CThostFtdcRspInfoField, nRequestID: c_int, bIsLast: c_bool) {}
+extern "C" fn spi_on_rsp_qry_exchange_margin_rate(spi: *mut Struct_CThostFtdcTraderSpi, pExchangeMarginRate: *const Struct_CThostFtdcExchangeMarginRateField, pRspInfo: *const Struct_CThostFtdcRspInfoField, nRequestID: c_int, bIsLast: c_bool) {
+    let rsp_info = from_rsp_info_to_rsp_result(pRspInfo);
+    unsafe { transmute::<*mut TraderSpi, &mut TraderSpi>(transmute::<*mut Struct_CThostFtdcTraderSpi, &mut Struct_CThostFtdcTraderSpi>(spi).trader_spi_ptr).on_rsp_qry_exchange_margin_rate(pExchangeMarginRate.as_ref(), rsp_info, nRequestID, bIsLast != 0) };
+}
 
 #[allow(non_snake_case, unused_variables)]
-extern "C" fn spi_on_rsp_qry_exchange_margin_rate_adjust(spi: *mut Struct_CThostFtdcTraderSpi, pExchangeMarginRateAdjust: *const Struct_CThostFtdcExchangeMarginRateAdjustField, pRspInfo: *const Struct_CThostFtdcRspInfoField, nRequestID: c_int, bIsLast: c_bool) {}
+extern "C" fn spi_on_rsp_qry_exchange_margin_rate_adjust(spi: *mut Struct_CThostFtdcTraderSpi, pExchangeMarginRateAdjust: *const Struct_CThostFtdcExchangeMarginRateAdjustField, pRspInfo: *const Struct_CThostFtdcRspInfoField, nRequestID: c_int, bIsLast: c_bool) {
+    let rsp_info = from_rsp_info_to_rsp_result(pRspInfo);
+    unsafe { transmute::<*mut TraderSpi, &mut TraderSpi>(transmute::<*mut Struct_CThostFtdcTraderSpi, &mut Struct_CThostFtdcTraderSpi>(spi).trader_spi_ptr).on_rsp_qry_exchange_margin_rate_adjust(pExchangeMarginRateAdjust.as_ref(), rsp_info, nRequestID, bIsLast != 0) };
+}
 
 #[allow(non_snake_case, unused_variables)]
-extern "C" fn spi_on_rsp_qry_exchange_rate(spi: *mut Struct_CThostFtdcTraderSpi, pExchangeRate: *const Struct_CThostFtdcExchangeRateField, pRspInfo: *const Struct_CThostFtdcRspInfoField, nRequestID: c_int, bIsLast: c_bool) {}
+extern "C" fn spi_on_rsp_qry_exchange_rate(spi: *mut Struct_CThostFtdcTraderSpi, pExchangeRate: *const Struct_CThostFtdcExchangeRateField, pRspInfo: *const Struct_CThostFtdcRspInfoField, nRequestID: c_int, bIsLast: c_bool) {
+    let rsp_info = from_rsp_info_to_rsp_result(pRspInfo);
+    unsafe { transmute::<*mut TraderSpi, &mut TraderSpi>(transmute::<*mut Struct_CThostFtdcTraderSpi, &mut Struct_CThostFtdcTraderSpi>(spi).trader_spi_ptr).on_rsp_qry_exchange_rate(pExchangeRate.as_ref(), rsp_info, nRequestID, bIsLast != 0) };
+}
 
 #[allow(non_snake_case, unused_variables)]
 extern "C" fn spi_on_rsp_qry_sec_agent_acid_map(spi: *mut Struct_CThostFtdcTraderSpi, pSecAgentACIDMap: *const Struct_CThostFtdcSecAgentACIDMapField, pRspInfo: *const Struct_CThostFtdcRspInfoField, nRequestID: c_int, bIsLast: c_bool) {}

@@ -244,6 +244,54 @@ impl fmt::Debug for Struct_CThostFtdcSettlementInfoField {
     }
 }
 
+impl fmt::Debug for Struct_CThostFtdcExchangeMarginRateField {
+    fn fmt(&self, fmt: &mut fmt::Formatter) -> fmt::Result {
+        fmt.debug_struct("Struct_CThostFtdcExchangeMarginRateField")
+            .field("BrokerID", &gb18030_cstr_to_str(&self.BrokerID))
+            .field("InstrumentID", &gb18030_cstr_to_str(&self.InstrumentID))
+            .field("HedgeFlag", &char::from(self.HedgeFlag))
+            .field("LongMarginRatioByMoney", &self.LongMarginRatioByMoney)
+            .field("LongMarginRatioByVolume", &self.LongMarginRatioByVolume)
+            .field("ShortMarginRatioByMoney", &self.ShortMarginRatioByMoney)
+            .field("ShortMarginRatioByVolume", &self.ShortMarginRatioByVolume)
+            .finish()
+    }
+}
+
+impl fmt::Debug for Struct_CThostFtdcExchangeMarginRateAdjustField {
+    fn fmt(&self, fmt: &mut fmt::Formatter) -> fmt::Result {
+        fmt.debug_struct("Struct_CThostFtdcExchangeMarginRateAdjustField")
+            .field("BrokerID", &gb18030_cstr_to_str(&self.BrokerID))
+            .field("InstrumentID", &gb18030_cstr_to_str(&self.InstrumentID))
+            .field("HedgeFlag", &char::from(self.HedgeFlag))
+            .field("LongMarginRatioByMoney", &self.LongMarginRatioByMoney)
+            .field("LongMarginRatioByVolume", &self.LongMarginRatioByVolume)
+            .field("ShortMarginRatioByMoney", &self.ShortMarginRatioByMoney)
+            .field("ShortMarginRatioByVolume", &self.ShortMarginRatioByVolume)
+            .field("ExchLongMarginRatioByMoney", &self.ExchLongMarginRatioByMoney)
+            .field("ExchLongMarginRatioByVolume", &self.ExchLongMarginRatioByVolume)
+            .field("ExchShortMarginRatioByMoney", &self.ExchShortMarginRatioByMoney)
+            .field("ExchShortMarginRatioByVolume", &self.ExchShortMarginRatioByVolume)
+            .field("NoLongMarginRatioByMoney", &self.NoLongMarginRatioByMoney)
+            .field("NoLongMarginRatioByVolume", &self.NoLongMarginRatioByVolume)
+            .field("NoShortMarginRatioByMoney", &self.NoShortMarginRatioByMoney)
+            .field("NoShortMarginRatioByVolume", &self.NoShortMarginRatioByVolume)
+            .finish()
+    }
+}
+
+impl fmt::Debug for Struct_CThostFtdcExchangeRateField {
+    fn fmt(&self, fmt: &mut fmt::Formatter) -> fmt::Result {
+        fmt.debug_struct("Struct_CThostFtdcExchangeRateField")
+            .field("BrokerID", &gb18030_cstr_to_str(&self.BrokerID))
+            .field("FromCurrencyID", &gb18030_cstr_to_str(&self.FromCurrencyID))
+            .field("FromCurrencyUnit", &self.FromCurrencyUnit)
+            .field("ToCurrencyID", &gb18030_cstr_to_str(&self.ToCurrencyID))
+            .field("ExchangeRate", &self.ExchangeRate)
+            .finish()
+    }
+}
+
 impl fmt::Debug for Struct_CThostFtdcSettlementInfoConfirmField {
     fn fmt(&self, fmt: &mut fmt::Formatter) -> fmt::Result {
         fmt.debug_struct("Struct_CThostFtdcSettlementInfoConfirmField")
@@ -488,6 +536,41 @@ impl fmt::Debug for Struct_CThostFtdcInvestorPositionField {
             .finish()
     }
 }
+
+impl fmt::Debug for Struct_CThostFtdcInstrumentMarginRateField {
+    fn fmt(&self, fmt: &mut fmt::Formatter) -> fmt::Result {
+        fmt.debug_struct("Struct_CThostFtdcInstrumentMarginRateField")
+            .field("InstrumentID", &gb18030_cstr_to_str(&self.InstrumentID))
+            .field("InvestorRange", &self.InvestorRange)
+            .field("BrokerID", &gb18030_cstr_to_str(&self.BrokerID))
+            .field("InvestorID", &gb18030_cstr_to_str(&self.InvestorID))
+            .field("HedgeFlag", &char::from(self.HedgeFlag))
+            .field("LongMarginRatioByMoney", &self.LongMarginRatioByMoney)
+            .field("LongMarginRatioByVolume", &self.LongMarginRatioByVolume)
+            .field("ShortMarginRatioByMoney", &self.ShortMarginRatioByMoney)
+            .field("ShortMarginRatioByVolume", &self.ShortMarginRatioByVolume)
+            .field("IsRelative", &self.IsRelative)
+            .finish()
+    }
+}
+
+impl fmt::Debug for Struct_CThostFtdcInstrumentCommissionRateField {
+    fn fmt(&self, fmt: &mut fmt::Formatter) -> fmt::Result {
+        fmt.debug_struct("Struct_CThostFtdcInstrumentCommissionRateField")
+            .field("InstrumentID", &gb18030_cstr_to_str(&self.InstrumentID))
+            .field("InvestorRange", &self.InvestorRange)
+            .field("BrokerID", &gb18030_cstr_to_str(&self.BrokerID))
+            .field("InvestorID", &gb18030_cstr_to_str(&self.InvestorID))
+            .field("OpenRatioByMoney", &self.OpenRatioByMoney)
+            .field("OpenRatioByVolume", &self.OpenRatioByVolume)
+            .field("CloseRatioByMoney", &self.CloseRatioByMoney)
+            .field("CloseRatioByVolume", &self.CloseRatioByVolume)
+            .field("CloseTodayRatioByMoney", &self.CloseTodayRatioByMoney)
+            .field("CloseTodayRatioByVolume", &self.CloseTodayRatioByVolume)
+            .finish()
+    }
+}
+
 
 impl fmt::Debug for Struct_CThostFtdcDepthMarketDataField {
     fn fmt(&self, fmt: &mut fmt::Formatter) -> fmt::Result {

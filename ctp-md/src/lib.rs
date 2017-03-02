@@ -110,11 +110,11 @@ impl MdApi {
         from_api_return_to_api_result(unsafe { _ZN14CFtdcMdApiImpl22UnSubscribeForQuoteRspEPPci(self.md_api_ptr, v.as_ptr(), v.len() as c_int) })
     }
 
-    pub fn req_user_login(&mut self, req_user_login: &Struct_CThostFtdcReqUserLoginField, request_id: i32) -> ApiResult {
+    pub fn req_user_login(&mut self, req_user_login: &Struct_CThostFtdcReqUserLoginField, request_id: TThostFtdcRequestIDType) -> ApiResult {
         from_api_return_to_api_result(unsafe { _ZN14CFtdcMdApiImpl12ReqUserLoginEP27CThostFtdcReqUserLoginFieldi(self.md_api_ptr, req_user_login, request_id) })
     }
 
-    pub fn req_user_logout(&mut self, req_user_logout: &Struct_CThostFtdcUserLogoutField, request_id: i32) -> ApiResult {
+    pub fn req_user_logout(&mut self, req_user_logout: &Struct_CThostFtdcUserLogoutField, request_id: TThostFtdcRequestIDType) -> ApiResult {
         from_api_return_to_api_result(unsafe { _ZN14CFtdcMdApiImpl13ReqUserLogoutEP25CThostFtdcUserLogoutFieldi(self.md_api_ptr, req_user_logout, request_id) })
     }
 }
@@ -148,37 +148,37 @@ pub trait MdSpi {
     }
 
     #[allow(unused_variables)]
-    fn on_rsp_user_login(&mut self, rsp_user_login: Option<&Struct_CThostFtdcRspUserLoginField>, result: RspResult, request_id: i32, is_last: bool) {
+    fn on_rsp_user_login(&mut self, rsp_user_login: Option<&Struct_CThostFtdcRspUserLoginField>, result: RspResult, request_id: TThostFtdcRequestIDType, is_last: bool) {
         println!("on_rsp_user_login: {:?}, {}, {:?}, {:?}", rsp_user_login, from_rsp_result_to_string(&result), request_id, is_last);
     }
 
     #[allow(unused_variables)]
-    fn on_rsp_user_logout(&mut self, rsp_user_logout: Option<&Struct_CThostFtdcUserLogoutField>, result: RspResult, request_id: i32, is_last: bool) {
+    fn on_rsp_user_logout(&mut self, rsp_user_logout: Option<&Struct_CThostFtdcUserLogoutField>, result: RspResult, request_id: TThostFtdcRequestIDType, is_last: bool) {
         println!("on_rsp_user_logout: {:?}, {}, {:?}, {:?}", rsp_user_logout, from_rsp_result_to_string(&result), request_id, is_last);
     }
 
     #[allow(unused_variables)]
-    fn on_rsp_error(&mut self, result: RspResult, request_id: i32, is_last: bool) {
+    fn on_rsp_error(&mut self, result: RspResult, request_id: TThostFtdcRequestIDType, is_last: bool) {
         println!("on_rsp_error: {}, {:?}, {:?}", from_rsp_result_to_string(&result), request_id, is_last);
     }
 
     #[allow(unused_variables)]
-    fn on_rsp_sub_market_data(&mut self, specific_instrument: Option<&Struct_CThostFtdcSpecificInstrumentField>, result: RspResult, request_id: i32, is_last: bool) {
+    fn on_rsp_sub_market_data(&mut self, specific_instrument: Option<&Struct_CThostFtdcSpecificInstrumentField>, result: RspResult, request_id: TThostFtdcRequestIDType, is_last: bool) {
         println!("on_rsp_sub_market_data: {:?}, {}, {:?}, {:?}", specific_instrument, from_rsp_result_to_string(&result), request_id, is_last);
     }
 
     #[allow(unused_variables)]
-    fn on_rsp_un_sub_market_data(&mut self, specific_instrument: Option<&Struct_CThostFtdcSpecificInstrumentField>, result: RspResult, request_id: i32, is_last: bool) {
+    fn on_rsp_un_sub_market_data(&mut self, specific_instrument: Option<&Struct_CThostFtdcSpecificInstrumentField>, result: RspResult, request_id: TThostFtdcRequestIDType, is_last: bool) {
         println!("on_rsp_un_sub_market_data: {:?}, {}, {:?}, {:?}", specific_instrument, from_rsp_result_to_string(&result), request_id, is_last);
     }
 
     #[allow(unused_variables)]
-    fn on_rsp_sub_for_quote_rsp(&mut self, specific_instrument: Option<&Struct_CThostFtdcSpecificInstrumentField>, result: RspResult, request_id: i32, is_last: bool) {
+    fn on_rsp_sub_for_quote_rsp(&mut self, specific_instrument: Option<&Struct_CThostFtdcSpecificInstrumentField>, result: RspResult, request_id: TThostFtdcRequestIDType, is_last: bool) {
         println!("on_rsp_sub_for_quote_rsp: {:?}, {}, {:?}, {:?}", specific_instrument, from_rsp_result_to_string(&result), request_id, is_last);
     }
 
     #[allow(unused_variables)]
-    fn on_rsp_un_sub_for_quote_rsp(&mut self, specific_instrument: Option<&Struct_CThostFtdcSpecificInstrumentField>, result: RspResult, request_id: i32, is_last: bool) {
+    fn on_rsp_un_sub_for_quote_rsp(&mut self, specific_instrument: Option<&Struct_CThostFtdcSpecificInstrumentField>, result: RspResult, request_id: TThostFtdcRequestIDType, is_last: bool) {
         println!("on_rsp_un_sub_for_quote_rsp: {:?}, {}, {:?}, {:?}", specific_instrument, from_rsp_result_to_string(&result), request_id, is_last);
     }
 

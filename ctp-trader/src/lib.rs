@@ -159,91 +159,91 @@ impl TraderApi {
         unsafe { _ZN18CFtdcTraderApiImpl20SubscribePublicTopicE20THOST_TE_RESUME_TYPE(self.trader_api_ptr, resume_type.into()) };
     }
 
-    pub fn req_authenticate(&mut self, req_authenticate: &Struct_CThostFtdcReqAuthenticateField, request_id: i32) -> ApiResult {
+    pub fn req_authenticate(&mut self, req_authenticate: &Struct_CThostFtdcReqAuthenticateField, request_id: TThostFtdcRequestIDType) -> ApiResult {
         from_api_return_to_api_result(unsafe { _ZN18CFtdcTraderApiImpl15ReqAuthenticateEP30CThostFtdcReqAuthenticateFieldi(self.trader_api_ptr, req_authenticate, request_id) })
     }
 
-    pub fn req_user_login(&mut self, req_user_login: &Struct_CThostFtdcReqUserLoginField, request_id: i32) -> ApiResult {
+    pub fn req_user_login(&mut self, req_user_login: &Struct_CThostFtdcReqUserLoginField, request_id: TThostFtdcRequestIDType) -> ApiResult {
         from_api_return_to_api_result(unsafe { _ZN18CFtdcTraderApiImpl12ReqUserLoginEP27CThostFtdcReqUserLoginFieldi(self.trader_api_ptr, req_user_login, request_id) })
     }
 
-    pub fn req_user_logout(&mut self, req_user_logout: &Struct_CThostFtdcUserLogoutField, request_id: i32) -> ApiResult {
+    pub fn req_user_logout(&mut self, req_user_logout: &Struct_CThostFtdcUserLogoutField, request_id: TThostFtdcRequestIDType) -> ApiResult {
         from_api_return_to_api_result(unsafe { _ZN18CFtdcTraderApiImpl13ReqUserLogoutEP25CThostFtdcUserLogoutFieldi(self.trader_api_ptr, req_user_logout, request_id) })
     }
 
-    pub fn req_order_insert(&mut self, input_order: &Struct_CThostFtdcInputOrderField, request_id: i32) -> ApiResult {
+    pub fn req_order_insert(&mut self, input_order: &Struct_CThostFtdcInputOrderField, request_id: TThostFtdcRequestIDType) -> ApiResult {
         from_api_return_to_api_result(unsafe { _ZN18CFtdcTraderApiImpl14ReqOrderInsertEP25CThostFtdcInputOrderFieldi(self.trader_api_ptr, input_order, request_id) })
     }
 
-    pub fn req_order_action(&mut self, input_order_action: &Struct_CThostFtdcInputOrderActionField, request_id: i32) -> ApiResult {
+    pub fn req_order_action(&mut self, input_order_action: &Struct_CThostFtdcInputOrderActionField, request_id: TThostFtdcRequestIDType) -> ApiResult {
         from_api_return_to_api_result(unsafe { _ZN18CFtdcTraderApiImpl14ReqOrderActionEP31CThostFtdcInputOrderActionFieldi(self.trader_api_ptr, input_order_action, request_id) })
     }
 
-    pub fn req_settlement_info_confirm(&mut self, settlement_info_confirm: &Struct_CThostFtdcSettlementInfoConfirmField, request_id: i32) -> ApiResult {
+    pub fn req_settlement_info_confirm(&mut self, settlement_info_confirm: &Struct_CThostFtdcSettlementInfoConfirmField, request_id: TThostFtdcRequestIDType) -> ApiResult {
         from_api_return_to_api_result(unsafe { _ZN18CFtdcTraderApiImpl24ReqSettlementInfoConfirmEP36CThostFtdcSettlementInfoConfirmFieldi(self.trader_api_ptr, settlement_info_confirm, request_id) })
     }
 
-    pub fn req_qry_order(&mut self, qry_order: &Struct_CThostFtdcQryOrderField, request_id: i32) -> ApiResult {
+    pub fn req_qry_order(&mut self, qry_order: &Struct_CThostFtdcQryOrderField, request_id: TThostFtdcRequestIDType) -> ApiResult {
         from_api_return_to_api_result(unsafe { _ZN18CFtdcTraderApiImpl11ReqQryOrderEP23CThostFtdcQryOrderFieldi(self.trader_api_ptr, qry_order, request_id) })
     }
 
-    pub fn req_qry_trade(&mut self, qry_trade: &Struct_CThostFtdcQryTradeField, request_id: i32) -> ApiResult {
+    pub fn req_qry_trade(&mut self, qry_trade: &Struct_CThostFtdcQryTradeField, request_id: TThostFtdcRequestIDType) -> ApiResult {
         from_api_return_to_api_result(unsafe { _ZN18CFtdcTraderApiImpl11ReqQryTradeEP23CThostFtdcQryTradeFieldi(self.trader_api_ptr, qry_trade, request_id) })
     }
 
-    pub fn req_qry_investor_position(&mut self, qry_investor_position: &Struct_CThostFtdcQryInvestorPositionField, request_id: i32) -> ApiResult {
+    pub fn req_qry_investor_position(&mut self, qry_investor_position: &Struct_CThostFtdcQryInvestorPositionField, request_id: TThostFtdcRequestIDType) -> ApiResult {
         from_api_return_to_api_result(unsafe { _ZN18CFtdcTraderApiImpl22ReqQryInvestorPositionEP34CThostFtdcQryInvestorPositionFieldi(self.trader_api_ptr, qry_investor_position, request_id) })
     }
 
-    pub fn req_qry_trading_account(&mut self, qry_trading_account: &Struct_CThostFtdcQryTradingAccountField, request_id: i32) -> ApiResult {
+    pub fn req_qry_trading_account(&mut self, qry_trading_account: &Struct_CThostFtdcQryTradingAccountField, request_id: TThostFtdcRequestIDType) -> ApiResult {
         from_api_return_to_api_result(unsafe { _ZN18CFtdcTraderApiImpl20ReqQryTradingAccountEP32CThostFtdcQryTradingAccountFieldi(self.trader_api_ptr, qry_trading_account, request_id) })
     }
 
-    pub fn req_qry_investor(&mut self, qry_investor: &Struct_CThostFtdcQryInvestorField, request_id: i32) -> ApiResult {
+    pub fn req_qry_investor(&mut self, qry_investor: &Struct_CThostFtdcQryInvestorField, request_id: TThostFtdcRequestIDType) -> ApiResult {
         from_api_return_to_api_result(unsafe { _ZN18CFtdcTraderApiImpl14ReqQryInvestorEP26CThostFtdcQryInvestorFieldi(self.trader_api_ptr, qry_investor, request_id) })
     }
 
-    pub fn req_qry_trading_code(&mut self, qry_trading_code: &Struct_CThostFtdcQryTradingCodeField, request_id: i32) -> ApiResult {
+    pub fn req_qry_trading_code(&mut self, qry_trading_code: &Struct_CThostFtdcQryTradingCodeField, request_id: TThostFtdcRequestIDType) -> ApiResult {
         from_api_return_to_api_result(unsafe { _ZN18CFtdcTraderApiImpl17ReqQryTradingCodeEP29CThostFtdcQryTradingCodeFieldi(self.trader_api_ptr, qry_trading_code, request_id) })
     }
 
-    pub fn req_qry_instrument_margin_rate(&mut self, qry_instrument_margin_rate: &Struct_CThostFtdcQryInstrumentMarginRateField, request_id: i32) -> ApiResult {
+    pub fn req_qry_instrument_margin_rate(&mut self, qry_instrument_margin_rate: &Struct_CThostFtdcQryInstrumentMarginRateField, request_id: TThostFtdcRequestIDType) -> ApiResult {
         from_api_return_to_api_result(unsafe { _ZN18CFtdcTraderApiImpl26ReqQryInstrumentMarginRateEP38CThostFtdcQryInstrumentMarginRateFieldi(self.trader_api_ptr, qry_instrument_margin_rate, request_id) })
     }
 
-    pub fn req_qry_instrument_commission_rate(&mut self, qry_instrument_commission_rate: &Struct_CThostFtdcQryInstrumentCommissionRateField, request_id: i32) -> ApiResult {
+    pub fn req_qry_instrument_commission_rate(&mut self, qry_instrument_commission_rate: &Struct_CThostFtdcQryInstrumentCommissionRateField, request_id: TThostFtdcRequestIDType) -> ApiResult {
         from_api_return_to_api_result(unsafe { _ZN18CFtdcTraderApiImpl30ReqQryInstrumentCommissionRateEP42CThostFtdcQryInstrumentCommissionRateFieldi(self.trader_api_ptr, qry_instrument_commission_rate, request_id) })
     }
 
-    pub fn req_qry_exchange(&mut self, qry_exchange: &Struct_CThostFtdcQryExchangeField, request_id: i32) -> ApiResult {
+    pub fn req_qry_exchange(&mut self, qry_exchange: &Struct_CThostFtdcQryExchangeField, request_id: TThostFtdcRequestIDType) -> ApiResult {
         from_api_return_to_api_result(unsafe { _ZN18CFtdcTraderApiImpl14ReqQryExchangeEP26CThostFtdcQryExchangeFieldi(self.trader_api_ptr, qry_exchange, request_id) })
     }
 
-    pub fn req_qry_product(&mut self, qry_product: &Struct_CThostFtdcQryProductField, request_id: i32) -> ApiResult {
+    pub fn req_qry_product(&mut self, qry_product: &Struct_CThostFtdcQryProductField, request_id: TThostFtdcRequestIDType) -> ApiResult {
         from_api_return_to_api_result(unsafe { _ZN18CFtdcTraderApiImpl13ReqQryProductEP25CThostFtdcQryProductFieldi(self.trader_api_ptr, qry_product, request_id) })
     }
 
-    pub fn req_qry_instrument(&mut self, qry_instrument: &Struct_CThostFtdcQryInstrumentField, request_id: i32) -> ApiResult {
+    pub fn req_qry_instrument(&mut self, qry_instrument: &Struct_CThostFtdcQryInstrumentField, request_id: TThostFtdcRequestIDType) -> ApiResult {
         from_api_return_to_api_result(unsafe { _ZN18CFtdcTraderApiImpl16ReqQryInstrumentEP28CThostFtdcQryInstrumentFieldi(self.trader_api_ptr, qry_instrument, request_id) })
     }
 
-    pub fn req_qry_settlement_info(&mut self, qry_settlement_info: &Struct_CThostFtdcQrySettlementInfoField, request_id: i32) -> ApiResult {
+    pub fn req_qry_settlement_info(&mut self, qry_settlement_info: &Struct_CThostFtdcQrySettlementInfoField, request_id: TThostFtdcRequestIDType) -> ApiResult {
         from_api_return_to_api_result(unsafe { _ZN18CFtdcTraderApiImpl20ReqQrySettlementInfoEP32CThostFtdcQrySettlementInfoFieldi(self.trader_api_ptr, qry_settlement_info, request_id) })
     }
 
-    pub fn req_qry_settlement_info_confirm(&mut self, qry_settlement_info_confirm: &Struct_CThostFtdcQrySettlementInfoConfirmField, request_id: i32) -> ApiResult {
+    pub fn req_qry_settlement_info_confirm(&mut self, qry_settlement_info_confirm: &Struct_CThostFtdcQrySettlementInfoConfirmField, request_id: TThostFtdcRequestIDType) -> ApiResult {
         from_api_return_to_api_result(unsafe { _ZN18CFtdcTraderApiImpl27ReqQrySettlementInfoConfirmEP39CThostFtdcQrySettlementInfoConfirmFieldi(self.trader_api_ptr, qry_settlement_info_confirm, request_id) })
     }
 
-    pub fn req_qry_exchange_margin_rate(&mut self, qry_exchange_margin_rate: &Struct_CThostFtdcQryExchangeMarginRateField, request_id: i32) -> ApiResult {
+    pub fn req_qry_exchange_margin_rate(&mut self, qry_exchange_margin_rate: &Struct_CThostFtdcQryExchangeMarginRateField, request_id: TThostFtdcRequestIDType) -> ApiResult {
         from_api_return_to_api_result(unsafe { _ZN18CFtdcTraderApiImpl24ReqQryExchangeMarginRateEP36CThostFtdcQryExchangeMarginRateFieldi(self.trader_api_ptr, qry_exchange_margin_rate, request_id) })
     }
 
-    pub fn req_qry_exchange_margin_rate_adjust(&mut self, qry_exchange_margin_rate_adjust: &Struct_CThostFtdcQryExchangeMarginRateAdjustField, request_id: i32) -> ApiResult {
+    pub fn req_qry_exchange_margin_rate_adjust(&mut self, qry_exchange_margin_rate_adjust: &Struct_CThostFtdcQryExchangeMarginRateAdjustField, request_id: TThostFtdcRequestIDType) -> ApiResult {
         from_api_return_to_api_result(unsafe { _ZN18CFtdcTraderApiImpl30ReqQryExchangeMarginRateAdjustEP42CThostFtdcQryExchangeMarginRateAdjustFieldi(self.trader_api_ptr, qry_exchange_margin_rate_adjust, request_id) })
     }
 
-    pub fn req_qry_exchange_rate(&mut self, qry_exchange_rate: &Struct_CThostFtdcQryExchangeRateField, request_id: i32) -> ApiResult {
+    pub fn req_qry_exchange_rate(&mut self, qry_exchange_rate: &Struct_CThostFtdcQryExchangeRateField, request_id: TThostFtdcRequestIDType) -> ApiResult {
         from_api_return_to_api_result(unsafe { _ZN18CFtdcTraderApiImpl18ReqQryExchangeRateEP30CThostFtdcQryExchangeRateFieldi(self.trader_api_ptr, qry_exchange_rate, request_id) })
     }
 }
@@ -272,95 +272,95 @@ pub trait TraderSpi {
         println!("on_front_disconnected: {:?}", reason);
     }
 
-    fn on_rsp_authenticate(&mut self, rsp_authenticate: Option<&Struct_CThostFtdcRspAuthenticateField>, result: RspResult, request_id: i32, is_last: bool) {
+    fn on_rsp_authenticate(&mut self, rsp_authenticate: Option<&Struct_CThostFtdcRspAuthenticateField>, result: RspResult, request_id: TThostFtdcRequestIDType, is_last: bool) {
         println!("on_rsp_authenticate: {:?}, {}, {:?}, {:?}", rsp_authenticate, from_rsp_result_to_string(&result), request_id, is_last);
     }
 
-    fn on_rsp_user_login(&mut self, rsp_user_login: Option<&Struct_CThostFtdcRspUserLoginField>, result: RspResult, request_id: i32, is_last: bool) {
+    fn on_rsp_user_login(&mut self, rsp_user_login: Option<&Struct_CThostFtdcRspUserLoginField>, result: RspResult, request_id: TThostFtdcRequestIDType, is_last: bool) {
         println!("on_rsp_user_login: {:?}, {}, {:?}, {:?}", rsp_user_login, from_rsp_result_to_string(&result), request_id, is_last);
     }
 
-    fn on_rsp_user_logout(&mut self, rsp_user_logout: Option<&Struct_CThostFtdcUserLogoutField>, result: RspResult, request_id: i32, is_last: bool) {
+    fn on_rsp_user_logout(&mut self, rsp_user_logout: Option<&Struct_CThostFtdcUserLogoutField>, result: RspResult, request_id: TThostFtdcRequestIDType, is_last: bool) {
         println!("on_rsp_user_logout: {:?}, {}, {:?}, {:?}", rsp_user_logout, from_rsp_result_to_string(&result), request_id, is_last);
     }
 
-    fn on_rsp_order_insert(&mut self, input_order: Option<&Struct_CThostFtdcInputOrderField>, result: RspResult, request_id: i32, is_last: bool) {
+    fn on_rsp_order_insert(&mut self, input_order: Option<&Struct_CThostFtdcInputOrderField>, result: RspResult, request_id: TThostFtdcRequestIDType, is_last: bool) {
         println!("on_rsp_order_insert: {:?}, {}, {:?}, {:?}", input_order, from_rsp_result_to_string(&result), request_id, is_last);
     }
 
-    fn on_rsp_order_action(&mut self, input_order_action: Option<&Struct_CThostFtdcInputOrderActionField>, result: RspResult, request_id: i32, is_last: bool) {
+    fn on_rsp_order_action(&mut self, input_order_action: Option<&Struct_CThostFtdcInputOrderActionField>, result: RspResult, request_id: TThostFtdcRequestIDType, is_last: bool) {
         println!("on_rsp_order_action: {:?}, {}, {:?}, {:?}", input_order_action, from_rsp_result_to_string(&result), request_id, is_last);
     }
 
-    fn on_rsp_settlement_info_confirm(&mut self, settlement_info_confirm: Option<&Struct_CThostFtdcSettlementInfoConfirmField>, result: RspResult, request_id: i32, is_last: bool) {
+    fn on_rsp_settlement_info_confirm(&mut self, settlement_info_confirm: Option<&Struct_CThostFtdcSettlementInfoConfirmField>, result: RspResult, request_id: TThostFtdcRequestIDType, is_last: bool) {
         println!("on_rsp_settlement_info_confirm: {:?}, {}, {:?}, {:?}", settlement_info_confirm, from_rsp_result_to_string(&result), request_id, is_last);
     }
 
-    fn on_rsp_qry_order(&mut self, order: Option<&Struct_CThostFtdcOrderField>, result: RspResult, request_id: i32, is_last: bool) {
+    fn on_rsp_qry_order(&mut self, order: Option<&Struct_CThostFtdcOrderField>, result: RspResult, request_id: TThostFtdcRequestIDType, is_last: bool) {
         println!("on_rsp_qry_order: {:?}, {}, {:?}, {:?}", order, from_rsp_result_to_string(&result), request_id, is_last);
     }
 
-    fn on_rsp_qry_trade(&mut self, trade: Option<&Struct_CThostFtdcTradeField>, result: RspResult, request_id: i32, is_last: bool) {
+    fn on_rsp_qry_trade(&mut self, trade: Option<&Struct_CThostFtdcTradeField>, result: RspResult, request_id: TThostFtdcRequestIDType, is_last: bool) {
         println!("on_rsp_qry_trade: {:?}, {}, {:?}, {:?}", trade, from_rsp_result_to_string(&result), request_id, is_last);
     }
 
-    fn on_rsp_qry_investor_position(&mut self, investor_position: Option<&Struct_CThostFtdcInvestorPositionField>, result: RspResult, request_id: i32, is_last: bool) {
+    fn on_rsp_qry_investor_position(&mut self, investor_position: Option<&Struct_CThostFtdcInvestorPositionField>, result: RspResult, request_id: TThostFtdcRequestIDType, is_last: bool) {
         println!("on_rsp_qry_investor_position: {:?}, {}, {:?}, {:?}", investor_position, from_rsp_result_to_string(&result), request_id, is_last);
     }
 
-    fn on_rsp_qry_trading_account(&mut self, trading_account: Option<&Struct_CThostFtdcTradingAccountField>, result: RspResult, request_id: i32, is_last: bool) {
+    fn on_rsp_qry_trading_account(&mut self, trading_account: Option<&Struct_CThostFtdcTradingAccountField>, result: RspResult, request_id: TThostFtdcRequestIDType, is_last: bool) {
         println!("on_rsp_qry_trading_account: {:?}, {}, {:?}, {:?}", trading_account, from_rsp_result_to_string(&result), request_id, is_last);
     }
 
-    fn on_rsp_qry_investor(&mut self, investor: Option<&Struct_CThostFtdcInvestorField>, result: RspResult, request_id: i32, is_last: bool) {
+    fn on_rsp_qry_investor(&mut self, investor: Option<&Struct_CThostFtdcInvestorField>, result: RspResult, request_id: TThostFtdcRequestIDType, is_last: bool) {
         println!("on_rsp_qry_investor: {:?}, {}, {:?}, {:?}", investor, from_rsp_result_to_string(&result), request_id, is_last);
     }
 
-    fn on_rsp_qry_trading_code(&mut self, trading_code: Option<&Struct_CThostFtdcTradingCodeField>, result: RspResult, request_id: i32, is_last: bool) {
+    fn on_rsp_qry_trading_code(&mut self, trading_code: Option<&Struct_CThostFtdcTradingCodeField>, result: RspResult, request_id: TThostFtdcRequestIDType, is_last: bool) {
         println!("on_rsp_qry_trading_code: {:?}, {}, {:?}, {:?}", trading_code, from_rsp_result_to_string(&result), request_id, is_last);
     }
 
-	fn on_rsp_qry_instrument_margin_rate(&mut self, instrument_margin_rate: Option<&Struct_CThostFtdcInstrumentMarginRateField>, result: RspResult, request_id: i32, is_last: bool) {
+	fn on_rsp_qry_instrument_margin_rate(&mut self, instrument_margin_rate: Option<&Struct_CThostFtdcInstrumentMarginRateField>, result: RspResult, request_id: TThostFtdcRequestIDType, is_last: bool) {
         println!("on_rsp_qry_instrument_margin_rate: {:?}, {}, {:?}, {:?}", instrument_margin_rate, from_rsp_result_to_string(&result), request_id, is_last);
     }
 
-	fn on_rsp_qry_instrument_commission_rate(&mut self, instrument_commission_rate: Option<&Struct_CThostFtdcInstrumentCommissionRateField>, result: RspResult, request_id: i32, is_last: bool) {
+	fn on_rsp_qry_instrument_commission_rate(&mut self, instrument_commission_rate: Option<&Struct_CThostFtdcInstrumentCommissionRateField>, result: RspResult, request_id: TThostFtdcRequestIDType, is_last: bool) {
         println!("on_rsp_qry_instrument_commission_rate: {:?}, {}, {:?}, {:?}", instrument_commission_rate, from_rsp_result_to_string(&result), request_id, is_last);
     }
 
-    fn on_rsp_qry_exchange(&mut self, exchange: Option<&Struct_CThostFtdcExchangeField>, result: RspResult, request_id: i32, is_last: bool) {
+    fn on_rsp_qry_exchange(&mut self, exchange: Option<&Struct_CThostFtdcExchangeField>, result: RspResult, request_id: TThostFtdcRequestIDType, is_last: bool) {
         println!("on_rsp_qry_exchange: {:?}, {}, {:?}, {:?}", exchange, from_rsp_result_to_string(&result), request_id, is_last);
     }
 
-    fn on_rsp_qry_product(&mut self, product: Option<&Struct_CThostFtdcProductField>, result: RspResult, request_id: i32, is_last: bool) {
+    fn on_rsp_qry_product(&mut self, product: Option<&Struct_CThostFtdcProductField>, result: RspResult, request_id: TThostFtdcRequestIDType, is_last: bool) {
         println!("on_rsp_qry_product: {:?}, {}, {:?}, {:?}", product, from_rsp_result_to_string(&result), request_id, is_last);
     }
 
-    fn on_rsp_qry_instrument(&mut self, instrument: Option<&Struct_CThostFtdcInstrumentField>, result: RspResult, request_id: i32, is_last: bool) {
+    fn on_rsp_qry_instrument(&mut self, instrument: Option<&Struct_CThostFtdcInstrumentField>, result: RspResult, request_id: TThostFtdcRequestIDType, is_last: bool) {
         println!("on_rsp_qry_instrument: {:?}, {}, {:?}, {:?}", instrument, from_rsp_result_to_string(&result), request_id, is_last);
     }
 
-    fn on_rsp_qry_settlement_info(&mut self, settlement_info: Option<&Struct_CThostFtdcSettlementInfoField>, result: RspResult, request_id: i32, is_last: bool) {
+    fn on_rsp_qry_settlement_info(&mut self, settlement_info: Option<&Struct_CThostFtdcSettlementInfoField>, result: RspResult, request_id: TThostFtdcRequestIDType, is_last: bool) {
         println!("on_rsp_qry_settlement_info: {:?}, {}, {:?}, {:?}", settlement_info, from_rsp_result_to_string(&result), request_id, is_last);
     }
 
-    fn on_rsp_qry_settlement_info_confirm(&mut self, settlement_info_confirm: Option<&Struct_CThostFtdcSettlementInfoConfirmField>, result: RspResult, request_id: i32, is_last: bool) {
+    fn on_rsp_qry_settlement_info_confirm(&mut self, settlement_info_confirm: Option<&Struct_CThostFtdcSettlementInfoConfirmField>, result: RspResult, request_id: TThostFtdcRequestIDType, is_last: bool) {
         println!("on_rsp_qry_settlement_info_confirm: {:?}, {}, {:?}, {:?}", settlement_info_confirm, from_rsp_result_to_string(&result), request_id, is_last);
     }
 
-	fn on_rsp_qry_exchange_margin_rate(&mut self, exchange_margin_rate: Option<&Struct_CThostFtdcExchangeMarginRateField>, result: RspResult, request_id: i32, is_last: bool) {
+	fn on_rsp_qry_exchange_margin_rate(&mut self, exchange_margin_rate: Option<&Struct_CThostFtdcExchangeMarginRateField>, result: RspResult, request_id: TThostFtdcRequestIDType, is_last: bool) {
         println!("on_rsp_qry_exchange_margin_rate: {:?}, {}, {:?}, {:?}", exchange_margin_rate, from_rsp_result_to_string(&result), request_id, is_last);
     }
 
-	fn on_rsp_qry_exchange_margin_rate_adjust(&mut self, exchange_margin_rate_adjust: Option<&Struct_CThostFtdcExchangeMarginRateAdjustField>, result: RspResult, request_id: i32, is_last: bool) {
+	fn on_rsp_qry_exchange_margin_rate_adjust(&mut self, exchange_margin_rate_adjust: Option<&Struct_CThostFtdcExchangeMarginRateAdjustField>, result: RspResult, request_id: TThostFtdcRequestIDType, is_last: bool) {
         println!("on_rsp_qry_exchange_margin_rate_adjust: {:?}, {}, {:?}, {:?}", exchange_margin_rate_adjust, from_rsp_result_to_string(&result), request_id, is_last);
     }
 
-	fn on_rsp_qry_exchange_rate(&mut self, exchange_rate: Option<&Struct_CThostFtdcExchangeRateField>, result: RspResult, request_id: i32, is_last: bool) {
+	fn on_rsp_qry_exchange_rate(&mut self, exchange_rate: Option<&Struct_CThostFtdcExchangeRateField>, result: RspResult, request_id: TThostFtdcRequestIDType, is_last: bool) {
         println!("on_rsp_qry_exchange_rate: {:?}, {}, {:?}, {:?}", exchange_rate, from_rsp_result_to_string(&result), request_id, is_last);
     }
 
-    fn on_rsp_error(&mut self, result: RspResult, request_id: i32, is_last: bool) {
+    fn on_rsp_error(&mut self, result: RspResult, request_id: TThostFtdcRequestIDType, is_last: bool) {
         println!("on_rsp_error: {}, {:?}, {:?}", from_rsp_result_to_string(&result), request_id, is_last);
     }
 

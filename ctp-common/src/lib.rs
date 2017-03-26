@@ -139,7 +139,7 @@ pub fn from_api_return_to_api_result(api_return: c_int) -> ApiResult {
 
 #[derive(Clone, Debug, PartialEq)]
 pub struct RspError {
-    pub id: i32,
+    pub id: TThostFtdcErrorIDType,
     pub msg: String,
 }
 

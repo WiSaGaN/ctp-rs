@@ -15,6 +15,21 @@ use time::{ Timespec, Tm };
 
 pub use binding::*;
 
+/// 交易接口中的查询操作的限制为:
+///   每秒钟最多只能进行一次查询操作。
+///   在途的查询操作最多只能有一个。
+/// 在途:查询操作从发送请求,到接收到响应为一个完整的过程。如果请求已经发送,但是未收到响应,则称
+/// 该查询操作在途。
+/// 上述限制只针对交易接口中的数据查询操作(ReqQryXXX),对报单,撤单,报价,询价等操作没有影响。
+pub const DEFAULT_MAX_NUM_QUERY_REQUEST_PER_SECOND: usize = 1;
+
+/// 报单流量限制是由期货公司通过在系统中配置相关参数实现限制的。
+/// 不进行配置的情况下,默认流量限制为:
+/// 在一个连接会话(Session)中,每个客户端每秒钟最多只能发送 6 笔交易相关的指令(报单,撤单等)。
+pub const DEFAULT_MAX_NUM_ORDER_REQUEST_PER_SECOND: usize = 6;
+/// 同一个账户同时最多只能建立 6 个会话(Session)。
+pub const DEFAULT_MAX_NUM_CONCURRENT_SESSION: usize = 6;
+
 pub fn ascii_cstr_to_str(s: &[u8]) -> Result<&str, SimpleError> {
     match s.last() {
         Some(&0u8) => {
@@ -120,7 +135,6 @@ pub enum ApiError {
     NetworkError = -1,
     QueueFull = -2,
     Throttled = -3,
-    Unknown = -4,
 }
 
 #[must_use]
@@ -133,7 +147,8 @@ pub fn from_api_return_to_api_result(api_return: c_int) -> ApiResult {
         -1 => Err(ApiError::NetworkError),
         -2 => Err(ApiError::QueueFull),
         -3 => Err(ApiError::Throttled),
-        _ => Err(ApiError::Unknown),
+        // no other values are possible in specification
+        i => panic!("api return unspecified {}", i),
     }
 }
 

@@ -28,6 +28,23 @@ extern "C" {
     fn _ZN14CFtdcMdApiImpl13ReqUserLogoutEP25CThostFtdcUserLogoutFieldi(api: *mut c_void, pUserLogoutField: *const Struct_CThostFtdcUserLogoutField, nRequestID: c_int) -> c_int;
 }
 
+pub trait GenericMdApi {
+    fn new(flow_path: CString, use_udp: bool, use_multicast: bool) -> Self;
+    fn init(&mut self);
+    fn join(&mut self) -> ApiResult;
+    fn get_trading_day<'a>(&mut self) -> &'a CStr;
+    fn register_front(&mut self, front_socket_address: CString);
+    fn register_name_server(&mut self, name_server: CString);
+    fn register_fens_user_info(&mut self, fens_user_info: &Struct_CThostFtdcFensUserInfoField);
+    fn register_spi(&mut self, md_spi: Box<MdSpi>);
+    fn subscribe_market_data(&mut self, instrument_ids: &[CString]) -> ApiResult;
+    fn unsubscribe_market_data(&mut self, instrument_ids: &[CString]) -> ApiResult;
+    fn subscribe_for_quote_rsp(&mut self, instrument_ids: &[CString]) -> ApiResult;
+    fn unsubscribe_for_quote_rsp(&mut self, instrument_ids: &[CString]) -> ApiResult;
+    fn req_user_login(&mut self, req_user_login: &Struct_CThostFtdcReqUserLoginField, request_id: TThostFtdcRequestIDType) -> ApiResult;
+    fn req_user_logout(&mut self, req_user_logout: &Struct_CThostFtdcUserLogoutField, request_id: TThostFtdcRequestIDType) -> ApiResult;
+}
+
 pub struct MdApi {
     md_api_ptr: *mut c_void,
     registered_spi: Option<*mut Struct_CThostFtdcMdSpi>,
@@ -35,8 +52,8 @@ pub struct MdApi {
 
 unsafe impl Send for MdApi {}
 
-impl MdApi {
-    pub fn new(flow_path: CString, use_udp: bool, use_multicast: bool) -> MdApi {
+impl GenericMdApi for MdApi {
+    fn new(flow_path: CString, use_udp: bool, use_multicast: bool) -> Self {
         let flow_path_ptr = flow_path.into_raw();
         let api = unsafe { _ZN15CThostFtdcMdApi15CreateFtdcMdApiEPKcbb(flow_path_ptr, use_udp as c_bool, use_multicast as c_bool) };
         let flow_path = unsafe { CString::from_raw(flow_path_ptr) };
@@ -44,38 +61,38 @@ impl MdApi {
         MdApi{ md_api_ptr: api, registered_spi: None }
     }
 
-    pub fn init(&mut self) {
+    fn init(&mut self) {
         unsafe { _ZN14CFtdcMdApiImpl4InitEv(self.md_api_ptr) };
     }
 
-    pub fn join(&mut self) -> ApiResult {
+    fn join(&mut self) -> ApiResult {
         from_api_return_to_api_result(unsafe { _ZN14CFtdcMdApiImpl4JoinEv(self.md_api_ptr) })
     }
 
-    pub fn get_trading_day<'a>(&mut self) -> &'a CStr {
+    fn get_trading_day<'a>(&mut self) -> &'a CStr {
         let trading_day_cstr = unsafe { _ZN14CFtdcMdApiImpl13GetTradingDayEv(self.md_api_ptr) };
         unsafe { CStr::from_ptr(trading_day_cstr) }
     }
 
-    pub fn register_front(&mut self, front_socket_address: CString) {
+    fn register_front(&mut self, front_socket_address: CString) {
         let front_socket_address_ptr = front_socket_address.into_raw();
         unsafe { _ZN14CFtdcMdApiImpl13RegisterFrontEPc(self.md_api_ptr, front_socket_address_ptr) };
         let front_socket_address = unsafe { CString::from_raw(front_socket_address_ptr) };
         drop(front_socket_address);
     }
 
-    pub fn register_name_server(&mut self, name_server: CString) {
+    fn register_name_server(&mut self, name_server: CString) {
         let name_server_ptr = name_server.into_raw();
         unsafe { _ZN14CFtdcMdApiImpl18RegisterNameServerEPc(self.md_api_ptr, name_server_ptr) };
         let name_server = unsafe { CString::from_raw(name_server_ptr) };
         drop(name_server);
     }
 
-    pub fn register_fens_user_info(&mut self, fens_user_info: &Struct_CThostFtdcFensUserInfoField) {
+    fn register_fens_user_info(&mut self, fens_user_info: &Struct_CThostFtdcFensUserInfoField) {
         unsafe { _ZN14CFtdcMdApiImpl20RegisterFensUserInfoEP27CThostFtdcFensUserInfoField(self.md_api_ptr, fens_user_info) };
     }
 
-    pub fn register_spi(&mut self, md_spi: Box<MdSpi>) {
+    fn register_spi(&mut self, md_spi: Box<MdSpi>) {
         let last_registered_spi_ptr = self.registered_spi.take();
         let md_spi_ptr = Box::into_raw(md_spi);
         let spi_ptr = Box::into_raw(Box::new(new_spi(md_spi_ptr)));
@@ -90,31 +107,31 @@ impl MdApi {
         };
     }
 
-    pub fn subscribe_market_data(&mut self, instrument_ids: &[CString]) -> ApiResult {
+    fn subscribe_market_data(&mut self, instrument_ids: &[CString]) -> ApiResult {
         let v = cstring_slice_to_char_star_vec(instrument_ids);
         from_api_return_to_api_result(unsafe { _ZN14CFtdcMdApiImpl19SubscribeMarketDataEPPci(self.md_api_ptr, v.as_ptr(), v.len() as c_int) })
     }
 
-    pub fn unsubscribe_market_data(&mut self, instrument_ids: &[CString]) -> ApiResult {
+    fn unsubscribe_market_data(&mut self, instrument_ids: &[CString]) -> ApiResult {
         let v = cstring_slice_to_char_star_vec(instrument_ids);
         from_api_return_to_api_result(unsafe { _ZN14CFtdcMdApiImpl21UnSubscribeMarketDataEPPci(self.md_api_ptr, v.as_ptr(), v.len() as c_int) })
     }
 
-    pub fn subscribe_for_quote_rsp(&mut self, instrument_ids: &[CString]) -> ApiResult {
+    fn subscribe_for_quote_rsp(&mut self, instrument_ids: &[CString]) -> ApiResult {
         let v = cstring_slice_to_char_star_vec(instrument_ids);
         from_api_return_to_api_result(unsafe { _ZN14CFtdcMdApiImpl20SubscribeForQuoteRspEPPci(self.md_api_ptr, v.as_ptr(), v.len() as c_int) })
     }
 
-    pub fn unsubscribe_for_quote_rsp(&mut self, instrument_ids: &[CString]) -> ApiResult {
+    fn unsubscribe_for_quote_rsp(&mut self, instrument_ids: &[CString]) -> ApiResult {
         let v = cstring_slice_to_char_star_vec(instrument_ids);
         from_api_return_to_api_result(unsafe { _ZN14CFtdcMdApiImpl22UnSubscribeForQuoteRspEPPci(self.md_api_ptr, v.as_ptr(), v.len() as c_int) })
     }
 
-    pub fn req_user_login(&mut self, req_user_login: &Struct_CThostFtdcReqUserLoginField, request_id: TThostFtdcRequestIDType) -> ApiResult {
+    fn req_user_login(&mut self, req_user_login: &Struct_CThostFtdcReqUserLoginField, request_id: TThostFtdcRequestIDType) -> ApiResult {
         from_api_return_to_api_result(unsafe { _ZN14CFtdcMdApiImpl12ReqUserLoginEP27CThostFtdcReqUserLoginFieldi(self.md_api_ptr, req_user_login, request_id) })
     }
 
-    pub fn req_user_logout(&mut self, req_user_logout: &Struct_CThostFtdcUserLogoutField, request_id: TThostFtdcRequestIDType) -> ApiResult {
+    fn req_user_logout(&mut self, req_user_logout: &Struct_CThostFtdcUserLogoutField, request_id: TThostFtdcRequestIDType) -> ApiResult {
         from_api_return_to_api_result(unsafe { _ZN14CFtdcMdApiImpl13ReqUserLogoutEP25CThostFtdcUserLogoutFieldi(self.md_api_ptr, req_user_logout, request_id) })
     }
 }

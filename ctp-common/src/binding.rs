@@ -110,7 +110,7 @@ impl fmt::Debug for Struct_CThostFtdcInstrumentField {
             .field("StrikePrice", &normalize_double(self.StrikePrice))
             .field("OptionsType", &maybe_char(self.OptionsType))
             .field("UnderlyingMultiple", &normalize_double(self.UnderlyingMultiple))
-            .field("CombinationType", &char::from(self.CombinationType))
+            .field("CombinationType", &maybe_char(self.CombinationType))
             .finish()
     }
 }

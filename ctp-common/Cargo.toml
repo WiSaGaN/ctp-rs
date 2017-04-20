@@ -13,3 +13,4 @@ time = "0.1"
 [build-dependencies]
 bindgen = "0.16"
 encoding = "0.2"
+xmltree = "0.4"

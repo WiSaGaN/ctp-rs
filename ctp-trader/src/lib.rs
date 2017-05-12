@@ -298,7 +298,7 @@ impl Drop for TraderApi {
     }
 }
 
-pub trait TraderSpi {
+pub trait TraderSpi : Send {
     fn on_front_connected(&mut self) {
         println!("on_front_connected");
     }

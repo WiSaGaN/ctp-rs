@@ -155,7 +155,7 @@ fn cstring_slice_to_char_star_vec(cstring_vec: &[CString]) -> Vec<*const c_char>
     cstring_vec.iter().map(|cstring| cstring.as_ptr()).collect()
 }
 
-pub trait MdSpi {
+pub trait MdSpi : Send {
     fn on_front_connected(&mut self) {
         println!("on_front_connected");
     }

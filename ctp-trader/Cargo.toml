@@ -1,7 +1,8 @@
 [package]
 name = "ctp-trader"
-version = "0.3.1"
+version = "0.3.2"
 authors = ["Wangshan Lu <wisagan@gmail.com>"]
+links = "ctp-trader"
 build = "build.rs"
 
 [dependencies.ctp-common]

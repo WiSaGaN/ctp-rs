@@ -13,7 +13,7 @@ addons:
 
 # run builds for all the trains (and more)
 rust:
-  - nightly
+  - stable
 
 # the main build
 script:

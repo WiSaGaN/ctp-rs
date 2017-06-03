@@ -10,6 +10,8 @@ use encoding::all::GB18030;
 use simple_error::SimpleError;
 use std::ascii::AsciiExt;
 use std::borrow::Cow;
+use std::error::Error;
+use std::fmt;
 use std::os::raw::c_int;
 use time::{ Timespec, Tm };
 
@@ -130,11 +132,42 @@ impl std::convert::From<c_int> for DisconnectionReason {
     }
 }
 
+impl fmt::Display for DisconnectionReason {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        use DisconnectionReason::*;
+        match *self {
+            ReadError => f.write_str("read error"),
+            WriteError => f.write_str("write error"),
+            HeartbeatTimeout => f.write_str("heartbeat timeout"),
+            HeartbeatSendError => f.write_str("heatbeat send error"),
+            ErrorMessageReceived => f.write_str("error message received"),
+            Unknown => f.write_str("unknown"),
+        }
+    }
+}
+
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub enum ApiError {
     NetworkError = -1,
     QueueFull = -2,
     Throttled = -3,
+}
+
+impl std::error::Error for ApiError {
+    fn description(&self) -> &str {
+        use ApiError::*;
+        match *self {
+            NetworkError => "network error",
+            QueueFull => "queue full",
+            Throttled => "throttled",
+        }
+    }
+}
+
+impl fmt::Display for ApiError {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        f.write_str(self.description())
+    }
 }
 
 #[must_use]
@@ -156,6 +189,18 @@ pub fn from_api_return_to_api_result(api_return: c_int) -> ApiResult {
 pub struct RspError {
     pub id: TThostFtdcErrorIDType,
     pub msg: String,
+}
+
+impl std::error::Error for RspError {
+    fn description(&self) -> &str {
+        &self.msg
+    }
+}
+
+impl fmt::Display for RspError {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        write!(f, "{} {}", self.id, self.msg)
+    }
 }
 
 #[must_use]

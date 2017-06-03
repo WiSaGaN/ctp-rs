@@ -3,6 +3,7 @@ extern crate ctp_common;
 use std::ffi::{ CStr, CString };
 use std::mem::transmute;
 use std::os::raw::{ c_void, c_char, c_int };
+use std::sync::mpsc;
 
 #[allow(non_camel_case_types)]
 type c_bool = std::os::raw::c_uchar;
@@ -210,6 +211,153 @@ pub trait MdSpi : Send {
     }
 }
 
+#[derive(Clone, Debug)]
+pub struct MdSpiOnFrontConnected {
+}
+
+#[derive(Clone, Debug)]
+pub struct MdSpiOnFrontDisconnected {
+    pub reason: DisconnectionReason,
+}
+
+#[derive(Clone, Debug)]
+pub struct MdSpiOnRspUserLogin {
+    pub user_login: Option<Struct_CThostFtdcRspUserLoginField>,
+    pub result: RspResult,
+    pub request_id: TThostFtdcRequestIDType,
+    pub is_last: bool,
+}
+
+#[derive(Clone, Debug)]
+pub struct MdSpiOnRspUserLogout {
+    pub user_logout: Option<Struct_CThostFtdcUserLogoutField>,
+    pub result: RspResult,
+    pub request_id: TThostFtdcRequestIDType,
+    pub is_last: bool,
+}
+
+#[derive(Clone, Debug)]
+pub struct MdSpiOnRspError {
+    pub result: RspResult,
+    pub request_id: TThostFtdcRequestIDType,
+    pub is_last: bool,
+}
+
+#[derive(Clone, Debug)]
+pub struct MdSpiOnRspSubMarketData {
+    pub specific_instrument: Option<Struct_CThostFtdcSpecificInstrumentField>,
+    pub result: RspResult,
+    pub request_id: TThostFtdcRequestIDType,
+    pub is_last: bool,
+}
+
+#[derive(Clone, Debug)]
+pub struct MdSpiOnRspUnSubMarketData {
+    pub specific_instrument: Option<Struct_CThostFtdcSpecificInstrumentField>,
+    pub result: RspResult,
+    pub request_id: TThostFtdcRequestIDType,
+    pub is_last: bool,
+}
+
+#[derive(Clone, Debug)]
+pub struct MdSpiOnRspSubForQuoteRsp {
+    pub specific_instrument: Option<Struct_CThostFtdcSpecificInstrumentField>,
+    pub result: RspResult,
+    pub request_id: TThostFtdcRequestIDType,
+    pub is_last: bool,
+}
+
+#[derive(Clone, Debug)]
+pub struct MdSpiOnRspUnSubForQuoteRsp {
+    pub specific_instrument: Option<Struct_CThostFtdcSpecificInstrumentField>,
+    pub result: RspResult,
+    pub request_id: TThostFtdcRequestIDType,
+    pub is_last: bool,
+}
+
+#[derive(Clone, Debug)]
+pub struct MdSpiOnRtnDepthMarketData {
+    pub depth_market_data: Struct_CThostFtdcDepthMarketDataField,
+}
+
+#[derive(Clone, Debug)]
+pub struct MdSpiOnRtnForQuoteRsp {
+    pub for_quote_rsp: Struct_CThostFtdcForQuoteRspField,
+}
+
+#[derive(Clone, Debug)]
+pub enum MdSpiOutput {
+    FrontConnected(MdSpiOnFrontConnected),
+    RspUserLogin(MdSpiOnRspUserLogin),
+    FrontDisconnected(MdSpiOnFrontDisconnected),
+    RspUserLogout(MdSpiOnRspUserLogout),
+    RspError(MdSpiOnRspError),
+    SubMarketData(MdSpiOnRspSubMarketData),
+    UnSubMarketData(MdSpiOnRspUnSubMarketData),
+    SubForQuoteRsp(MdSpiOnRspSubForQuoteRsp),
+    UnSubForQuoteRsp(MdSpiOnRspUnSubForQuoteRsp),
+    DepthMarketData(MdSpiOnRtnDepthMarketData),
+    ForQuoteRsp(MdSpiOnRtnForQuoteRsp),
+}
+
+#[derive(Clone, Debug)]
+pub struct SyncSenderMdSpi<T: From<MdSpiOutput> + Send + 'static> {
+    sender: mpsc::SyncSender<T>,
+}
+
+impl<T> SyncSenderMdSpi<T> where T: From<MdSpiOutput> + Send + 'static {
+    pub fn new(sender: mpsc::SyncSender<T>) -> Self {
+        SyncSenderMdSpi {
+            sender: sender,
+        }
+    }
+}
+
+impl<T> MdSpi for SyncSenderMdSpi<T> where T: From<MdSpiOutput> + Send + 'static {
+    fn on_front_connected(&mut self) {
+        self.sender.send(T::from(MdSpiOutput::FrontConnected(MdSpiOnFrontConnected{ }))).expect("spi callback send front_connected failed");
+    }
+
+    fn on_front_disconnected(&mut self, reason: DisconnectionReason) {
+        self.sender.send(T::from(MdSpiOutput::FrontDisconnected(MdSpiOnFrontDisconnected{ reason: reason }))).expect("spi callback send front_disconnected failed");
+    }
+
+    fn on_rsp_user_login(&mut self, rsp_user_login: Option<&Struct_CThostFtdcRspUserLoginField>, result: RspResult, request_id: i32, is_last: bool) {
+        self.sender.send(T::from(MdSpiOutput::RspUserLogin(MdSpiOnRspUserLogin{ user_login: rsp_user_login.cloned(), result: result, request_id: request_id, is_last: is_last }))).expect("spi callback send rsp_user_login failed");
+    }
+
+    fn on_rsp_user_logout(&mut self, rsp_user_logout: Option<&Struct_CThostFtdcUserLogoutField>, result: RspResult, request_id: i32, is_last: bool) {
+        self.sender.send(T::from(MdSpiOutput::RspUserLogout(MdSpiOnRspUserLogout{ user_logout: rsp_user_logout.cloned(), result: result, request_id: request_id, is_last: is_last }))).expect("spi callback send rsp_user_logout failed");
+    }
+
+    fn on_rsp_error(&mut self, result: RspResult, request_id: i32, is_last: bool) {
+        self.sender.send(T::from(MdSpiOutput::RspError(MdSpiOnRspError{ result: result, request_id: request_id, is_last: is_last }))).expect("spi callback send rsp_error failed");
+    }
+
+    fn on_rsp_sub_market_data(&mut self, specific_instrument: Option<&Struct_CThostFtdcSpecificInstrumentField>, result: RspResult, request_id: i32, is_last: bool) {
+        self.sender.send(T::from(MdSpiOutput::SubMarketData(MdSpiOnRspSubMarketData{ specific_instrument: specific_instrument.cloned(), result: result, request_id: request_id, is_last: is_last }))).expect("spi callback send rsp_sub_market_data failed");
+    }
+
+    fn on_rsp_un_sub_market_data(&mut self, specific_instrument: Option<&Struct_CThostFtdcSpecificInstrumentField>, result: RspResult, request_id: i32, is_last: bool) {
+        self.sender.send(T::from(MdSpiOutput::UnSubMarketData(MdSpiOnRspUnSubMarketData{ specific_instrument: specific_instrument.cloned(), result: result, request_id: request_id, is_last: is_last }))).expect("spi callback send rsp_sub_market_data failed");
+    }
+
+    fn on_rsp_sub_for_quote_rsp(&mut self, specific_instrument: Option<&Struct_CThostFtdcSpecificInstrumentField>, result: RspResult, request_id: TThostFtdcRequestIDType, is_last: bool) {
+        self.sender.send(T::from(MdSpiOutput::SubForQuoteRsp(MdSpiOnRspSubForQuoteRsp{ specific_instrument: specific_instrument.cloned(), result: result, request_id: request_id, is_last: is_last }))).expect("spi callback send rsp_sub_sub_for_quote_rsp failed");
+    }
+
+    fn on_rsp_un_sub_for_quote_rsp(&mut self, specific_instrument: Option<&Struct_CThostFtdcSpecificInstrumentField>, result: RspResult, request_id: TThostFtdcRequestIDType, is_last: bool) {
+        self.sender.send(T::from(MdSpiOutput::UnSubForQuoteRsp(MdSpiOnRspUnSubForQuoteRsp{ specific_instrument: specific_instrument.cloned(), result: result, request_id: request_id, is_last: is_last }))).expect("spi callback send rsp_sub_sub_for_quote_rsp failed");
+    }
+
+    fn on_rtn_depth_market_data(&mut self, depth_market_data: Option<&Struct_CThostFtdcDepthMarketDataField>) {
+        self.sender.send(T::from(MdSpiOutput::DepthMarketData(MdSpiOnRtnDepthMarketData{ depth_market_data: depth_market_data.expect("depth_market_data is none").clone() }))).expect("spi callback send depth_market_data failed");
+    }
+
+    fn on_rtn_for_quote_rsp(&mut self, for_quote_rsp: Option<&Struct_CThostFtdcForQuoteRspField>) {
+        self.sender.send(T::from(MdSpiOutput::ForQuoteRsp(MdSpiOnRtnForQuoteRsp{ for_quote_rsp: for_quote_rsp.expect("for_quote_rsp is none").clone() }))).expect("spi callback send depth_market_data failed");
+    }
+}
 
 #[allow(non_snake_case)]
 extern "C" fn spi_on_front_connected(spi: *mut Struct_CThostFtdcMdSpi) {

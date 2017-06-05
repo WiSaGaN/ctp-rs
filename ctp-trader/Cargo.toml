@@ -1,6 +1,6 @@
 [package]
 name = "ctp-trader"
-version = "0.3.2"
+version = "0.4.0"
 authors = ["Wangshan Lu <wisagan@gmail.com>"]
 links = "ctp-trader"
 build = "build.rs"

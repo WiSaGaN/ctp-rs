@@ -3,6 +3,7 @@ extern crate ctp_common;
 use std::ffi::{ CStr, CString };
 use std::mem::transmute;
 use std::os::raw::{ c_void, c_char, c_int };
+use std::sync::mpsc;
 
 #[allow(non_camel_case_types)]
 type c_bool = std::os::raw::c_uchar;
@@ -422,6 +423,405 @@ pub trait TraderSpi : Send {
     fn on_rtn_trading_notice(&mut self, trading_notice_info: Option<&Struct_CThostFtdcTradingNoticeInfoField>) {
         println!("on_rtn_trading_notice: {:?}", trading_notice_info);
     }
+}
+
+#[derive(Clone, Debug)]
+pub struct TraderSpiOnFrontConnected {
+}
+
+#[derive(Clone, Debug)]
+pub struct TraderSpiOnFrontDisconnected {
+    pub reason: DisconnectionReason,
+}
+
+#[derive(Clone, Debug)]
+pub struct TraderSpiOnRspAuthenticate {
+    pub authenticate: Option<Struct_CThostFtdcRspAuthenticateField>,
+    pub result: RspResult,
+    pub request_id: TThostFtdcRequestIDType,
+    pub is_last: bool,
+}
+
+#[derive(Clone, Debug)]
+pub struct TraderSpiOnRspUserLogin {
+    pub user_login: Option<Struct_CThostFtdcRspUserLoginField>,
+    pub result: RspResult,
+    pub request_id: TThostFtdcRequestIDType,
+    pub is_last: bool,
+}
+
+#[derive(Clone, Debug)]
+pub struct TraderSpiOnRspUserLogout {
+    pub user_logout: Option<Struct_CThostFtdcUserLogoutField>,
+    pub result: RspResult,
+    pub request_id: TThostFtdcRequestIDType,
+    pub is_last: bool,
+}
+
+#[derive(Clone, Debug)]
+pub struct TraderSpiOnRspError {
+    pub result: RspResult,
+    pub request_id: TThostFtdcRequestIDType,
+    pub is_last: bool,
+}
+
+#[derive(Clone, Debug)]
+pub struct TraderSpiOnRspQryOrder {
+    pub order: Option<Struct_CThostFtdcOrderField>,
+    pub result: RspResult,
+    pub request_id: TThostFtdcRequestIDType,
+    pub is_last: bool,
+}
+
+#[derive(Clone, Debug)]
+pub struct TraderSpiOnRspQryTrade {
+    pub trade: Option<Struct_CThostFtdcTradeField>,
+    pub result: RspResult,
+    pub request_id: TThostFtdcRequestIDType,
+    pub is_last: bool,
+}
+
+#[derive(Clone, Debug)]
+pub struct TraderSpiOnRspQryInvestorPosition {
+    pub investor_position: Option<Struct_CThostFtdcInvestorPositionField>,
+    pub result: RspResult,
+    pub request_id: TThostFtdcRequestIDType,
+    pub is_last: bool,
+}
+
+#[derive(Clone, Debug)]
+pub struct TraderSpiOnRspQryTradingAccount {
+    pub trading_account: Option<Struct_CThostFtdcTradingAccountField>,
+    pub result: RspResult,
+    pub request_id: TThostFtdcRequestIDType,
+    pub is_last: bool,
+}
+
+#[derive(Clone, Debug)]
+pub struct TraderSpiOnRspQryInvestor {
+    pub investor: Option<Struct_CThostFtdcInvestorField>,
+    pub result: RspResult,
+    pub request_id: TThostFtdcRequestIDType,
+    pub is_last: bool,
+}
+
+#[derive(Clone, Debug)]
+pub struct TraderSpiOnRspQryTradingCode {
+    pub trading_code: Option<Struct_CThostFtdcTradingCodeField>,
+    pub result: RspResult,
+    pub request_id: TThostFtdcRequestIDType,
+    pub is_last: bool,
+}
+
+#[derive(Clone, Debug)]
+pub struct TraderSpiOnRspQryInstrumentMarginRate {
+    pub instrument_margin_rate: Option<Struct_CThostFtdcInstrumentMarginRateField>,
+    pub result: RspResult,
+    pub request_id: TThostFtdcRequestIDType,
+    pub is_last: bool,
+}
+
+#[derive(Clone, Debug)]
+pub struct TraderSpiOnRspQryInstrumentCommissionRate {
+    pub instrument_commission_rate: Option<Struct_CThostFtdcInstrumentCommissionRateField>,
+    pub result: RspResult,
+    pub request_id: TThostFtdcRequestIDType,
+    pub is_last: bool,
+}
+
+#[derive(Clone, Debug)]
+pub struct TraderSpiOnRspQryExchange {
+    pub exchange: Option<Struct_CThostFtdcExchangeField>,
+    pub result: RspResult,
+    pub request_id: TThostFtdcRequestIDType,
+    pub is_last: bool,
+}
+
+#[derive(Clone, Debug)]
+pub struct TraderSpiOnRspQryProduct {
+    pub product: Option<Struct_CThostFtdcProductField>,
+    pub result: RspResult,
+    pub request_id: TThostFtdcRequestIDType,
+    pub is_last: bool,
+}
+
+#[derive(Clone, Debug)]
+pub struct TraderSpiOnRspQryInstrument {
+    pub instrument: Option<Struct_CThostFtdcInstrumentField>,
+    pub result: RspResult,
+    pub request_id: TThostFtdcRequestIDType,
+    pub is_last: bool,
+}
+
+#[derive(Clone, Debug)]
+pub struct TraderSpiOnRspQryExchangeMarginRate {
+    pub exchange_margin_rate: Option<Struct_CThostFtdcExchangeMarginRateField>,
+    pub result: RspResult,
+    pub request_id: TThostFtdcRequestIDType,
+    pub is_last: bool,
+}
+
+#[derive(Clone, Debug)]
+pub struct TraderSpiOnRspQryExchangeMarginRateAdjust {
+    pub exchange_margin_rate_adjust: Option<Struct_CThostFtdcExchangeMarginRateAdjustField>,
+    pub result: RspResult,
+    pub request_id: TThostFtdcRequestIDType,
+    pub is_last: bool,
+}
+
+#[derive(Clone, Debug)]
+pub struct TraderSpiOnRspQryExchangeRate {
+    pub exchange_rate: Option<Struct_CThostFtdcExchangeRateField>,
+    pub result: RspResult,
+    pub request_id: TThostFtdcRequestIDType,
+    pub is_last: bool,
+}
+
+#[derive(Clone, Debug)]
+pub struct TraderSpiOnRspOrderInsert {
+    pub input_order: Option<Struct_CThostFtdcInputOrderField>,
+    pub result: RspResult,
+    pub request_id: TThostFtdcRequestIDType,
+    pub is_last: bool,
+}
+
+#[derive(Clone, Debug)]
+pub struct TraderSpiOnRspOrderAction {
+    pub input_order_action: Option<Struct_CThostFtdcInputOrderActionField>,
+    pub result: RspResult,
+    pub request_id: TThostFtdcRequestIDType,
+    pub is_last: bool,
+}
+
+#[derive(Clone, Debug)]
+pub struct TraderSpiOnErrRtnOrderInsert {
+    pub input_order: Option<Struct_CThostFtdcInputOrderField>,
+    pub result: RspResult,
+}
+
+#[derive(Clone, Debug)]
+pub struct TraderSpiOnErrRtnOrderAction {
+    pub order_action: Option<Struct_CThostFtdcOrderActionField>,
+    pub result: RspResult,
+}
+
+#[derive(Clone, Debug)]
+pub struct TraderSpiOnRtnOrder {
+    pub order: Option<Struct_CThostFtdcOrderField>,
+}
+
+#[derive(Clone, Debug)]
+pub struct TraderSpiOnRtnTrade {
+    pub trade: Option<Struct_CThostFtdcTradeField>,
+}
+
+#[derive(Clone, Debug)]
+pub struct TraderSpiOnRtnInstrumentStatus {
+    pub instrument_status: Option<Struct_CThostFtdcInstrumentStatusField>,
+}
+
+#[derive(Clone, Debug)]
+pub struct TraderSpiOnRtnTradingNotice {
+    pub trading_notice_info: Option<Struct_CThostFtdcTradingNoticeInfoField>,
+}
+
+#[derive(Clone, Debug)]
+pub struct TraderSpiOnRspQrySettlementInfo {
+    pub settlement_info: Option<Struct_CThostFtdcSettlementInfoField>,
+    pub result: RspResult,
+    pub request_id: TThostFtdcRequestIDType,
+    pub is_last: bool,
+}
+
+#[derive(Clone, Debug)]
+pub struct TraderSpiOnRspQrySettlementInfoConfirm {
+    pub settlement_info_confirm: Option<Struct_CThostFtdcSettlementInfoConfirmField>,
+    pub result: RspResult,
+    pub request_id: TThostFtdcRequestIDType,
+    pub is_last: bool,
+}
+
+#[derive(Clone, Debug)]
+pub struct TraderSpiOnRspSettlementInfoConfirm {
+    pub settlement_info_confirm: Option<Struct_CThostFtdcSettlementInfoConfirmField>,
+    pub result: RspResult,
+    pub request_id: TThostFtdcRequestIDType,
+    pub is_last: bool,
+}
+
+#[derive(Clone, Debug)]
+pub enum TraderSpiOutput {
+    FrontConnected(TraderSpiOnFrontConnected),
+    FrontDisconnected(TraderSpiOnFrontDisconnected),
+    RspAuthenticate(TraderSpiOnRspAuthenticate),
+    RspUserLogin(TraderSpiOnRspUserLogin),
+    RspUserLogout(TraderSpiOnRspUserLogout),
+    RspError(TraderSpiOnRspError),
+    RspQryOrder(TraderSpiOnRspQryOrder),
+    RspQryTrade(TraderSpiOnRspQryTrade),
+    RspQryInvestorPosition(TraderSpiOnRspQryInvestorPosition),
+    RspQryTradingAccount(TraderSpiOnRspQryTradingAccount),
+    RspQryInvestor(TraderSpiOnRspQryInvestor),
+    RspQryTradingCode(TraderSpiOnRspQryTradingCode),
+    RspQryInstrumentMarginRate(TraderSpiOnRspQryInstrumentMarginRate),
+    RspQryInstrumentCommissionRate(TraderSpiOnRspQryInstrumentCommissionRate),
+    RspQryExchange(TraderSpiOnRspQryExchange),
+    RspQryProduct(TraderSpiOnRspQryProduct),
+    RspQryInstrument(TraderSpiOnRspQryInstrument),
+    RspQryExchangeMarginRate(TraderSpiOnRspQryExchangeMarginRate),
+    RspQryExchangeMarginRateAdjust(TraderSpiOnRspQryExchangeMarginRateAdjust),
+    RspQryExchangeRate(TraderSpiOnRspQryExchangeRate),
+    RspQrySettlementInfo(TraderSpiOnRspQrySettlementInfo),
+    RspQrySettlementInfoConfirm(TraderSpiOnRspQrySettlementInfoConfirm),
+    RspSettlementInfoConfirm(TraderSpiOnRspSettlementInfoConfirm),
+    RspOrderInsert(TraderSpiOnRspOrderInsert),
+    RspOrderAction(TraderSpiOnRspOrderAction),
+    ErrRtnOrderInsert(TraderSpiOnErrRtnOrderInsert),
+    ErrRtnOrderAction(TraderSpiOnErrRtnOrderAction),
+    RtnOrder(TraderSpiOnRtnOrder),
+    RtnTrade(TraderSpiOnRtnTrade),
+    RtnInstrumentStatus(TraderSpiOnRtnInstrumentStatus),
+    RtnTradingNotice(TraderSpiOnRtnTradingNotice),
+}
+
+#[derive(Clone, Debug)]
+pub struct SyncSenderTraderSpi<T: From<TraderSpiOutput> + Send + 'static> {
+    sender: mpsc::SyncSender<T>,
+}
+
+impl<T> SyncSenderTraderSpi<T> where T: From<TraderSpiOutput> + Send + 'static {
+    pub fn new(sender: mpsc::SyncSender<T>) -> Self {
+        SyncSenderTraderSpi {
+            sender: sender,
+        }
+    }
+}
+
+impl<T> TraderSpi for SyncSenderTraderSpi<T> where T: From<TraderSpiOutput> + Send + 'static {
+    fn on_front_connected(&mut self) {
+        self.sender.send(T::from(TraderSpiOutput::FrontConnected(TraderSpiOnFrontConnected{ }))).expect("spi callback send front_connected failed");
+    }
+
+    fn on_front_disconnected(&mut self, reason: DisconnectionReason) {
+        self.sender.send(T::from(TraderSpiOutput::FrontDisconnected(TraderSpiOnFrontDisconnected{ reason: reason }))).expect("spi callback send front_disconnected failed");
+    }
+
+    fn on_rsp_authenticate(&mut self, rsp_authenticate: Option<&Struct_CThostFtdcRspAuthenticateField>, result: RspResult, request_id: TThostFtdcRequestIDType, is_last: bool) {
+        self.sender.send(T::from(TraderSpiOutput::RspAuthenticate(TraderSpiOnRspAuthenticate{ authenticate: rsp_authenticate.cloned(), result: result, request_id: request_id, is_last: is_last }))).expect("spi callback send rsp_user_login failed");
+    }
+
+    fn on_rsp_user_login(&mut self, rsp_user_login: Option<&Struct_CThostFtdcRspUserLoginField>, result: RspResult, request_id: i32, is_last: bool) {
+        self.sender.send(T::from(TraderSpiOutput::RspUserLogin(TraderSpiOnRspUserLogin{ user_login: rsp_user_login.cloned(), result: result, request_id: request_id, is_last: is_last }))).expect("spi callback send rsp_user_login failed");
+    }
+
+    fn on_rsp_user_logout(&mut self, rsp_user_logout: Option<&Struct_CThostFtdcUserLogoutField>, result: RspResult, request_id: i32, is_last: bool) {
+        self.sender.send(T::from(TraderSpiOutput::RspUserLogout(TraderSpiOnRspUserLogout{ user_logout: rsp_user_logout.cloned(), result: result, request_id: request_id, is_last: is_last }))).expect("spi callback send rsp_user_logout failed");
+    }
+
+   fn on_rsp_order_insert(&mut self, input_order: Option<&Struct_CThostFtdcInputOrderField>, result: RspResult, request_id: TThostFtdcRequestIDType, is_last: bool) {
+        self.sender.send(T::from(TraderSpiOutput::RspOrderInsert(TraderSpiOnRspOrderInsert{ input_order: input_order.cloned(), result: result, request_id: request_id, is_last: is_last }))).expect("spi callback send rsp_order_insert failed");
+    }
+
+    fn on_rsp_order_action(&mut self, input_order_action: Option<&Struct_CThostFtdcInputOrderActionField>, result: RspResult, request_id: TThostFtdcRequestIDType, is_last: bool) {
+        self.sender.send(T::from(TraderSpiOutput::RspOrderAction(TraderSpiOnRspOrderAction{ input_order_action: input_order_action.cloned(), result: result, request_id: request_id, is_last: is_last }))).expect("spi callback send rsp_order_action failed");
+    }
+
+    fn on_rsp_settlement_info_confirm(&mut self, settlement_info_confirm: Option<&Struct_CThostFtdcSettlementInfoConfirmField>, result: RspResult, request_id: TThostFtdcRequestIDType, is_last: bool) {
+        self.sender.send(T::from(TraderSpiOutput::RspSettlementInfoConfirm(TraderSpiOnRspSettlementInfoConfirm{ settlement_info_confirm: settlement_info_confirm.cloned(), result: result, request_id: request_id, is_last: is_last }))).expect("spi callback send rsp_settlement_info_confirm failed");
+    }
+
+    fn on_rsp_qry_order(&mut self, order: Option<&Struct_CThostFtdcOrderField>, result: RspResult, request_id: TThostFtdcRequestIDType, is_last: bool) {
+        self.sender.send(T::from(TraderSpiOutput::RspQryOrder(TraderSpiOnRspQryOrder{ order: order.cloned(), result: result, request_id: request_id, is_last: is_last }))).expect("spi callback send rsp_qry_order failed");
+    }
+
+    fn on_rsp_qry_trade(&mut self, trade: Option<&Struct_CThostFtdcTradeField>, result: RspResult, request_id: TThostFtdcRequestIDType, is_last: bool) {
+        self.sender.send(T::from(TraderSpiOutput::RspQryTrade(TraderSpiOnRspQryTrade{ trade: trade.cloned(), result: result, request_id: request_id, is_last: is_last }))).expect("spi callback send rsp_qry_trade failed");
+    }
+
+    fn on_rsp_qry_investor_position(&mut self, investor_position: Option<&Struct_CThostFtdcInvestorPositionField>, result: RspResult, request_id: TThostFtdcRequestIDType, is_last: bool) {
+        self.sender.send(T::from(TraderSpiOutput::RspQryInvestorPosition(TraderSpiOnRspQryInvestorPosition{ investor_position: investor_position.cloned(), result: result, request_id: request_id, is_last: is_last }))).expect("spi callback send rsp_qry_investor_position failed");
+    }
+
+    fn on_rsp_qry_trading_account(&mut self, trading_account: Option<&Struct_CThostFtdcTradingAccountField>, result: RspResult, request_id: TThostFtdcRequestIDType, is_last: bool) {
+        self.sender.send(T::from(TraderSpiOutput::RspQryTradingAccount(TraderSpiOnRspQryTradingAccount{ trading_account: trading_account.cloned(), result: result, request_id: request_id, is_last: is_last }))).expect("spi callback send rsp_qry_trading_account failed");
+    }
+
+    fn on_rsp_qry_investor(&mut self, investor: Option<&Struct_CThostFtdcInvestorField>, result: RspResult, request_id: TThostFtdcRequestIDType, is_last: bool) {
+        self.sender.send(T::from(TraderSpiOutput::RspQryInvestor(TraderSpiOnRspQryInvestor{ investor: investor.cloned(), result: result, request_id: request_id, is_last: is_last }))).expect("spi callback send rsp_qry_investor failed");
+    }
+
+    fn on_rsp_qry_trading_code(&mut self, trading_code: Option<&Struct_CThostFtdcTradingCodeField>, result: RspResult, request_id: TThostFtdcRequestIDType, is_last: bool) {
+        self.sender.send(T::from(TraderSpiOutput::RspQryTradingCode(TraderSpiOnRspQryTradingCode{ trading_code: trading_code.cloned(), result: result, request_id: request_id, is_last: is_last }))).expect("spi callback send rsp_qry_trading_code failed");
+    }
+
+	fn on_rsp_qry_instrument_margin_rate(&mut self, instrument_margin_rate: Option<&Struct_CThostFtdcInstrumentMarginRateField>, result: RspResult, request_id: TThostFtdcRequestIDType, is_last: bool) {
+        self.sender.send(T::from(TraderSpiOutput::RspQryInstrumentMarginRate(TraderSpiOnRspQryInstrumentMarginRate{ instrument_margin_rate: instrument_margin_rate.cloned(), result: result, request_id: request_id, is_last: is_last }))).expect("spi callback send rsp_qry_instrument_margin_rate failed");
+    }
+
+	fn on_rsp_qry_instrument_commission_rate(&mut self, instrument_commission_rate: Option<&Struct_CThostFtdcInstrumentCommissionRateField>, result: RspResult, request_id: TThostFtdcRequestIDType, is_last: bool) {
+        self.sender.send(T::from(TraderSpiOutput::RspQryInstrumentCommissionRate(TraderSpiOnRspQryInstrumentCommissionRate{ instrument_commission_rate: instrument_commission_rate.cloned(), result: result, request_id: request_id, is_last: is_last }))).expect("spi callback send rsp_qry_instrument_commission_rate failed");
+    }
+
+    fn on_rsp_qry_exchange(&mut self, exchange: Option<&Struct_CThostFtdcExchangeField>, result: RspResult, request_id: TThostFtdcRequestIDType, is_last: bool) {
+        self.sender.send(T::from(TraderSpiOutput::RspQryExchange(TraderSpiOnRspQryExchange{ exchange: exchange.cloned(), result: result, request_id: request_id, is_last: is_last }))).expect("spi callback send rsp_qry_exchange failed");
+    }
+
+    fn on_rsp_qry_product(&mut self, product: Option<&Struct_CThostFtdcProductField>, result: RspResult, request_id: TThostFtdcRequestIDType, is_last: bool) {
+        self.sender.send(T::from(TraderSpiOutput::RspQryProduct(TraderSpiOnRspQryProduct{ product: product.cloned(), result: result, request_id: request_id, is_last: is_last }))).expect("spi callback send rsp_qry_product failed");
+    }
+
+    fn on_rsp_qry_instrument(&mut self, instrument: Option<&Struct_CThostFtdcInstrumentField>, result: RspResult, request_id: TThostFtdcRequestIDType, is_last: bool) {
+        self.sender.send(T::from(TraderSpiOutput::RspQryInstrument(TraderSpiOnRspQryInstrument{ instrument: instrument.cloned(), result: result, request_id: request_id, is_last: is_last }))).expect("spi callback send rsp_qry_instrument failed");
+    }
+
+    fn on_rsp_qry_settlement_info(&mut self, settlement_info: Option<&Struct_CThostFtdcSettlementInfoField>, result: RspResult, request_id: TThostFtdcRequestIDType, is_last: bool) {
+        self.sender.send(T::from(TraderSpiOutput::RspQrySettlementInfo(TraderSpiOnRspQrySettlementInfo{ settlement_info: settlement_info.cloned(), result: result, request_id: request_id, is_last: is_last }))).expect("spi callback send rsp_qry_settlement_info failed");
+    }
+
+    fn on_rsp_qry_settlement_info_confirm(&mut self, settlement_info_confirm: Option<&Struct_CThostFtdcSettlementInfoConfirmField>, result: RspResult, request_id: TThostFtdcRequestIDType, is_last: bool) {
+        self.sender.send(T::from(TraderSpiOutput::RspQrySettlementInfoConfirm(TraderSpiOnRspQrySettlementInfoConfirm{ settlement_info_confirm: settlement_info_confirm.cloned(), result: result, request_id: request_id, is_last: is_last }))).expect("spi callback send rsp_qry_settlement_info_confirm failed");
+    }
+
+	fn on_rsp_qry_exchange_margin_rate(&mut self, exchange_margin_rate: Option<&Struct_CThostFtdcExchangeMarginRateField>, result: RspResult, request_id: TThostFtdcRequestIDType, is_last: bool) {
+        self.sender.send(T::from(TraderSpiOutput::RspQryExchangeMarginRate(TraderSpiOnRspQryExchangeMarginRate{ exchange_margin_rate: exchange_margin_rate.cloned(), result: result, request_id: request_id, is_last: is_last }))).expect("spi callback send rsp_qry_exchange_margin_rate failed");
+    }
+
+	fn on_rsp_qry_exchange_margin_rate_adjust(&mut self, exchange_margin_rate_adjust: Option<&Struct_CThostFtdcExchangeMarginRateAdjustField>, result: RspResult, request_id: TThostFtdcRequestIDType, is_last: bool) {
+        self.sender.send(T::from(TraderSpiOutput::RspQryExchangeMarginRateAdjust(TraderSpiOnRspQryExchangeMarginRateAdjust{ exchange_margin_rate_adjust: exchange_margin_rate_adjust.cloned(), result: result, request_id: request_id, is_last: is_last }))).expect("spi callback send rsp_qry_exchange_margin_rate_adjust failed");
+    }
+
+	fn on_rsp_qry_exchange_rate(&mut self, exchange_rate: Option<&Struct_CThostFtdcExchangeRateField>, result: RspResult, request_id: TThostFtdcRequestIDType, is_last: bool) {
+        self.sender.send(T::from(TraderSpiOutput::RspQryExchangeRate(TraderSpiOnRspQryExchangeRate{ exchange_rate: exchange_rate.cloned(), result: result, request_id: request_id, is_last: is_last }))).expect("spi callback send rsp_qry_exchange_rate failed");
+    }
+
+    fn on_rsp_error(&mut self, result: RspResult, request_id: i32, is_last: bool) {
+        self.sender.send(T::from(TraderSpiOutput::RspError(TraderSpiOnRspError{ result: result, request_id: request_id, is_last: is_last }))).expect("spi callback send rsp_error failed");
+    }
+
+    fn on_rtn_order(&mut self, order: Option<&Struct_CThostFtdcOrderField>) {
+        self.sender.send(T::from(TraderSpiOutput::RtnOrder(TraderSpiOnRtnOrder{ order: order.cloned() }))).expect("spi callback send rtn_order failed");
+    }
+
+    fn on_rtn_trade(&mut self, trade: Option<&Struct_CThostFtdcTradeField>) {
+        self.sender.send(T::from(TraderSpiOutput::RtnTrade(TraderSpiOnRtnTrade{ trade: trade.cloned() }))).expect("spi callback send rtn_trade failed");
+    }
+
+    fn on_err_rtn_order_insert(&mut self, input_order: Option<&Struct_CThostFtdcInputOrderField>, result: RspResult) {
+        self.sender.send(T::from(TraderSpiOutput::ErrRtnOrderInsert(TraderSpiOnErrRtnOrderInsert{ input_order: input_order.cloned(), result: result }))).expect("spi callback send err_rtn_order_insert failed");
+    }
+
+    fn on_err_rtn_order_action(&mut self, order_action: Option<&Struct_CThostFtdcOrderActionField>, result: RspResult) {
+        self.sender.send(T::from(TraderSpiOutput::ErrRtnOrderAction(TraderSpiOnErrRtnOrderAction{ order_action: order_action.cloned(), result: result }))).expect("spi callback send err_rtn_order_action failed");
+    }
+
+    fn on_rtn_instrument_status(&mut self, instrument_status: Option<&Struct_CThostFtdcInstrumentStatusField>) {
+        self.sender.send(T::from(TraderSpiOutput::RtnInstrumentStatus(TraderSpiOnRtnInstrumentStatus{ instrument_status: instrument_status.cloned() }))).expect("spi callback send rtn_instrument_status failed");
+    }
+
+    fn on_rtn_trading_notice(&mut self, trading_notice_info: Option<&Struct_CThostFtdcTradingNoticeInfoField>) {
+        self.sender.send(T::from(TraderSpiOutput::RtnTradingNotice(TraderSpiOnRtnTradingNotice{ trading_notice_info: trading_notice_info.cloned() }))).expect("spi callback send rtn_trading_notice_info failed");
+    }
+
 }
 
 #[allow(non_snake_case)]

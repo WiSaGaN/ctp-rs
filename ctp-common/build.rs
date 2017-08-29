@@ -33,8 +33,13 @@ fn generate_data_type(input_h: &Path, output_rs: &Path) -> Result<(), String> {
     Ok(())
 }
 
-fn generate_struct(input_h: &Path, output_rs: &Path) -> Result<(), String> {
-    let binding = try!(bindgen::builder().header(input_h.to_string_lossy().into_owned()).generate().map_err(|_| format!("failed to generate binding" )));
+fn generate_struct(input_h: &str, output_rs: &str) -> Result<(), String> {
+    let binding = try!(bindgen::builder()
+                       .header(input_h)
+                       .derive_debug(false)
+                       .derive_default(true)
+                       .generate()
+                       .map_err(|_| format!("failed to generate binding" )));
     let binding_output = binding.to_string().replace("c_char", "c_uchar");
     let mut output_file = try!(std::fs::File::create(output_rs).map_err(|e| format!("cannot create struct file, {}", e)));
     output_file.write_all(binding_output.as_bytes()).map_err(|e| format!("cannot write struct file, {}", e))
@@ -101,7 +106,7 @@ fn main() {
     generate_data_type(Path::new(data_type_header), Path::new(&data_type_out_path)).unwrap();
     let struct_header = "../api-ctp/include/ThostFtdcUserApiStruct.h";
     let struct_out_path = format!("{}/struct.rs.in", out_dir);
-    generate_struct(Path::new(struct_header), Path::new(&struct_out_path)).unwrap();
+    generate_struct((struct_header), (&struct_out_path)).unwrap();
     let error_xml = "../api-ctp/misc/error.xml";
     let error_out_path = format!("{}/error.rs.in", out_dir);
     generate_error(Path::new(error_xml), Path::new(&error_out_path)).unwrap();

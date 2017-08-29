@@ -9,97 +9,97 @@ struct Spi;
 impl TraderSpi for Spi {
 }
 
-fn new_login(user_id: &str, password: &str) -> Struct_CThostFtdcReqUserLoginField {
-    let mut f: Struct_CThostFtdcReqUserLoginField = Default::default();
+fn new_login(user_id: &str, password: &str) -> CThostFtdcReqUserLoginField {
+    let mut f: CThostFtdcReqUserLoginField = Default::default();
     set_cstr_from_str_truncate(&mut f.BrokerID, BROKER_ID);
     set_cstr_from_str_truncate(&mut f.UserID, user_id);
     set_cstr_from_str_truncate(&mut f.Password, password);
     f
 }
 
-fn new_qry_settlement_info(user_id: &str) -> Struct_CThostFtdcQrySettlementInfoField {
-    let mut f: Struct_CThostFtdcQrySettlementInfoField = Default::default();
+fn new_qry_settlement_info(user_id: &str) -> CThostFtdcQrySettlementInfoField {
+    let mut f: CThostFtdcQrySettlementInfoField = Default::default();
     set_cstr_from_str_truncate(&mut f.BrokerID, BROKER_ID);
     set_cstr_from_str_truncate(&mut f.InvestorID, user_id);
     f
 }
 
-fn new_settlement_info_confirm(user_id: &str) -> Struct_CThostFtdcSettlementInfoConfirmField {
-    let mut f: Struct_CThostFtdcSettlementInfoConfirmField = Default::default();
+fn new_settlement_info_confirm(user_id: &str) -> CThostFtdcSettlementInfoConfirmField {
+    let mut f: CThostFtdcSettlementInfoConfirmField = Default::default();
     set_cstr_from_str_truncate(&mut f.BrokerID, BROKER_ID);
     set_cstr_from_str_truncate(&mut f.InvestorID, user_id);
     f
 }
 
-fn new_qry_settlement_info_confirm(user_id: &str) -> Struct_CThostFtdcQrySettlementInfoConfirmField {
-    let mut f: Struct_CThostFtdcQrySettlementInfoConfirmField = Default::default();
+fn new_qry_settlement_info_confirm(user_id: &str) -> CThostFtdcQrySettlementInfoConfirmField {
+    let mut f: CThostFtdcQrySettlementInfoConfirmField = Default::default();
     set_cstr_from_str_truncate(&mut f.BrokerID, BROKER_ID);
     set_cstr_from_str_truncate(&mut f.InvestorID, user_id);
     f
 }
 
-fn new_qry_instrument(pattern: &str) -> Struct_CThostFtdcQryInstrumentField {
-    let mut f: Struct_CThostFtdcQryInstrumentField = Default::default();
+fn new_qry_instrument(pattern: &str) -> CThostFtdcQryInstrumentField {
+    let mut f: CThostFtdcQryInstrumentField = Default::default();
     set_cstr_from_str_truncate(&mut f.InstrumentID, pattern);
     f
 }
 
-fn new_qry_exchange(pattern: &str) -> Struct_CThostFtdcQryExchangeField {
-    let mut f: Struct_CThostFtdcQryExchangeField = Default::default();
+fn new_qry_exchange(pattern: &str) -> CThostFtdcQryExchangeField {
+    let mut f: CThostFtdcQryExchangeField = Default::default();
     set_cstr_from_str_truncate(&mut f.ExchangeID, pattern);
     f
 }
 
-fn new_qry_product(pattern: &str) -> Struct_CThostFtdcQryProductField {
-    let mut f: Struct_CThostFtdcQryProductField = Default::default();
+fn new_qry_product(pattern: &str) -> CThostFtdcQryProductField {
+    let mut f: CThostFtdcQryProductField = Default::default();
     set_cstr_from_str_truncate(&mut f.ProductID, pattern);
     f
 }
 
-fn new_qry_order(user_id: &str) -> Struct_CThostFtdcQryOrderField {
-    let mut f: Struct_CThostFtdcQryOrderField = Default::default();
+fn new_qry_order(user_id: &str) -> CThostFtdcQryOrderField {
+    let mut f: CThostFtdcQryOrderField = Default::default();
     set_cstr_from_str_truncate(&mut f.BrokerID, BROKER_ID);
     set_cstr_from_str_truncate(&mut f.InvestorID, user_id);
     f
 }
 
-fn new_qry_trade(user_id: &str) -> Struct_CThostFtdcQryTradeField {
-    let mut f: Struct_CThostFtdcQryTradeField = Default::default();
+fn new_qry_trade(user_id: &str) -> CThostFtdcQryTradeField {
+    let mut f: CThostFtdcQryTradeField = Default::default();
     set_cstr_from_str_truncate(&mut f.BrokerID, BROKER_ID);
     set_cstr_from_str_truncate(&mut f.InvestorID, user_id);
     f
 }
 
-fn new_qry_investor_position(user_id: &str) -> Struct_CThostFtdcQryInvestorPositionField {
-    let mut f: Struct_CThostFtdcQryInvestorPositionField = Default::default();
+fn new_qry_investor_position(user_id: &str) -> CThostFtdcQryInvestorPositionField {
+    let mut f: CThostFtdcQryInvestorPositionField = Default::default();
     set_cstr_from_str_truncate(&mut f.BrokerID, BROKER_ID);
     set_cstr_from_str_truncate(&mut f.InvestorID, user_id);
     f
 }
 
-fn new_qry_trading_account(user_id: &str) -> Struct_CThostFtdcQryTradingAccountField {
-    let mut f: Struct_CThostFtdcQryTradingAccountField = Default::default();
+fn new_qry_trading_account(user_id: &str) -> CThostFtdcQryTradingAccountField {
+    let mut f: CThostFtdcQryTradingAccountField = Default::default();
     set_cstr_from_str_truncate(&mut f.BrokerID, BROKER_ID);
     set_cstr_from_str_truncate(&mut f.InvestorID, user_id);
     f
 }
 
-fn new_qry_investor(user_id: &str) -> Struct_CThostFtdcQryInvestorField {
-    let mut f: Struct_CThostFtdcQryInvestorField = Default::default();
+fn new_qry_investor(user_id: &str) -> CThostFtdcQryInvestorField {
+    let mut f: CThostFtdcQryInvestorField = Default::default();
     set_cstr_from_str_truncate(&mut f.BrokerID, BROKER_ID);
     set_cstr_from_str_truncate(&mut f.InvestorID, user_id);
     f
 }
 
-fn new_qry_trading_code(user_id: &str) -> Struct_CThostFtdcQryTradingCodeField {
-    let mut f: Struct_CThostFtdcQryTradingCodeField = Default::default();
+fn new_qry_trading_code(user_id: &str) -> CThostFtdcQryTradingCodeField {
+    let mut f: CThostFtdcQryTradingCodeField = Default::default();
     set_cstr_from_str_truncate(&mut f.BrokerID, BROKER_ID);
     set_cstr_from_str_truncate(&mut f.InvestorID, user_id);
     f
 }
 
-fn new_input_order(user_id: &str) -> Struct_CThostFtdcInputOrderField {
-    let mut f: Struct_CThostFtdcInputOrderField = Default::default();
+fn new_input_order(user_id: &str) -> CThostFtdcInputOrderField {
+    let mut f: CThostFtdcInputOrderField = Default::default();
     set_cstr_from_str_truncate(&mut f.BrokerID, BROKER_ID);
     set_cstr_from_str_truncate(&mut f.InvestorID, user_id);
     set_cstr_from_str_truncate(&mut f.InstrumentID, "IF1703");
@@ -119,8 +119,8 @@ fn new_input_order(user_id: &str) -> Struct_CThostFtdcInputOrderField {
     f
 }
 
-fn new_input_order_action() -> Struct_CThostFtdcInputOrderActionField {
-    let mut f: Struct_CThostFtdcInputOrderActionField = Default::default();
+fn new_input_order_action() -> CThostFtdcInputOrderActionField {
+    let mut f: CThostFtdcInputOrderActionField = Default::default();
     f.ActionFlag = THOST_FTDC_AF_Delete;
     f
 }

@@ -94,17 +94,17 @@ pub struct OrderIdExchangeDuo {
 
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub enum ResumeType {
-    Restart = Enum_THOST_TE_RESUME_TYPE::THOST_TERT_RESTART as isize,
-    Resume = Enum_THOST_TE_RESUME_TYPE::THOST_TERT_RESUME as isize,
-    Quick = Enum_THOST_TE_RESUME_TYPE::THOST_TERT_QUICK as isize,
+    Restart = THOST_TE_RESUME_TYPE::THOST_TERT_RESTART as isize,
+    Resume = THOST_TE_RESUME_TYPE::THOST_TERT_RESUME as isize,
+    Quick = THOST_TE_RESUME_TYPE::THOST_TERT_QUICK as isize,
 }
 
-impl std::convert::Into<Enum_THOST_TE_RESUME_TYPE> for ResumeType {
-    fn into(self) -> Enum_THOST_TE_RESUME_TYPE {
+impl std::convert::Into<THOST_TE_RESUME_TYPE> for ResumeType {
+    fn into(self) -> THOST_TE_RESUME_TYPE {
         match self {
-            ResumeType::Restart => Enum_THOST_TE_RESUME_TYPE::THOST_TERT_RESTART,
-            ResumeType::Resume => Enum_THOST_TE_RESUME_TYPE::THOST_TERT_RESUME,
-            ResumeType::Quick => Enum_THOST_TE_RESUME_TYPE::THOST_TERT_QUICK,
+            ResumeType::Restart => THOST_TE_RESUME_TYPE::THOST_TERT_RESTART,
+            ResumeType::Resume => THOST_TE_RESUME_TYPE::THOST_TERT_RESUME,
+            ResumeType::Quick => THOST_TE_RESUME_TYPE::THOST_TERT_QUICK,
         }
     }
 }
@@ -213,13 +213,13 @@ pub fn from_rsp_result_to_string(rsp_result: &RspResult) -> String {
     }
 }
 
-pub fn from_rsp_info_to_rsp_result(rsp_info: *const Struct_CThostFtdcRspInfoField) -> RspResult {
+pub fn from_rsp_info_to_rsp_result(rsp_info: *const CThostFtdcRspInfoField) -> RspResult {
     match unsafe { rsp_info.as_ref() } {
-        Some(&info) => match info {
-            Struct_CThostFtdcRspInfoField { ErrorID: 0, ErrorMsg: _ } => {
+        Some(info) => match *info {
+            CThostFtdcRspInfoField { ErrorID: 0, ErrorMsg: _ } => {
                 Ok(())
             },
-            Struct_CThostFtdcRspInfoField { ErrorID: id, ErrorMsg: ref msg } => {
+            CThostFtdcRspInfoField { ErrorID: id, ErrorMsg: ref msg } => {
                 Err(RspError{ id: id, msg: gb18030_cstr_to_str(msg).into_owned() })
             }
         },
@@ -375,7 +375,7 @@ mod tests {
     use super::gb18030_cstr_to_str;
     use super::to_exchange_timestamp;
     use super::{ set_cstr_from_str, set_cstr_from_str_truncate };
-    use super::Struct_CThostFtdcDepthMarketDataField;
+    use super::CThostFtdcDepthMarketDataField;
 
     #[test]
     fn len_0_ascii_cstr_to_str() {
@@ -477,7 +477,7 @@ mod tests {
 
     #[test]
     fn exchange_timestamp_conversion() {
-        let mut md: Struct_CThostFtdcDepthMarketDataField = Default::default();
+        let mut md: CThostFtdcDepthMarketDataField = Default::default();
         md.TradingDay = *b"19700101\0";
         md.UpdateTime = *b"08:00:00\0";
         md.UpdateMillisec = 0;

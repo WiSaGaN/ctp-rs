@@ -3,7 +3,6 @@
 #![allow(non_snake_case)]
 #![allow(non_upper_case_globals)]
 include!(concat!(env!("OUT_DIR"), "/struct.rs.in"));
-include!(concat!(env!("OUT_DIR"), "/data_type.rs.in"));
 include!(concat!(env!("OUT_DIR"), "/error.rs.in"));
 
 pub const THOST_FTDC_BOOL_True: TThostFtdcBoolType = 1;
@@ -14,9 +13,9 @@ pub const THOST_FTDC_COMB_FLAG_LENGTH: usize = 5;
 use std::fmt;
 use super::{ gb18030_cstr_to_str, normalize_double, reduce_comb_flags, maybe_char };
 
-impl fmt::Debug for Struct_CThostFtdcRspAuthenticateField {
+impl fmt::Debug for CThostFtdcRspAuthenticateField {
     fn fmt(&self, fmt: &mut fmt::Formatter) -> fmt::Result {
-        fmt.debug_struct("Struct_CThostFtdcRspAuthenticateField")
+        fmt.debug_struct("CThostFtdcRspAuthenticateField")
             .field("BrokerID", &gb18030_cstr_to_str(&self.BrokerID))
             .field("UserID", &gb18030_cstr_to_str(&self.UserID))
             .field("UserProductInfo", &gb18030_cstr_to_str(&self.UserProductInfo))
@@ -24,9 +23,9 @@ impl fmt::Debug for Struct_CThostFtdcRspAuthenticateField {
     }
 }
 
-impl fmt::Debug for Struct_CThostFtdcReqUserLoginField {
+impl fmt::Debug for CThostFtdcReqUserLoginField {
     fn fmt(&self, fmt: &mut fmt::Formatter) -> fmt::Result {
-        fmt.debug_struct("Struct_CThostFtdcReqUserLoginField")
+        fmt.debug_struct("CThostFtdcReqUserLoginField")
             .field("TradingDay", &gb18030_cstr_to_str(&self.TradingDay))
             .field("BrokerID", &gb18030_cstr_to_str(&self.BrokerID))
             .field("UserID", &gb18030_cstr_to_str(&self.UserID))
@@ -41,9 +40,9 @@ impl fmt::Debug for Struct_CThostFtdcReqUserLoginField {
     }
 }
 
-impl fmt::Debug for Struct_CThostFtdcRspUserLoginField {
+impl fmt::Debug for CThostFtdcRspUserLoginField {
     fn fmt(&self, fmt: &mut fmt::Formatter) -> fmt::Result {
-        fmt.debug_struct("Struct_CThostFtdcRspUserLoginField")
+        fmt.debug_struct("CThostFtdcRspUserLoginField")
             .field("TradingDay", &gb18030_cstr_to_str(&self.TradingDay))
             .field("LoginTime", &gb18030_cstr_to_str(&self.LoginTime))
             .field("BrokerID", &gb18030_cstr_to_str(&self.BrokerID))
@@ -61,26 +60,26 @@ impl fmt::Debug for Struct_CThostFtdcRspUserLoginField {
     }
 }
 
-impl fmt::Debug for Struct_CThostFtdcUserLogoutField {
+impl fmt::Debug for CThostFtdcUserLogoutField {
     fn fmt(&self, fmt: &mut fmt::Formatter) -> fmt::Result {
-        fmt.debug_struct("Struct_CThostFtdcUserLogoutField")
+        fmt.debug_struct("CThostFtdcUserLogoutField")
             .field("BrokerID", &gb18030_cstr_to_str(&self.BrokerID))
             .field("UserID", &gb18030_cstr_to_str(&self.UserID))
             .finish()
     }
 }
 
-impl fmt::Debug for Struct_CThostFtdcSpecificInstrumentField {
+impl fmt::Debug for CThostFtdcSpecificInstrumentField {
     fn fmt(&self, fmt: &mut fmt::Formatter) -> fmt::Result {
-        fmt.debug_struct("Struct_CThostFtdcSpecificInstrumentField")
+        fmt.debug_struct("CThostFtdcSpecificInstrumentField")
             .field("InstrumentID", &gb18030_cstr_to_str(&self.InstrumentID))
             .finish()
     }
 }
 
-impl fmt::Debug for Struct_CThostFtdcInstrumentField {
+impl fmt::Debug for CThostFtdcInstrumentField {
     fn fmt(&self, fmt: &mut fmt::Formatter) -> fmt::Result {
-        fmt.debug_struct("Struct_CThostFtdcInstrumentField")
+        fmt.debug_struct("CThostFtdcInstrumentField")
             .field("InstrumentID", &gb18030_cstr_to_str(&self.InstrumentID))
             .field("ExchangeID", &gb18030_cstr_to_str(&self.ExchangeID))
             .field("InstrumentName", &gb18030_cstr_to_str(&self.InstrumentName))
@@ -116,9 +115,9 @@ impl fmt::Debug for Struct_CThostFtdcInstrumentField {
     }
 }
 
-impl fmt::Debug for Struct_CThostFtdcInstrumentStatusField {
+impl fmt::Debug for CThostFtdcInstrumentStatusField {
     fn fmt(&self, fmt: &mut fmt::Formatter) -> fmt::Result {
-        fmt.debug_struct("Struct_CThostFtdcInstrumentStatusField ")
+        fmt.debug_struct("CThostFtdcInstrumentStatusField ")
             .field("ExchangeID", &gb18030_cstr_to_str(&self.ExchangeID))
             .field("ExchangeInstID", &gb18030_cstr_to_str(&self.ExchangeInstID))
             .field("SettlementGroupID", &gb18030_cstr_to_str(&self.SettlementGroupID))
@@ -131,9 +130,9 @@ impl fmt::Debug for Struct_CThostFtdcInstrumentStatusField {
     }
 }
 
-impl fmt::Debug for Struct_CThostFtdcOrderField {
+impl fmt::Debug for CThostFtdcOrderField {
     fn fmt(&self, fmt: &mut fmt::Formatter) -> fmt::Result {
-        fmt.debug_struct("Struct_CThostFtdcOrderField")
+        fmt.debug_struct("CThostFtdcOrderField")
             .field("BrokerID", &gb18030_cstr_to_str(&self.BrokerID))
             .field("InvestorID", &gb18030_cstr_to_str(&self.InvestorID))
             .field("InstrumentID", &gb18030_cstr_to_str(&self.InstrumentID))
@@ -195,9 +194,9 @@ impl fmt::Debug for Struct_CThostFtdcOrderField {
     }
 }
 
-impl fmt::Debug for Struct_CThostFtdcTradeField {
+impl fmt::Debug for CThostFtdcTradeField {
     fn fmt(&self, fmt: &mut fmt::Formatter) -> fmt::Result {
-        fmt.debug_struct("Struct_CThostFtdcTradeField")
+        fmt.debug_struct("CThostFtdcTradeField")
             .field("BrokerID", &gb18030_cstr_to_str(&self.BrokerID))
             .field("InvestorID", &gb18030_cstr_to_str(&self.InvestorID))
             .field("InstrumentID", &gb18030_cstr_to_str(&self.InstrumentID))
@@ -232,9 +231,9 @@ impl fmt::Debug for Struct_CThostFtdcTradeField {
     }
 }
 
-impl fmt::Debug for Struct_CThostFtdcSettlementInfoField {
+impl fmt::Debug for CThostFtdcSettlementInfoField {
     fn fmt(&self, fmt: &mut fmt::Formatter) -> fmt::Result {
-        fmt.debug_struct("Struct_CThostFtdcSettlementInfoField")
+        fmt.debug_struct("CThostFtdcSettlementInfoField")
             .field("TradingDay", &gb18030_cstr_to_str(&self.TradingDay))
             .field("SettlementID", &self.SettlementID)
             .field("BrokerID", &gb18030_cstr_to_str(&self.BrokerID))
@@ -245,9 +244,9 @@ impl fmt::Debug for Struct_CThostFtdcSettlementInfoField {
     }
 }
 
-impl fmt::Debug for Struct_CThostFtdcExchangeMarginRateField {
+impl fmt::Debug for CThostFtdcExchangeMarginRateField {
     fn fmt(&self, fmt: &mut fmt::Formatter) -> fmt::Result {
-        fmt.debug_struct("Struct_CThostFtdcExchangeMarginRateField")
+        fmt.debug_struct("CThostFtdcExchangeMarginRateField")
             .field("BrokerID", &gb18030_cstr_to_str(&self.BrokerID))
             .field("InstrumentID", &gb18030_cstr_to_str(&self.InstrumentID))
             .field("HedgeFlag", &char::from(self.HedgeFlag))
@@ -259,9 +258,9 @@ impl fmt::Debug for Struct_CThostFtdcExchangeMarginRateField {
     }
 }
 
-impl fmt::Debug for Struct_CThostFtdcExchangeMarginRateAdjustField {
+impl fmt::Debug for CThostFtdcExchangeMarginRateAdjustField {
     fn fmt(&self, fmt: &mut fmt::Formatter) -> fmt::Result {
-        fmt.debug_struct("Struct_CThostFtdcExchangeMarginRateAdjustField")
+        fmt.debug_struct("CThostFtdcExchangeMarginRateAdjustField")
             .field("BrokerID", &gb18030_cstr_to_str(&self.BrokerID))
             .field("InstrumentID", &gb18030_cstr_to_str(&self.InstrumentID))
             .field("HedgeFlag", &char::from(self.HedgeFlag))
@@ -281,9 +280,9 @@ impl fmt::Debug for Struct_CThostFtdcExchangeMarginRateAdjustField {
     }
 }
 
-impl fmt::Debug for Struct_CThostFtdcExchangeRateField {
+impl fmt::Debug for CThostFtdcExchangeRateField {
     fn fmt(&self, fmt: &mut fmt::Formatter) -> fmt::Result {
-        fmt.debug_struct("Struct_CThostFtdcExchangeRateField")
+        fmt.debug_struct("CThostFtdcExchangeRateField")
             .field("BrokerID", &gb18030_cstr_to_str(&self.BrokerID))
             .field("FromCurrencyID", &gb18030_cstr_to_str(&self.FromCurrencyID))
             .field("FromCurrencyUnit", &self.FromCurrencyUnit)
@@ -293,9 +292,9 @@ impl fmt::Debug for Struct_CThostFtdcExchangeRateField {
     }
 }
 
-impl fmt::Debug for Struct_CThostFtdcSettlementInfoConfirmField {
+impl fmt::Debug for CThostFtdcSettlementInfoConfirmField {
     fn fmt(&self, fmt: &mut fmt::Formatter) -> fmt::Result {
-        fmt.debug_struct("Struct_CThostFtdcSettlementInfoConfirmField")
+        fmt.debug_struct("CThostFtdcSettlementInfoConfirmField")
             .field("BrokerID", &gb18030_cstr_to_str(&self.BrokerID))
             .field("InvestorID", &gb18030_cstr_to_str(&self.InvestorID))
             .field("ConfirmDate", &gb18030_cstr_to_str(&self.ConfirmDate))
@@ -304,9 +303,9 @@ impl fmt::Debug for Struct_CThostFtdcSettlementInfoConfirmField {
     }
 }
 
-impl fmt::Debug for Struct_CThostFtdcInputOrderField {
+impl fmt::Debug for CThostFtdcInputOrderField {
     fn fmt(&self, fmt: &mut fmt::Formatter) -> fmt::Result {
-        fmt.debug_struct("Struct_CThostFtdcInputOrderField")
+        fmt.debug_struct("CThostFtdcInputOrderField")
             .field("BrokerID", &gb18030_cstr_to_str(&self.BrokerID))
             .field("InvestorID", &gb18030_cstr_to_str(&self.InvestorID))
             .field("InstrumentID", &gb18030_cstr_to_str(&self.InstrumentID))
@@ -334,9 +333,9 @@ impl fmt::Debug for Struct_CThostFtdcInputOrderField {
     }
 }
 
-impl fmt::Debug for Struct_CThostFtdcOrderActionField {
+impl fmt::Debug for CThostFtdcOrderActionField {
     fn fmt(&self, fmt: &mut fmt::Formatter) -> fmt::Result {
-        fmt.debug_struct("Struct_CThostFtdcOrderActionField")
+        fmt.debug_struct("CThostFtdcOrderActionField")
             .field("BrokerID", &gb18030_cstr_to_str(&self.BrokerID))
             .field("InvestorID", &gb18030_cstr_to_str(&self.InvestorID))
             .field("OrderActionRef", &self.OrderActionRef)
@@ -366,9 +365,9 @@ impl fmt::Debug for Struct_CThostFtdcOrderActionField {
     }
 }
 
-impl fmt::Debug for Struct_CThostFtdcInputOrderActionField {
+impl fmt::Debug for CThostFtdcInputOrderActionField {
     fn fmt(&self, fmt: &mut fmt::Formatter) -> fmt::Result {
-        fmt.debug_struct("Struct_CThostFtdcInputOrderActionField")
+        fmt.debug_struct("CThostFtdcInputOrderActionField")
             .field("BrokerID", &gb18030_cstr_to_str(&self.BrokerID))
             .field("InvestorID", &gb18030_cstr_to_str(&self.InvestorID))
             .field("OrderActionRef", &self.OrderActionRef)
@@ -387,9 +386,9 @@ impl fmt::Debug for Struct_CThostFtdcInputOrderActionField {
     }
 }
 
-impl fmt::Debug for Struct_CThostFtdcTradingNoticeInfoField {
+impl fmt::Debug for CThostFtdcTradingNoticeInfoField {
     fn fmt(&self, fmt: &mut fmt::Formatter) -> fmt::Result {
-        fmt.debug_struct("Struct_CThostFtdcTradingNoticeInfoField")
+        fmt.debug_struct("CThostFtdcTradingNoticeInfoField")
             .field("BrokerID", &gb18030_cstr_to_str(&self.BrokerID))
             .field("InvestorID", &gb18030_cstr_to_str(&self.InvestorID))
             .field("SendTime", &gb18030_cstr_to_str(&self.SendTime))
@@ -400,9 +399,9 @@ impl fmt::Debug for Struct_CThostFtdcTradingNoticeInfoField {
     }
 }
 
-impl fmt::Debug for Struct_CThostFtdcInvestorField {
+impl fmt::Debug for CThostFtdcInvestorField {
     fn fmt(&self, fmt: &mut fmt::Formatter) -> fmt::Result {
-        fmt.debug_struct("Struct_CThostFtdcInvestorField")
+        fmt.debug_struct("CThostFtdcInvestorField")
             .field("InvestorID", &gb18030_cstr_to_str(&self.InvestorID))
             .field("BrokerID", &gb18030_cstr_to_str(&self.BrokerID))
             .field("InvestorGroupID", &gb18030_cstr_to_str(&self.InvestorGroupID))
@@ -420,9 +419,9 @@ impl fmt::Debug for Struct_CThostFtdcInvestorField {
     }
 }
 
-impl fmt::Debug for Struct_CThostFtdcTradingCodeField {
+impl fmt::Debug for CThostFtdcTradingCodeField {
     fn fmt(&self, fmt: &mut fmt::Formatter) -> fmt::Result {
-        fmt.debug_struct("Struct_CThostFtdcTradingCodeField")
+        fmt.debug_struct("CThostFtdcTradingCodeField")
             .field("InvestorID", &gb18030_cstr_to_str(&self.InvestorID))
             .field("BrokerID", &gb18030_cstr_to_str(&self.BrokerID))
             .field("ExchangeID", &gb18030_cstr_to_str(&self.ExchangeID))
@@ -434,9 +433,9 @@ impl fmt::Debug for Struct_CThostFtdcTradingCodeField {
 }
 
 
-impl fmt::Debug for Struct_CThostFtdcTradingAccountField {
+impl fmt::Debug for CThostFtdcTradingAccountField {
     fn fmt(&self, fmt: &mut fmt::Formatter) -> fmt::Result {
-        fmt.debug_struct("Struct_CThostFtdcTradingAccountField")
+        fmt.debug_struct("CThostFtdcTradingAccountField")
             .field("BrokerID", &gb18030_cstr_to_str(&self.BrokerID))
             .field("AccountID", &gb18030_cstr_to_str(&self.AccountID))
             .field("PreMortgage", &self.PreMortgage)
@@ -488,9 +487,9 @@ impl fmt::Debug for Struct_CThostFtdcTradingAccountField {
 }
 
 
-impl fmt::Debug for Struct_CThostFtdcInvestorPositionField {
+impl fmt::Debug for CThostFtdcInvestorPositionField {
     fn fmt(&self, fmt: &mut fmt::Formatter) -> fmt::Result {
-        fmt.debug_struct("Struct_CThostFtdcInvestorPositionField")
+        fmt.debug_struct("CThostFtdcInvestorPositionField")
             .field("InstrumentID", &gb18030_cstr_to_str(&self.InstrumentID))
             .field("BrokerID", &gb18030_cstr_to_str(&self.BrokerID))
             .field("InvestorID", &gb18030_cstr_to_str(&self.InvestorID))
@@ -538,9 +537,9 @@ impl fmt::Debug for Struct_CThostFtdcInvestorPositionField {
     }
 }
 
-impl fmt::Debug for Struct_CThostFtdcInstrumentMarginRateField {
+impl fmt::Debug for CThostFtdcInstrumentMarginRateField {
     fn fmt(&self, fmt: &mut fmt::Formatter) -> fmt::Result {
-        fmt.debug_struct("Struct_CThostFtdcInstrumentMarginRateField")
+        fmt.debug_struct("CThostFtdcInstrumentMarginRateField")
             .field("InstrumentID", &gb18030_cstr_to_str(&self.InstrumentID))
             .field("InvestorRange", &self.InvestorRange)
             .field("BrokerID", &gb18030_cstr_to_str(&self.BrokerID))
@@ -555,9 +554,9 @@ impl fmt::Debug for Struct_CThostFtdcInstrumentMarginRateField {
     }
 }
 
-impl fmt::Debug for Struct_CThostFtdcInstrumentCommissionRateField {
+impl fmt::Debug for CThostFtdcInstrumentCommissionRateField {
     fn fmt(&self, fmt: &mut fmt::Formatter) -> fmt::Result {
-        fmt.debug_struct("Struct_CThostFtdcInstrumentCommissionRateField")
+        fmt.debug_struct("CThostFtdcInstrumentCommissionRateField")
             .field("InstrumentID", &gb18030_cstr_to_str(&self.InstrumentID))
             .field("InvestorRange", &self.InvestorRange)
             .field("BrokerID", &gb18030_cstr_to_str(&self.BrokerID))
@@ -573,9 +572,9 @@ impl fmt::Debug for Struct_CThostFtdcInstrumentCommissionRateField {
 }
 
 
-impl fmt::Debug for Struct_CThostFtdcDepthMarketDataField {
+impl fmt::Debug for CThostFtdcDepthMarketDataField {
     fn fmt(&self, fmt: &mut fmt::Formatter) -> fmt::Result {
-        let mut debug = fmt.debug_struct("Struct_CThostFtdcDepthMarketDataField");
+        let mut debug = fmt.debug_struct("CThostFtdcDepthMarketDataField");
         debug.field("TradingDay", &gb18030_cstr_to_str(&self.TradingDay))
             .field("InstrumentID", &gb18030_cstr_to_str(&self.InstrumentID))
             .field("ExchangeID", &gb18030_cstr_to_str(&self.ExchangeID))
@@ -633,9 +632,9 @@ impl fmt::Debug for Struct_CThostFtdcDepthMarketDataField {
     }
 }
 
-impl fmt::Debug for Struct_CThostFtdcExchangeField {
+impl fmt::Debug for CThostFtdcExchangeField {
     fn fmt(&self, fmt: &mut fmt::Formatter) -> fmt::Result {
-        fmt.debug_struct("Struct_CThostFtdcExchangeField")
+        fmt.debug_struct("CThostFtdcExchangeField")
             .field("ExchangeID", &gb18030_cstr_to_str(&self.ExchangeID))
             .field("ExchangeName", &gb18030_cstr_to_str(&self.ExchangeName))
             .field("ExchangeProperty", &char::from(self.ExchangeProperty))
@@ -643,9 +642,9 @@ impl fmt::Debug for Struct_CThostFtdcExchangeField {
     }
 }
 
-impl fmt::Debug for Struct_CThostFtdcProductField {
+impl fmt::Debug for CThostFtdcProductField {
     fn fmt(&self, fmt: &mut fmt::Formatter) -> fmt::Result {
-        fmt.debug_struct("Struct_CThostFtdcProductField")
+        fmt.debug_struct("CThostFtdcProductField")
             .field("ProductID", &gb18030_cstr_to_str(&self.ProductID))
             .field("ProductName", &gb18030_cstr_to_str(&self.ProductName))
             .field("ExchangeID", &gb18030_cstr_to_str(&self.ExchangeID))
@@ -667,9 +666,9 @@ impl fmt::Debug for Struct_CThostFtdcProductField {
     }
 }
 
-impl fmt::Debug for Struct_CThostFtdcForQuoteRspField {
+impl fmt::Debug for CThostFtdcForQuoteRspField {
     fn fmt(&self, fmt: &mut fmt::Formatter) -> fmt::Result {
-        fmt.debug_struct("Struct_CThostFtdcForQuoteRspField")
+        fmt.debug_struct("CThostFtdcForQuoteRspField")
             .field("TradingDay", &gb18030_cstr_to_str(&self.TradingDay))
             .field("InstrumentID", &gb18030_cstr_to_str(&self.InstrumentID))
             .field("ForQuoteSysID", &gb18030_cstr_to_str(&self.ForQuoteSysID))

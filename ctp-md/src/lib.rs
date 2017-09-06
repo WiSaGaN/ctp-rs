@@ -486,6 +486,15 @@ fn new_spi(md_spi: *mut MdSpi) -> CThostFtdcMdSpi {
 mod tests {
     use super::*;
     use std::ffi::CString;
+    use std::mem::size_of;
+
+    #[test]
+    fn spi_output_size() {
+        let expected_size = 416;
+        let actual_size = size_of::<MdSpiOutput>();
+        assert_eq!(expected_size, actual_size, "MdSpiOutput expected size {}, actual size {}", expected_size, actual_size);
+    }
+
     #[test]
     fn create_release() {
         let flow_path = CString::new("").unwrap();

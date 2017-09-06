@@ -1574,6 +1574,15 @@ fn new_spi(trader_spi: *mut TraderSpi) -> CThostFtdcTraderSpi {
 mod tests {
     use super::*;
     use std::ffi::CString;
+    use std::mem::size_of;
+
+    #[test]
+    fn spi_output_size() {
+        let expected_size = 632;
+        let actual_size = size_of::<TraderSpiOutput>();
+        assert_eq!(expected_size, actual_size, "TraderSpiOutput expected size {}, actual size {}", expected_size, actual_size);
+    }
+
     #[test]
     fn create_release() {
         let flow_path = CString::new("").unwrap();

@@ -2,8 +2,8 @@
 #![allow(non_camel_case_types)]
 #![allow(non_snake_case)]
 #![allow(non_upper_case_globals)]
-include!(concat!(env!("OUT_DIR"), "/struct.rs.in"));
-include!(concat!(env!("OUT_DIR"), "/error.rs.in"));
+include!("generated/struct.rs.in");
+include!("generated/error.rs.in");
 
 pub const THOST_FTDC_BOOL_True: TThostFtdcBoolType = 1;
 pub const THOST_FTDC_BOOL_False: TThostFtdcBoolType = 0;

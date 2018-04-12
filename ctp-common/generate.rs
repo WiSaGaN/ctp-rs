@@ -1,3 +1,13 @@
+//! Rust script used for generate sources in `src/generated`
+//! Use `cargo script` to run it
+//!
+//! ```cargo
+//! [dependencies]
+//! bindgen = "0.30"
+//! encoding = "0.2"
+//! xmltree = "0.4"
+//! ```
+
 extern crate bindgen;
 extern crate encoding;
 extern crate xmltree;
@@ -100,7 +110,7 @@ fn generate_error(input_xml: &Path, output_rs: &Path) -> Result<(), String> {
 }
 
 fn main() {
-    let out_dir = std::env::var("OUT_DIR").unwrap();
+    let out_dir = "./src/generated";
     let data_type_header = "../api-ctp/include/ThostFtdcUserApiDataType.h";
     let data_type_out_path = format!("{}/data_type.rs.in", out_dir);
     generate_data_type(Path::new(data_type_header), Path::new(&data_type_out_path)).unwrap();

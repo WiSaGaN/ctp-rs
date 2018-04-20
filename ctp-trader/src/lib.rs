@@ -685,19 +685,19 @@ pub enum TraderSpiOutput {
 }
 
 #[derive(Clone, Debug)]
-pub struct SyncSenderTraderSpi<T: From<TraderSpiOutput> + Send + 'static> {
-    sender: mpsc::SyncSender<T>,
+pub struct SenderTraderSpi<T: From<TraderSpiOutput> + Send + 'static> {
+    sender: mpsc::Sender<T>,
 }
 
-impl<T> SyncSenderTraderSpi<T> where T: From<TraderSpiOutput> + Send + 'static {
-    pub fn new(sender: mpsc::SyncSender<T>) -> Self {
-        SyncSenderTraderSpi {
+impl<T> SenderTraderSpi<T> where T: From<TraderSpiOutput> + Send + 'static {
+    pub fn new(sender: mpsc::Sender<T>) -> Self {
+        SenderTraderSpi {
             sender: sender,
         }
     }
 }
 
-impl<T> TraderSpi for SyncSenderTraderSpi<T> where T: From<TraderSpiOutput> + Send + 'static {
+impl<T> TraderSpi for SenderTraderSpi<T> where T: From<TraderSpiOutput> + Send + 'static {
     fn on_front_connected(&mut self) {
         self.sender.send(T::from(TraderSpiOutput::FrontConnected(TraderSpiOnFrontConnected{ }))).expect("spi callback send front_connected failed");
     }

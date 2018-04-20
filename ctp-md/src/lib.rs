@@ -301,19 +301,19 @@ pub enum MdSpiOutput {
 }
 
 #[derive(Clone, Debug)]
-pub struct SyncSenderMdSpi<T: From<MdSpiOutput> + Send + 'static> {
-    sender: mpsc::SyncSender<T>,
+pub struct SenderMdSpi<T: From<MdSpiOutput> + Send + 'static> {
+    sender: mpsc::Sender<T>,
 }
 
-impl<T> SyncSenderMdSpi<T> where T: From<MdSpiOutput> + Send + 'static {
-    pub fn new(sender: mpsc::SyncSender<T>) -> Self {
-        SyncSenderMdSpi {
+impl<T> SenderMdSpi<T> where T: From<MdSpiOutput> + Send + 'static {
+    pub fn new(sender: mpsc::Sender<T>) -> Self {
+        SenderMdSpi {
             sender: sender,
         }
     }
 }
 
-impl<T> MdSpi for SyncSenderMdSpi<T> where T: From<MdSpiOutput> + Send + 'static {
+impl<T> MdSpi for SenderMdSpi<T> where T: From<MdSpiOutput> + Send + 'static {
     fn on_front_connected(&mut self) {
         self.sender.send(T::from(MdSpiOutput::FrontConnected(MdSpiOnFrontConnected{ }))).expect("spi callback send front_connected failed");
     }

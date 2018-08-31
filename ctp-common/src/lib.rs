@@ -8,7 +8,6 @@ mod binding;
 use encoding::{ DecoderTrap, Encoding };
 use encoding::all::GB18030;
 use simple_error::SimpleError;
-use std::ascii::AsciiExt;
 use std::borrow::Cow;
 use std::error::Error;
 use std::fmt;

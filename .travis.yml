@@ -15,7 +15,10 @@ addons:
 
 # run builds for all the trains (and more)
 rust:
+  - nightly
+  - beta
   - stable
+  - 1.26.0
 
 # the main build
 script:

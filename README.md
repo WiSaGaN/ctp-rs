@@ -29,3 +29,7 @@ Wrapper for trader API. A run-time dependency of `thosttraderapi.so` is needed f
 ## OS support
 
 Currently these 3 crates only support Linux x86_64
+
+## Minimal Rust version
+
+1.26.0

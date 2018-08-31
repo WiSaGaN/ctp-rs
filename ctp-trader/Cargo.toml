@@ -3,7 +3,6 @@ name = "ctp-trader"
 version = "0.6.0"
 authors = ["Wangshan Lu <wisagan@gmail.com>"]
 links = "ctp-trader"
-build = "build.rs"
 
 [dependencies.ctp-common]
 version = "0.6.0"

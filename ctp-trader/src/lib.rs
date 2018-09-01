@@ -1,3 +1,5 @@
+#[cfg(feature = "channel")]
+extern crate crossbeam_channel;
 extern crate ctp_common;
 
 use std::ffi::{ CStr, CString };
@@ -7,6 +9,11 @@ use std::sync::mpsc;
 
 #[allow(non_camel_case_types)]
 type c_bool = std::os::raw::c_uchar;
+
+#[cfg(feature = "channel")]
+mod channel;
+#[cfg(feature = "channel")]
+pub use channel::*;
 
 pub use ctp_common::*;
 

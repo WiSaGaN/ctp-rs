@@ -27,3 +27,4 @@ script:
   - cargo build --verbose --manifest-path ctp-md/Cargo.toml
   - cargo build --verbose --manifest-path ctp-md/Cargo.toml --features channel
   - cargo build --verbose --manifest-path ctp-trader/Cargo.toml
+  - cargo build --verbose --manifest-path ctp-trader/Cargo.toml --features channel

@@ -18,10 +18,12 @@ pub use channel::*;
 pub use ctp_common::*;
 
 #[allow(dead_code)]
-#[link(name = "thostmduserapi")]
+#[link(name = "thostmduserapi_se")]
 extern "C" {
     #[link_name = "_ZN15CThostFtdcMdApi15CreateFtdcMdApiEPKcbb"]
     fn CThostFtdcMdApiCreateFtdcMdApi(pszFlowPath: *const c_char, bIsUsingUdp: c_bool, bIsMulticast: c_bool) -> *mut c_void;
+    #[link_name = "_ZN15CThostFtdcMdApi13GetApiVersionEv"]
+    fn CThostFtdcMdApiGetApiVersion() -> *const c_char;
     #[link_name = "_ZN14CFtdcMdApiImpl7ReleaseEv"]
     fn CFtdcMdApiImplRelease(api: *mut c_void);
     #[link_name = "_ZN14CFtdcMdApiImpl4InitEv"]
@@ -69,6 +71,7 @@ pub trait GenericMdApi {
     fn req_user_logout(&mut self, req_user_logout: &CThostFtdcUserLogoutField, request_id: TThostFtdcRequestIDType) -> ApiResult;
 }
 
+#[derive(Debug)]
 pub struct MdApi {
     md_api_ptr: *mut c_void,
     registered_spi: Option<*mut CThostFtdcMdSpi>,
@@ -171,7 +174,11 @@ impl Drop for MdApi {
                 drop(last_registered_spi);
             }
         };
-        unsafe { CFtdcMdApiImplRelease(self.md_api_ptr) };
+        unsafe {
+            if !self.md_api_ptr.is_null() {
+                CFtdcMdApiImplRelease(self.md_api_ptr)
+            }
+        };
     }
 }
 
@@ -522,6 +529,7 @@ mod tests {
     fn create_release() {
         let flow_path = CString::new("").unwrap();
         let md_api = MdApi::new(flow_path, false, false);
+        println!("{:?}", md_api);
         drop(md_api);
         assert!(true);
     }

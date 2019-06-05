@@ -1,4 +1,4 @@
-const SO_FILENAME:&'static str = "thostmduserapi.so";
+const SO_FILENAME:&'static str = "thostmduserapi_se.so";
 
 fn main() {
     let out_dir = std::env::var("OUT_DIR").unwrap();

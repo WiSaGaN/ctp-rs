@@ -1,10 +1,10 @@
 [package]
 name = "ctp-common"
-version = "0.6.0"
+version = "0.7.0"
 authors = ["Wangshan Lu <wisagan@gmail.com>"]
 
 [dependencies]
 encoding = "0.2"
 memchr = "2.0.2"
-simple-error = "0.1"
+simple-error = "0.2.0"
 time = "0.1"

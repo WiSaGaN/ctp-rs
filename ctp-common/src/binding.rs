@@ -19,6 +19,8 @@ impl fmt::Debug for CThostFtdcRspAuthenticateField {
             .field("BrokerID", &gb18030_cstr_to_str(&self.BrokerID))
             .field("UserID", &gb18030_cstr_to_str(&self.UserID))
             .field("UserProductInfo", &gb18030_cstr_to_str(&self.UserProductInfo))
+            .field("AppID", &gb18030_cstr_to_str(&self.AppID))
+            .field("AppType", &maybe_char(self.AppType))
             .finish()
     }
 }

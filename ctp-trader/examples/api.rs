@@ -136,7 +136,7 @@ fn main() {
             println!("invalid user_id, {}", e);
         },
     }
-    user_id = user_id.trim_right().to_string();
+    user_id = user_id.trim_end().to_string();
     let mut password = String::new();
     print!("password: ");
     std::io::stdout().flush().unwrap();
@@ -146,7 +146,7 @@ fn main() {
             println!("invalid password, {}", e);
         },
     }
-    password = password.trim_right().to_string();
+    password = password.trim_end().to_string();
     let mut last_request_id = 0;
     let flow_path = ::std::ffi::CString::new("").unwrap();
     let mut trader_api = TraderApi::new(flow_path);

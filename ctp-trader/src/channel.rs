@@ -38,6 +38,10 @@ impl TraderSpi for ChannelTraderSpi {
         self.sender.send((TraderSpiOutput::RspUserLogout(TraderSpiOnRspUserLogout{ user_logout: rsp_user_logout.cloned(), result: result, request_id: request_id, is_last: is_last }), SystemTime::now()));
     }
 
+    fn on_rsp_user_password_update(&mut self, rsp_user_password_update: Option<&CThostFtdcUserPasswordUpdateField>, result: RspResult, request_id: TThostFtdcRequestIDType, is_last: bool) {
+        self.sender.send((TraderSpiOutput::RspUserPasswordUpdate(TraderSpiOnRspUserPasswordUpdate{ user_password_update: rsp_user_password_update.cloned(), result: result, request_id: request_id, is_last: is_last }), SystemTime::now()));
+    }
+
    fn on_rsp_order_insert(&mut self, input_order: Option<&CThostFtdcInputOrderField>, result: RspResult, request_id: TThostFtdcRequestIDType, is_last: bool) {
         self.sender.send((TraderSpiOutput::RspOrderInsert(TraderSpiOnRspOrderInsert{ input_order: input_order.cloned(), result: result, request_id: request_id, is_last: is_last }), SystemTime::now()));
     }

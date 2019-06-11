@@ -13,3 +13,8 @@ crossbeam-channel = { version = "0.2.4", optional = true }
 [dependencies.ctp-common]
 version = "0.7.0"
 path = "../ctp-common"
+
+[dev-dependencies]
+simple-error = "0.2.0"
+serde = { version = "1.0.91", features = [ "derive" ] }
+serde_yaml = "0.8.9"

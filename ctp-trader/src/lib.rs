@@ -224,6 +224,7 @@ pub trait GenericTraderApi {
     fn req_authenticate(&mut self, req_authenticate: &CThostFtdcReqAuthenticateField, request_id: TThostFtdcRequestIDType) -> ApiResult;
     fn req_user_login(&mut self, req_user_login: &CThostFtdcReqUserLoginField, request_id: TThostFtdcRequestIDType) -> ApiResult;
     fn req_user_logout(&mut self, req_user_logout: &CThostFtdcUserLogoutField, request_id: TThostFtdcRequestIDType) -> ApiResult;
+    fn req_user_password_update(&mut self, req_user_password_update: &CThostFtdcUserPasswordUpdateField, request_id: TThostFtdcRequestIDType) -> ApiResult;
     fn req_order_insert(&mut self, input_order: &CThostFtdcInputOrderField, request_id: TThostFtdcRequestIDType) -> ApiResult;
     fn req_order_action(&mut self, input_order_action: &CThostFtdcInputOrderActionField, request_id: TThostFtdcRequestIDType) -> ApiResult;
     fn req_settlement_info_confirm(&mut self, settlement_info_confirm: &CThostFtdcSettlementInfoConfirmField, request_id: TThostFtdcRequestIDType) -> ApiResult;
@@ -325,6 +326,10 @@ impl GenericTraderApi for TraderApi {
 
     fn req_user_logout(&mut self, req_user_logout: &CThostFtdcUserLogoutField, request_id: TThostFtdcRequestIDType) -> ApiResult {
         from_api_return_to_api_result(unsafe { CFtdcTraderApiImplReqUserLogout(self.trader_api_ptr, req_user_logout, request_id) })
+    }
+
+    fn req_user_password_update(&mut self, req_user_password_update: &CThostFtdcUserPasswordUpdateField, request_id: TThostFtdcRequestIDType) -> ApiResult {
+        from_api_return_to_api_result(unsafe { CFtdcTraderApiImplReqUserPasswordUpdate(self.trader_api_ptr, req_user_password_update, request_id) })
     }
 
     fn req_order_insert(&mut self, input_order: &CThostFtdcInputOrderField, request_id: TThostFtdcRequestIDType) -> ApiResult {
@@ -438,6 +443,10 @@ pub trait TraderSpi : Send {
 
     fn on_rsp_user_logout(&mut self, rsp_user_logout: Option<&CThostFtdcUserLogoutField>, result: RspResult, request_id: TThostFtdcRequestIDType, is_last: bool) {
         println!("on_rsp_user_logout: {:?}, {}, {:?}, {:?}", rsp_user_logout, from_rsp_result_to_string(&result), request_id, is_last);
+    }
+
+    fn on_rsp_user_password_update(&mut self, rsp_user_password_update: Option<&CThostFtdcUserPasswordUpdateField>, result: RspResult, request_id: TThostFtdcRequestIDType, is_last: bool) {
+        println!("on_rsp_user_password_update: {:?}, {}, {:?}, {:?}", rsp_user_password_update, from_rsp_result_to_string(&result), request_id, is_last);
     }
 
     fn on_rsp_order_insert(&mut self, input_order: Option<&CThostFtdcInputOrderField>, result: RspResult, request_id: TThostFtdcRequestIDType, is_last: bool) {
@@ -573,6 +582,14 @@ pub struct TraderSpiOnRspUserLogin {
 #[derive(Clone, Debug)]
 pub struct TraderSpiOnRspUserLogout {
     pub user_logout: Option<CThostFtdcUserLogoutField>,
+    pub result: RspResult,
+    pub request_id: TThostFtdcRequestIDType,
+    pub is_last: bool,
+}
+
+#[derive(Clone, Debug)]
+pub struct TraderSpiOnRspUserPasswordUpdate {
+    pub user_password_update: Option<CThostFtdcUserPasswordUpdateField>,
     pub result: RspResult,
     pub request_id: TThostFtdcRequestIDType,
     pub is_last: bool,
@@ -776,6 +793,7 @@ pub enum TraderSpiOutput {
     RspAuthenticate(TraderSpiOnRspAuthenticate),
     RspUserLogin(TraderSpiOnRspUserLogin),
     RspUserLogout(TraderSpiOnRspUserLogout),
+    RspUserPasswordUpdate(TraderSpiOnRspUserPasswordUpdate),
     RspError(TraderSpiOnRspError),
     RspQryOrder(TraderSpiOnRspQryOrder),
     RspQryTrade(TraderSpiOnRspQryTrade),
@@ -836,6 +854,10 @@ impl<T> TraderSpi for SenderTraderSpi<T> where T: From<TraderSpiOutput> + Send +
 
     fn on_rsp_user_logout(&mut self, rsp_user_logout: Option<&CThostFtdcUserLogoutField>, result: RspResult, request_id: i32, is_last: bool) {
         self.sender.send(T::from(TraderSpiOutput::RspUserLogout(TraderSpiOnRspUserLogout{ user_logout: rsp_user_logout.cloned(), result: result, request_id: request_id, is_last: is_last }))).expect("spi callback send rsp_user_logout failed");
+    }
+
+    fn on_rsp_user_password_update(&mut self, rsp_user_password_update: Option<&CThostFtdcUserPasswordUpdateField>, result: RspResult, request_id: TThostFtdcRequestIDType, is_last: bool) {
+        self.sender.send(T::from(TraderSpiOutput::RspUserPasswordUpdate(TraderSpiOnRspUserPasswordUpdate{ user_password_update: rsp_user_password_update.cloned(), result: result, request_id: request_id, is_last: is_last }))).expect("spi callback send rsp_user_password_update failed");
     }
 
    fn on_rsp_order_insert(&mut self, input_order: Option<&CThostFtdcInputOrderField>, result: RspResult, request_id: TThostFtdcRequestIDType, is_last: bool) {
@@ -979,8 +1001,11 @@ extern "C" fn spi_on_rsp_user_logout(spi: *mut CThostFtdcTraderSpi, pUserLogout:
     unsafe { transmute::<*mut TraderSpi, &mut TraderSpi>(transmute::<*mut CThostFtdcTraderSpi, &mut CThostFtdcTraderSpi>(spi).trader_spi_ptr).on_rsp_user_logout(pUserLogout.as_ref(), rsp_info, nRequestID, bIsLast != 0) };
 }
 
-#[allow(non_snake_case, unused_variables)]
-extern "C" fn spi_on_rsp_user_password_update(spi: *mut CThostFtdcTraderSpi, pUserPasswordUpdate: *const CThostFtdcUserPasswordUpdateField, pRspInfo: *const CThostFtdcRspInfoField, nRequestID: c_int, bIsLast: c_bool) {}
+#[allow(non_snake_case)]
+extern "C" fn spi_on_rsp_user_password_update(spi: *mut CThostFtdcTraderSpi, pUserPasswordUpdate: *const CThostFtdcUserPasswordUpdateField, pRspInfo: *const CThostFtdcRspInfoField, nRequestID: c_int, bIsLast: c_bool) {
+    let rsp_info = from_rsp_info_to_rsp_result(pRspInfo);
+    unsafe { transmute::<*mut TraderSpi, &mut TraderSpi>(transmute::<*mut CThostFtdcTraderSpi, &mut CThostFtdcTraderSpi>(spi).trader_spi_ptr).on_rsp_user_password_update(pUserPasswordUpdate.as_ref(), rsp_info, nRequestID, bIsLast != 0) };
+}
 
 #[allow(non_snake_case, unused_variables)]
 extern "C" fn spi_on_rsp_trading_account_password_update(spi: *mut CThostFtdcTraderSpi, pTradingAccountPasswordUpdate: *const CThostFtdcTradingAccountPasswordUpdateField, pRspInfo: *const CThostFtdcRspInfoField, nRequestID: c_int, bIsLast: c_bool) {}

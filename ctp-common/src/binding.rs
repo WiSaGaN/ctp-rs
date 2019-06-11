@@ -71,6 +71,17 @@ impl fmt::Debug for CThostFtdcUserLogoutField {
     }
 }
 
+impl fmt::Debug for CThostFtdcUserPasswordUpdateField {
+    fn fmt(&self, fmt: &mut fmt::Formatter) -> fmt::Result {
+        fmt.debug_struct("CThostFtdcUserPasswordUpdateField")
+            .field("BrokerID", &gb18030_cstr_to_str(&self.BrokerID))
+            .field("UserID", &gb18030_cstr_to_str(&self.UserID))
+            .field("OldPassword", &gb18030_cstr_to_str(&self.OldPassword))
+            .field("NewPassword", &gb18030_cstr_to_str(&self.NewPassword))
+            .finish()
+    }
+}
+
 impl fmt::Debug for CThostFtdcSpecificInstrumentField {
     fn fmt(&self, fmt: &mut fmt::Formatter) -> fmt::Result {
         fmt.debug_struct("CThostFtdcSpecificInstrumentField")

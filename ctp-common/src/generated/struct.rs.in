@@ -166,6 +166,8 @@ pub const THOST_FTDC_HF_Speculation: u8 = b'1';
 pub const THOST_FTDC_HF_Arbitrage: u8 = b'2';
 pub const THOST_FTDC_HF_Hedge: u8 = b'3';
 pub const THOST_FTDC_HF_MarketMaker: u8 = b'5';
+pub const THOST_FTDC_HF_SpecHedge: u8 = b'6';
+pub const THOST_FTDC_HF_HedgeSpec: u8 = b'7';
 pub const THOST_FTDC_BHF_Speculation: u8 = b'1';
 pub const THOST_FTDC_BHF_Arbitrage: u8 = b'2';
 pub const THOST_FTDC_BHF_Hedge: u8 = b'3';
@@ -210,7 +212,8 @@ pub const THOST_FTDC_ORDT_DeriveFromCombination: u8 = b'2';
 pub const THOST_FTDC_ORDT_Combination: u8 = b'3';
 pub const THOST_FTDC_ORDT_ConditionalOrder: u8 = b'4';
 pub const THOST_FTDC_ORDT_Swap: u8 = b'5';
-pub const THOST_FTDC_ORDT_DeriveFromEFP: u8 = b'6';
+pub const THOST_FTDC_ORDT_DeriveFromBlockTrade: u8 = b'6';
+pub const THOST_FTDC_ORDT_DeriveFromEFPTrade: u8 = b'7';
 pub const THOST_FTDC_TC_IOC: u8 = b'1';
 pub const THOST_FTDC_TC_GFS: u8 = b'2';
 pub const THOST_FTDC_TC_GFD: u8 = b'3';
@@ -249,9 +252,11 @@ pub const THOST_FTDC_TRDT_OptionsExecution: u8 = b'1';
 pub const THOST_FTDC_TRDT_OTC: u8 = b'2';
 pub const THOST_FTDC_TRDT_EFPDerived: u8 = b'3';
 pub const THOST_FTDC_TRDT_CombinationDerived: u8 = b'4';
+pub const THOST_FTDC_TRDT_BlockTrade: u8 = b'5';
 pub const THOST_FTDC_PSRC_LastPrice: u8 = b'0';
 pub const THOST_FTDC_PSRC_Buy: u8 = b'1';
 pub const THOST_FTDC_PSRC_Sell: u8 = b'2';
+pub const THOST_FTDC_PSRC_OTC: u8 = b'3';
 pub const THOST_FTDC_IS_BeforeTrading: u8 = b'0';
 pub const THOST_FTDC_IS_NoTrading: u8 = b'1';
 pub const THOST_FTDC_IS_Continous: u8 = b'2';
@@ -1129,6 +1134,17 @@ pub const THOST_FTDC_COMBT_STD: u8 = b'3';
 pub const THOST_FTDC_COMBT_STG: u8 = b'4';
 pub const THOST_FTDC_COMBT_PRT: u8 = b'5';
 pub const THOST_FTDC_COMBT_CLD: u8 = b'6';
+pub const THOST_FTDC_DCECOMBT_SPL: u8 = b'0';
+pub const THOST_FTDC_DCECOMBT_OPL: u8 = b'1';
+pub const THOST_FTDC_DCECOMBT_SP: u8 = b'2';
+pub const THOST_FTDC_DCECOMBT_SPC: u8 = b'3';
+pub const THOST_FTDC_DCECOMBT_BLS: u8 = b'4';
+pub const THOST_FTDC_DCECOMBT_BES: u8 = b'5';
+pub const THOST_FTDC_DCECOMBT_CAS: u8 = b'6';
+pub const THOST_FTDC_DCECOMBT_STD: u8 = b'7';
+pub const THOST_FTDC_DCECOMBT_STG: u8 = b'8';
+pub const THOST_FTDC_DCECOMBT_BFO: u8 = b'9';
+pub const THOST_FTDC_DCECOMBT_SFO: u8 = b'a';
 pub const THOST_FTDC_ORPT_PreSettlementPrice: u8 = b'1';
 pub const THOST_FTDC_ORPT_OpenPrice: u8 = b'4';
 pub const THOST_FTDC_ORPT_MaxPreSettlementPrice: u8 = b'5';
@@ -3288,6 +3304,7 @@ pub type TThostFtdcStrikeSequenceType = ::std::os::raw::c_int;
 ///
 pub type TThostFtdcStrikeTimeType = [::std::os::raw::c_uchar; 13usize];
 pub type TThostFtdcCombinationTypeType = ::std::os::raw::c_uchar;
+pub type TThostFtdcDceCombinationTypeType = ::std::os::raw::c_uchar;
 pub type TThostFtdcOptionRoyaltyPriceTypeType = ::std::os::raw::c_uchar;
 pub type TThostFtdcBalanceAlgorithmType = ::std::os::raw::c_uchar;
 pub type TThostFtdcActionTypeType = ::std::os::raw::c_uchar;
@@ -6340,11 +6357,13 @@ pub struct CThostFtdcInvestorPositionField {
     pub YdStrikeFrozen: TThostFtdcVolumeType,
     /// 投资单元代码
     pub InvestUnitID: TThostFtdcInvestUnitIDType,
+    /// 大商所持仓成本差值，只有大商所使用
+    pub PositionCostOffset: TThostFtdcMoneyType,
 }
 #[test]
 fn bindgen_test_layout_CThostFtdcInvestorPositionField() {
     assert_eq!(::std::mem::size_of::<CThostFtdcInvestorPositionField>() ,
-               360usize , concat ! (
+               368usize , concat ! (
                "Size of: " , stringify ! ( CThostFtdcInvestorPositionField )
                ));
     assert_eq! (::std::mem::align_of::<CThostFtdcInvestorPositionField>() ,
@@ -6638,6 +6657,13 @@ fn bindgen_test_layout_CThostFtdcInvestorPositionField() {
                 "Alignment of field: " , stringify ! (
                 CThostFtdcInvestorPositionField ) , "::" , stringify ! (
                 InvestUnitID ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const CThostFtdcInvestorPositionField ) ) .
+                PositionCostOffset as * const _ as usize } , 360usize , concat
+                ! (
+                "Alignment of field: " , stringify ! (
+                CThostFtdcInvestorPositionField ) , "::" , stringify ! (
+                PositionCostOffset ) ));
 }
 impl Clone for CThostFtdcInvestorPositionField {
     fn clone(&self) -> Self { *self }
@@ -12173,11 +12199,13 @@ pub struct CThostFtdcSyncingInvestorPositionField {
     pub YdStrikeFrozen: TThostFtdcVolumeType,
     /// 投资单元代码
     pub InvestUnitID: TThostFtdcInvestUnitIDType,
+    /// 大商所持仓成本差值，只有大商所使用
+    pub PositionCostOffset: TThostFtdcMoneyType,
 }
 #[test]
 fn bindgen_test_layout_CThostFtdcSyncingInvestorPositionField() {
     assert_eq!(::std::mem::size_of::<CThostFtdcSyncingInvestorPositionField>()
-               , 360usize , concat ! (
+               , 368usize , concat ! (
                "Size of: " , stringify ! (
                CThostFtdcSyncingInvestorPositionField ) ));
     assert_eq! (::std::mem::align_of::<CThostFtdcSyncingInvestorPositionField>()
@@ -12488,6 +12516,13 @@ fn bindgen_test_layout_CThostFtdcSyncingInvestorPositionField() {
                 "Alignment of field: " , stringify ! (
                 CThostFtdcSyncingInvestorPositionField ) , "::" , stringify !
                 ( InvestUnitID ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const CThostFtdcSyncingInvestorPositionField )
+                ) . PositionCostOffset as * const _ as usize } , 360usize ,
+                concat ! (
+                "Alignment of field: " , stringify ! (
+                CThostFtdcSyncingInvestorPositionField ) , "::" , stringify !
+                ( PositionCostOffset ) ));
 }
 impl Clone for CThostFtdcSyncingInvestorPositionField {
     fn clone(&self) -> Self { *self }
@@ -24865,6 +24900,8 @@ pub struct CThostFtdcInvestorPositionDetailField {
     pub CloseVolume: TThostFtdcVolumeType,
     /// 平仓金额
     pub CloseAmount: TThostFtdcMoneyType,
+    /// 按照时间顺序平仓的笔数,大商所专用
+    pub TimeFirstVolume: TThostFtdcVolumeType,
     /// 投资单元代码
     pub InvestUnitID: TThostFtdcInvestUnitIDType,
 }
@@ -25045,7 +25082,14 @@ fn bindgen_test_layout_CThostFtdcInvestorPositionDetailField() {
                 CloseAmount ) ));
     assert_eq! (unsafe {
                 & ( * ( 0 as * const CThostFtdcInvestorPositionDetailField ) )
-                . InvestUnitID as * const _ as usize } , 264usize , concat ! (
+                . TimeFirstVolume as * const _ as usize } , 264usize , concat
+                ! (
+                "Alignment of field: " , stringify ! (
+                CThostFtdcInvestorPositionDetailField ) , "::" , stringify ! (
+                TimeFirstVolume ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const CThostFtdcInvestorPositionDetailField ) )
+                . InvestUnitID as * const _ as usize } , 268usize , concat ! (
                 "Alignment of field: " , stringify ! (
                 CThostFtdcInvestorPositionDetailField ) , "::" , stringify ! (
                 InvestUnitID ) ));

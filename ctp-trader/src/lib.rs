@@ -489,7 +489,7 @@ pub trait TraderSpi : Send {
         println!("on_rsp_qry_instrument_margin_rate: {:?}, {}, {:?}, {:?}", instrument_margin_rate, from_rsp_result_to_string(&result), request_id, is_last);
     }
 
-       fn on_rsp_qry_instrument_commission_rate(&mut self, instrument_commission_rate: Option<&CThostFtdcInstrumentCommissionRateField>, result: RspResult, request_id: TThostFtdcRequestIDType, is_last: bool) {
+    fn on_rsp_qry_instrument_commission_rate(&mut self, instrument_commission_rate: Option<&CThostFtdcInstrumentCommissionRateField>, result: RspResult, request_id: TThostFtdcRequestIDType, is_last: bool) {
         println!("on_rsp_qry_instrument_commission_rate: {:?}, {}, {:?}, {:?}", instrument_commission_rate, from_rsp_result_to_string(&result), request_id, is_last);
     }
 

@@ -2,6 +2,10 @@
 
 This project roughly adheres to [Semantic Versioning](http://semver.org/). For 0.x.y releases, `x` is the major version in semver, while `y` is the minor version.
 
+## Unreleased
+
+* Upgrade to 2018 edition
+
 ## 0.8.0 - 2019-06-13
 
 * Support transparent regulatory API for prod environment (api-ctp 6.3.15)

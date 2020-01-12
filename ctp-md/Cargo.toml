@@ -1,7 +1,8 @@
 [package]
 name = "ctp-md"
-version = "0.8.0"
+version = "0.8.1"
 authors = ["Wangshan Lu <wisagan@gmail.com>"]
+edition = "2018"
 links = "ctp-md"
 
 [features]

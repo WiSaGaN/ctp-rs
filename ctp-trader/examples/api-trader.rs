@@ -1,7 +1,6 @@
-extern crate ctp_trader;
+use std::io::Write;
 
 use ctp_trader::*;
-use std::io::Write;
 
 const TRADER_FRONT: &'static str = "tcp://180.168.146.187:10030";
 const BROKER_ID: &'static str = "9999";

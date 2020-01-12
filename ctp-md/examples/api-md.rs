@@ -1,6 +1,5 @@
-extern crate ctp_md;
-
 use std::ffi::CString;
+
 use ctp_md::*;
 
 struct Spi;

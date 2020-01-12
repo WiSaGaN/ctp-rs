@@ -1,9 +1,5 @@
-extern crate encoding;
-extern crate memchr;
-extern crate simple_error;
-extern crate time;
-
 mod binding;
+pub use binding::*;
 
 use encoding::{ DecoderTrap, Encoding };
 use encoding::all::GB18030;
@@ -13,8 +9,6 @@ use std::error::Error;
 use std::fmt;
 use std::os::raw::c_int;
 use time::{ Timespec, Tm };
-
-pub use binding::*;
 
 /// 交易接口中的查询操作的限制为:
 ///   每秒钟最多只能进行一次查询操作。

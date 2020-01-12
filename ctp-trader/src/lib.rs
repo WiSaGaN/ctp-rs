@@ -1,7 +1,3 @@
-#[cfg(feature = "channel")]
-extern crate crossbeam_channel;
-extern crate ctp_common;
-
 use std::ffi::{ CStr, CString };
 use std::mem::transmute;
 use std::os::raw::{ c_void, c_char, c_int };
@@ -218,7 +214,7 @@ pub trait GenericTraderApi {
     fn register_front(&mut self, front_socket_address: CString);
     fn register_name_server(&mut self, name_server: CString);
     fn register_fens_user_info(&mut self, fens_user_info: &CThostFtdcFensUserInfoField);
-    fn register_spi(&mut self, trader_spi: Box<TraderSpi>);
+    fn register_spi(&mut self, trader_spi: Box<dyn TraderSpi>);
     fn subscribe_private_topic(&mut self, resume_type: ResumeType);
     fn subscribe_public_topic(&mut self, resume_type: ResumeType);
     fn req_authenticate(&mut self, req_authenticate: &CThostFtdcReqAuthenticateField, request_id: TThostFtdcRequestIDType) -> ApiResult;
@@ -293,7 +289,7 @@ impl GenericTraderApi for TraderApi {
         unsafe { CFtdcTraderApiImplRegisterFensUserInfo(self.trader_api_ptr, fens_user_info) };
     }
 
-    fn register_spi(&mut self, trader_spi: Box<TraderSpi>) {
+    fn register_spi(&mut self, trader_spi: Box<dyn TraderSpi>) {
         let last_registered_spi_ptr = self.registered_spi.take();
         let trader_spi_ptr = Box::into_raw(trader_spi);
         let spi_ptr = Box::into_raw(Box::new(new_spi(trader_spi_ptr)));
@@ -968,13 +964,13 @@ impl<T> TraderSpi for SenderTraderSpi<T> where T: From<TraderSpiOutput> + Send +
 
 #[allow(non_snake_case)]
 extern "C" fn spi_on_front_connected(spi: *mut CThostFtdcTraderSpi) {
-    unsafe { transmute::<*mut TraderSpi, &mut TraderSpi>(transmute::<*mut CThostFtdcTraderSpi, &mut CThostFtdcTraderSpi>(spi).trader_spi_ptr).on_front_connected() };
+    unsafe { transmute::<*mut dyn TraderSpi, &mut dyn TraderSpi>(transmute::<*mut CThostFtdcTraderSpi, &mut CThostFtdcTraderSpi>(spi).trader_spi_ptr).on_front_connected() };
 }
 
 #[allow(non_snake_case)]
 extern "C" fn spi_on_front_disconnected(spi: *mut CThostFtdcTraderSpi, nReason: c_int) {
     let reason = std::convert::From::from(nReason);
-    unsafe { transmute::<*mut TraderSpi, &mut TraderSpi>(transmute::<*mut CThostFtdcTraderSpi, &mut CThostFtdcTraderSpi>(spi).trader_spi_ptr).on_front_disconnected(reason) };
+    unsafe { transmute::<*mut dyn TraderSpi, &mut dyn TraderSpi>(transmute::<*mut CThostFtdcTraderSpi, &mut CThostFtdcTraderSpi>(spi).trader_spi_ptr).on_front_disconnected(reason) };
 }
 
 #[allow(non_snake_case, unused_variables)]
@@ -986,25 +982,25 @@ extern "C" fn spi_on_heart_beat_warning(spi: *mut CThostFtdcTraderSpi, nTimeLaps
 #[allow(non_snake_case)]
 extern "C" fn spi_on_rsp_authenticate(spi: *mut CThostFtdcTraderSpi, pRspAuthenticateField: *const CThostFtdcRspAuthenticateField, pRspInfo: *const CThostFtdcRspInfoField, nRequestID: c_int, bIsLast: c_bool) {
     let rsp_info = from_rsp_info_to_rsp_result(pRspInfo);
-    unsafe { transmute::<*mut TraderSpi, &mut TraderSpi>(transmute::<*mut CThostFtdcTraderSpi, &mut CThostFtdcTraderSpi>(spi).trader_spi_ptr).on_rsp_authenticate(pRspAuthenticateField.as_ref(), rsp_info, nRequestID, bIsLast != 0) };
+    unsafe { transmute::<*mut dyn TraderSpi, &mut dyn TraderSpi>(transmute::<*mut CThostFtdcTraderSpi, &mut CThostFtdcTraderSpi>(spi).trader_spi_ptr).on_rsp_authenticate(pRspAuthenticateField.as_ref(), rsp_info, nRequestID, bIsLast != 0) };
 }
 
 #[allow(non_snake_case)]
 extern "C" fn spi_on_rsp_user_login(spi: *mut CThostFtdcTraderSpi, pRspUserLogin: *const CThostFtdcRspUserLoginField, pRspInfo: *const CThostFtdcRspInfoField, nRequestID: c_int, bIsLast: c_bool) {
     let rsp_info = from_rsp_info_to_rsp_result(pRspInfo);
-    unsafe { transmute::<*mut TraderSpi, &mut TraderSpi>(transmute::<*mut CThostFtdcTraderSpi, &mut CThostFtdcTraderSpi>(spi).trader_spi_ptr).on_rsp_user_login(pRspUserLogin.as_ref(), rsp_info, nRequestID, bIsLast != 0) };
+    unsafe { transmute::<*mut dyn TraderSpi, &mut dyn TraderSpi>(transmute::<*mut CThostFtdcTraderSpi, &mut CThostFtdcTraderSpi>(spi).trader_spi_ptr).on_rsp_user_login(pRspUserLogin.as_ref(), rsp_info, nRequestID, bIsLast != 0) };
 }
 
 #[allow(non_snake_case)]
 extern "C" fn spi_on_rsp_user_logout(spi: *mut CThostFtdcTraderSpi, pUserLogout: *const CThostFtdcUserLogoutField, pRspInfo: *const CThostFtdcRspInfoField, nRequestID: c_int, bIsLast: c_bool) {
     let rsp_info = from_rsp_info_to_rsp_result(pRspInfo);
-    unsafe { transmute::<*mut TraderSpi, &mut TraderSpi>(transmute::<*mut CThostFtdcTraderSpi, &mut CThostFtdcTraderSpi>(spi).trader_spi_ptr).on_rsp_user_logout(pUserLogout.as_ref(), rsp_info, nRequestID, bIsLast != 0) };
+    unsafe { transmute::<*mut dyn TraderSpi, &mut dyn TraderSpi>(transmute::<*mut CThostFtdcTraderSpi, &mut CThostFtdcTraderSpi>(spi).trader_spi_ptr).on_rsp_user_logout(pUserLogout.as_ref(), rsp_info, nRequestID, bIsLast != 0) };
 }
 
 #[allow(non_snake_case)]
 extern "C" fn spi_on_rsp_user_password_update(spi: *mut CThostFtdcTraderSpi, pUserPasswordUpdate: *const CThostFtdcUserPasswordUpdateField, pRspInfo: *const CThostFtdcRspInfoField, nRequestID: c_int, bIsLast: c_bool) {
     let rsp_info = from_rsp_info_to_rsp_result(pRspInfo);
-    unsafe { transmute::<*mut TraderSpi, &mut TraderSpi>(transmute::<*mut CThostFtdcTraderSpi, &mut CThostFtdcTraderSpi>(spi).trader_spi_ptr).on_rsp_user_password_update(pUserPasswordUpdate.as_ref(), rsp_info, nRequestID, bIsLast != 0) };
+    unsafe { transmute::<*mut dyn TraderSpi, &mut dyn TraderSpi>(transmute::<*mut CThostFtdcTraderSpi, &mut CThostFtdcTraderSpi>(spi).trader_spi_ptr).on_rsp_user_password_update(pUserPasswordUpdate.as_ref(), rsp_info, nRequestID, bIsLast != 0) };
 }
 
 #[allow(non_snake_case, unused_variables)]
@@ -1022,7 +1018,7 @@ extern "C" fn spi_on_rsp_gen_user_text(spi: *mut CThostFtdcTraderSpi, pRspGenUse
 #[allow(non_snake_case)]
 extern "C" fn spi_on_rsp_order_insert(spi: *mut CThostFtdcTraderSpi, pInputOrder: *const CThostFtdcInputOrderField, pRspInfo: *const CThostFtdcRspInfoField, nRequestID: c_int, bIsLast: c_bool) {
     let rsp_info = from_rsp_info_to_rsp_result(pRspInfo);
-    unsafe { transmute::<*mut TraderSpi, &mut TraderSpi>(transmute::<*mut CThostFtdcTraderSpi, &mut CThostFtdcTraderSpi>(spi).trader_spi_ptr).on_rsp_order_insert(pInputOrder.as_ref(), rsp_info, nRequestID, bIsLast != 0) };
+    unsafe { transmute::<*mut dyn TraderSpi, &mut dyn TraderSpi>(transmute::<*mut CThostFtdcTraderSpi, &mut CThostFtdcTraderSpi>(spi).trader_spi_ptr).on_rsp_order_insert(pInputOrder.as_ref(), rsp_info, nRequestID, bIsLast != 0) };
 }
 
 #[allow(non_snake_case, unused_variables)]
@@ -1034,7 +1030,7 @@ extern "C" fn spi_on_rsp_parked_order_action(spi: *mut CThostFtdcTraderSpi, pPar
 #[allow(non_snake_case)]
 extern "C" fn spi_on_rsp_order_action(spi: *mut CThostFtdcTraderSpi, pInputOrderAction: *const CThostFtdcInputOrderActionField, pRspInfo: *const CThostFtdcRspInfoField, nRequestID: c_int, bIsLast: c_bool) {
     let rsp_info = from_rsp_info_to_rsp_result(pRspInfo);
-    unsafe { transmute::<*mut TraderSpi, &mut TraderSpi>(transmute::<*mut CThostFtdcTraderSpi, &mut CThostFtdcTraderSpi>(spi).trader_spi_ptr).on_rsp_order_action(pInputOrderAction.as_ref(), rsp_info, nRequestID, bIsLast != 0) };
+    unsafe { transmute::<*mut dyn TraderSpi, &mut dyn TraderSpi>(transmute::<*mut CThostFtdcTraderSpi, &mut CThostFtdcTraderSpi>(spi).trader_spi_ptr).on_rsp_order_action(pInputOrderAction.as_ref(), rsp_info, nRequestID, bIsLast != 0) };
 }
 
 #[allow(non_snake_case, unused_variables)]
@@ -1043,7 +1039,7 @@ extern "C" fn spi_on_rsp_query_max_order_volume(spi: *mut CThostFtdcTraderSpi, p
 #[allow(non_snake_case)]
 extern "C" fn spi_on_rsp_settlement_info_confirm(spi: *mut CThostFtdcTraderSpi, pSettlementInfoConfirm: *const CThostFtdcSettlementInfoConfirmField, pRspInfo: *const CThostFtdcRspInfoField, nRequestID: c_int, bIsLast: c_bool) {
     let rsp_info = from_rsp_info_to_rsp_result(pRspInfo);
-    unsafe { transmute::<*mut TraderSpi, &mut TraderSpi>(transmute::<*mut CThostFtdcTraderSpi, &mut CThostFtdcTraderSpi>(spi).trader_spi_ptr).on_rsp_settlement_info_confirm(pSettlementInfoConfirm.as_ref(), rsp_info, nRequestID, bIsLast != 0) };
+    unsafe { transmute::<*mut dyn TraderSpi, &mut dyn TraderSpi>(transmute::<*mut CThostFtdcTraderSpi, &mut CThostFtdcTraderSpi>(spi).trader_spi_ptr).on_rsp_settlement_info_confirm(pSettlementInfoConfirm.as_ref(), rsp_info, nRequestID, bIsLast != 0) };
 }
 
 #[allow(non_snake_case, unused_variables)]
@@ -1082,67 +1078,67 @@ extern "C" fn spi_on_rsp_comb_action_insert(spi: *mut CThostFtdcTraderSpi, pInpu
 #[allow(non_snake_case)]
 extern "C" fn spi_on_rsp_qry_order(spi: *mut CThostFtdcTraderSpi, pOrder: *const CThostFtdcOrderField, pRspInfo: *const CThostFtdcRspInfoField, nRequestID: c_int, bIsLast: c_bool) {
     let rsp_info = from_rsp_info_to_rsp_result(pRspInfo);
-    unsafe { transmute::<*mut TraderSpi, &mut TraderSpi>(transmute::<*mut CThostFtdcTraderSpi, &mut CThostFtdcTraderSpi>(spi).trader_spi_ptr).on_rsp_qry_order(pOrder.as_ref(), rsp_info, nRequestID, bIsLast != 0) };
+    unsafe { transmute::<*mut dyn TraderSpi, &mut dyn TraderSpi>(transmute::<*mut CThostFtdcTraderSpi, &mut CThostFtdcTraderSpi>(spi).trader_spi_ptr).on_rsp_qry_order(pOrder.as_ref(), rsp_info, nRequestID, bIsLast != 0) };
 }
 
 #[allow(non_snake_case)]
 extern "C" fn spi_on_rsp_qry_trade(spi: *mut CThostFtdcTraderSpi, pTrade: *const CThostFtdcTradeField, pRspInfo: *const CThostFtdcRspInfoField, nRequestID: c_int, bIsLast: c_bool) {
     let rsp_info = from_rsp_info_to_rsp_result(pRspInfo);
-    unsafe { transmute::<*mut TraderSpi, &mut TraderSpi>(transmute::<*mut CThostFtdcTraderSpi, &mut CThostFtdcTraderSpi>(spi).trader_spi_ptr).on_rsp_qry_trade(pTrade.as_ref(), rsp_info, nRequestID, bIsLast != 0) };
+    unsafe { transmute::<*mut dyn TraderSpi, &mut dyn TraderSpi>(transmute::<*mut CThostFtdcTraderSpi, &mut CThostFtdcTraderSpi>(spi).trader_spi_ptr).on_rsp_qry_trade(pTrade.as_ref(), rsp_info, nRequestID, bIsLast != 0) };
 }
 
 #[allow(non_snake_case)]
 extern "C" fn spi_on_rsp_qry_investor_position(spi: *mut CThostFtdcTraderSpi, pInvestorPosition: *const CThostFtdcInvestorPositionField, pRspInfo: *const CThostFtdcRspInfoField, nRequestID: c_int, bIsLast: c_bool) {
     let rsp_info = from_rsp_info_to_rsp_result(pRspInfo);
-    unsafe { transmute::<*mut TraderSpi, &mut TraderSpi>(transmute::<*mut CThostFtdcTraderSpi, &mut CThostFtdcTraderSpi>(spi).trader_spi_ptr).on_rsp_qry_investor_position(pInvestorPosition.as_ref(), rsp_info, nRequestID, bIsLast != 0) };
+    unsafe { transmute::<*mut dyn TraderSpi, &mut dyn TraderSpi>(transmute::<*mut CThostFtdcTraderSpi, &mut CThostFtdcTraderSpi>(spi).trader_spi_ptr).on_rsp_qry_investor_position(pInvestorPosition.as_ref(), rsp_info, nRequestID, bIsLast != 0) };
 }
 
 #[allow(non_snake_case)]
 extern "C" fn spi_on_rsp_qry_trading_account(spi: *mut CThostFtdcTraderSpi, pTradingAccount: *const CThostFtdcTradingAccountField, pRspInfo: *const CThostFtdcRspInfoField, nRequestID: c_int, bIsLast: c_bool) {
     let rsp_info = from_rsp_info_to_rsp_result(pRspInfo);
-    unsafe { transmute::<*mut TraderSpi, &mut TraderSpi>(transmute::<*mut CThostFtdcTraderSpi, &mut CThostFtdcTraderSpi>(spi).trader_spi_ptr).on_rsp_qry_trading_account(pTradingAccount.as_ref(), rsp_info, nRequestID, bIsLast != 0) };
+    unsafe { transmute::<*mut dyn TraderSpi, &mut dyn TraderSpi>(transmute::<*mut CThostFtdcTraderSpi, &mut CThostFtdcTraderSpi>(spi).trader_spi_ptr).on_rsp_qry_trading_account(pTradingAccount.as_ref(), rsp_info, nRequestID, bIsLast != 0) };
 }
 
 #[allow(non_snake_case)]
 extern "C" fn spi_on_rsp_qry_investor(spi: *mut CThostFtdcTraderSpi, pInvestor: *const CThostFtdcInvestorField, pRspInfo: *const CThostFtdcRspInfoField, nRequestID: c_int, bIsLast: c_bool) {
     let rsp_info = from_rsp_info_to_rsp_result(pRspInfo);
-    unsafe { transmute::<*mut TraderSpi, &mut TraderSpi>(transmute::<*mut CThostFtdcTraderSpi, &mut CThostFtdcTraderSpi>(spi).trader_spi_ptr).on_rsp_qry_investor(pInvestor.as_ref(), rsp_info, nRequestID, bIsLast != 0) };
+    unsafe { transmute::<*mut dyn TraderSpi, &mut dyn TraderSpi>(transmute::<*mut CThostFtdcTraderSpi, &mut CThostFtdcTraderSpi>(spi).trader_spi_ptr).on_rsp_qry_investor(pInvestor.as_ref(), rsp_info, nRequestID, bIsLast != 0) };
 }
 
 #[allow(non_snake_case)]
 extern "C" fn spi_on_rsp_qry_trading_code(spi: *mut CThostFtdcTraderSpi, pTradingCode: *const CThostFtdcTradingCodeField, pRspInfo: *const CThostFtdcRspInfoField, nRequestID: c_int, bIsLast: c_bool) {
     let rsp_info = from_rsp_info_to_rsp_result(pRspInfo);
-    unsafe { transmute::<*mut TraderSpi, &mut TraderSpi>(transmute::<*mut CThostFtdcTraderSpi, &mut CThostFtdcTraderSpi>(spi).trader_spi_ptr).on_rsp_qry_trading_code(pTradingCode.as_ref(), rsp_info, nRequestID, bIsLast != 0) };
+    unsafe { transmute::<*mut dyn TraderSpi, &mut dyn TraderSpi>(transmute::<*mut CThostFtdcTraderSpi, &mut CThostFtdcTraderSpi>(spi).trader_spi_ptr).on_rsp_qry_trading_code(pTradingCode.as_ref(), rsp_info, nRequestID, bIsLast != 0) };
 }
 
 #[allow(non_snake_case, unused_variables)]
 extern "C" fn spi_on_rsp_qry_instrument_margin_rate(spi: *mut CThostFtdcTraderSpi, pInstrumentMarginRate: *const CThostFtdcInstrumentMarginRateField, pRspInfo: *const CThostFtdcRspInfoField, nRequestID: c_int, bIsLast: c_bool) {
     let rsp_info = from_rsp_info_to_rsp_result(pRspInfo);
-    unsafe { transmute::<*mut TraderSpi, &mut TraderSpi>(transmute::<*mut CThostFtdcTraderSpi, &mut CThostFtdcTraderSpi>(spi).trader_spi_ptr).on_rsp_qry_instrument_margin_rate(pInstrumentMarginRate.as_ref(), rsp_info, nRequestID, bIsLast != 0) };
+    unsafe { transmute::<*mut dyn TraderSpi, &mut dyn TraderSpi>(transmute::<*mut CThostFtdcTraderSpi, &mut CThostFtdcTraderSpi>(spi).trader_spi_ptr).on_rsp_qry_instrument_margin_rate(pInstrumentMarginRate.as_ref(), rsp_info, nRequestID, bIsLast != 0) };
 }
 
 #[allow(non_snake_case, unused_variables)]
 extern "C" fn spi_on_rsp_qry_instrument_commission_rate(spi: *mut CThostFtdcTraderSpi, pInstrumentCommissionRate: *const CThostFtdcInstrumentCommissionRateField, pRspInfo: *const CThostFtdcRspInfoField, nRequestID: c_int, bIsLast: c_bool) {
     let rsp_info = from_rsp_info_to_rsp_result(pRspInfo);
-    unsafe { transmute::<*mut TraderSpi, &mut TraderSpi>(transmute::<*mut CThostFtdcTraderSpi, &mut CThostFtdcTraderSpi>(spi).trader_spi_ptr).on_rsp_qry_instrument_commission_rate(pInstrumentCommissionRate.as_ref(), rsp_info, nRequestID, bIsLast != 0) };
+    unsafe { transmute::<*mut dyn TraderSpi, &mut dyn TraderSpi>(transmute::<*mut CThostFtdcTraderSpi, &mut CThostFtdcTraderSpi>(spi).trader_spi_ptr).on_rsp_qry_instrument_commission_rate(pInstrumentCommissionRate.as_ref(), rsp_info, nRequestID, bIsLast != 0) };
 }
 
 #[allow(non_snake_case, unused_variables)]
 extern "C" fn spi_on_rsp_qry_exchange(spi: *mut CThostFtdcTraderSpi, pExchange: *const CThostFtdcExchangeField, pRspInfo: *const CThostFtdcRspInfoField, nRequestID: c_int, bIsLast: c_bool) {
     let rsp_info = from_rsp_info_to_rsp_result(pRspInfo);
-    unsafe { transmute::<*mut TraderSpi, &mut TraderSpi>(transmute::<*mut CThostFtdcTraderSpi, &mut CThostFtdcTraderSpi>(spi).trader_spi_ptr).on_rsp_qry_exchange(pExchange.as_ref(), rsp_info, nRequestID, bIsLast != 0) };
+    unsafe { transmute::<*mut dyn TraderSpi, &mut dyn TraderSpi>(transmute::<*mut CThostFtdcTraderSpi, &mut CThostFtdcTraderSpi>(spi).trader_spi_ptr).on_rsp_qry_exchange(pExchange.as_ref(), rsp_info, nRequestID, bIsLast != 0) };
 }
 
 #[allow(non_snake_case, unused_variables)]
 extern "C" fn spi_on_rsp_qry_product(spi: *mut CThostFtdcTraderSpi, pProduct: *const CThostFtdcProductField, pRspInfo: *const CThostFtdcRspInfoField, nRequestID: c_int, bIsLast: c_bool) {
     let rsp_info = from_rsp_info_to_rsp_result(pRspInfo);
-    unsafe { transmute::<*mut TraderSpi, &mut TraderSpi>(transmute::<*mut CThostFtdcTraderSpi, &mut CThostFtdcTraderSpi>(spi).trader_spi_ptr).on_rsp_qry_product(pProduct.as_ref(), rsp_info, nRequestID, bIsLast != 0) };
+    unsafe { transmute::<*mut dyn TraderSpi, &mut dyn TraderSpi>(transmute::<*mut CThostFtdcTraderSpi, &mut CThostFtdcTraderSpi>(spi).trader_spi_ptr).on_rsp_qry_product(pProduct.as_ref(), rsp_info, nRequestID, bIsLast != 0) };
 }
 
 #[allow(non_snake_case, unused_variables)]
 extern "C" fn spi_on_rsp_qry_instrument(spi: *mut CThostFtdcTraderSpi, pInstrument: *const CThostFtdcInstrumentField, pRspInfo: *const CThostFtdcRspInfoField, nRequestID: c_int, bIsLast: c_bool) {
     let rsp_info = from_rsp_info_to_rsp_result(pRspInfo);
-    unsafe { transmute::<*mut TraderSpi, &mut TraderSpi>(transmute::<*mut CThostFtdcTraderSpi, &mut CThostFtdcTraderSpi>(spi).trader_spi_ptr).on_rsp_qry_instrument(pInstrument.as_ref(), rsp_info, nRequestID, bIsLast != 0) };
+    unsafe { transmute::<*mut dyn TraderSpi, &mut dyn TraderSpi>(transmute::<*mut CThostFtdcTraderSpi, &mut CThostFtdcTraderSpi>(spi).trader_spi_ptr).on_rsp_qry_instrument(pInstrument.as_ref(), rsp_info, nRequestID, bIsLast != 0) };
 }
 
 #[allow(non_snake_case, unused_variables)]
@@ -1151,7 +1147,7 @@ extern "C" fn spi_on_rsp_qry_depth_market_data(spi: *mut CThostFtdcTraderSpi, pD
 #[allow(non_snake_case, unused_variables)]
 extern "C" fn spi_on_rsp_qry_settlement_info(spi: *mut CThostFtdcTraderSpi, pSettlementInfo: *const CThostFtdcSettlementInfoField, pRspInfo: *const CThostFtdcRspInfoField, nRequestID: c_int, bIsLast: c_bool) {
     let rsp_info = from_rsp_info_to_rsp_result(pRspInfo);
-    unsafe { transmute::<*mut TraderSpi, &mut TraderSpi>(transmute::<*mut CThostFtdcTraderSpi, &mut CThostFtdcTraderSpi>(spi).trader_spi_ptr).on_rsp_qry_settlement_info(pSettlementInfo.as_ref(), rsp_info, nRequestID, bIsLast != 0) };
+    unsafe { transmute::<*mut dyn TraderSpi, &mut dyn TraderSpi>(transmute::<*mut CThostFtdcTraderSpi, &mut CThostFtdcTraderSpi>(spi).trader_spi_ptr).on_rsp_qry_settlement_info(pSettlementInfo.as_ref(), rsp_info, nRequestID, bIsLast != 0) };
 }
 
 #[allow(non_snake_case, unused_variables)]
@@ -1166,7 +1162,7 @@ extern "C" fn spi_on_rsp_qry_notice(spi: *mut CThostFtdcTraderSpi, pNotice: *con
 #[allow(non_snake_case, unused_variables)]
 extern "C" fn spi_on_rsp_qry_settlement_info_confirm(spi: *mut CThostFtdcTraderSpi, pSettlementInfoConfirm: *const CThostFtdcSettlementInfoConfirmField, pRspInfo: *const CThostFtdcRspInfoField, nRequestID: c_int, bIsLast: c_bool) {
     let rsp_info = from_rsp_info_to_rsp_result(pRspInfo);
-    unsafe { transmute::<*mut TraderSpi, &mut TraderSpi>(transmute::<*mut CThostFtdcTraderSpi, &mut CThostFtdcTraderSpi>(spi).trader_spi_ptr).on_rsp_qry_settlement_info_confirm(pSettlementInfoConfirm.as_ref(), rsp_info, nRequestID, bIsLast != 0) };
+    unsafe { transmute::<*mut dyn TraderSpi, &mut dyn TraderSpi>(transmute::<*mut CThostFtdcTraderSpi, &mut CThostFtdcTraderSpi>(spi).trader_spi_ptr).on_rsp_qry_settlement_info_confirm(pSettlementInfoConfirm.as_ref(), rsp_info, nRequestID, bIsLast != 0) };
 }
 
 #[allow(non_snake_case, unused_variables)]
@@ -1184,19 +1180,19 @@ extern "C" fn spi_on_rsp_qry_investor_product_group_margin(spi: *mut CThostFtdcT
 #[allow(non_snake_case, unused_variables)]
 extern "C" fn spi_on_rsp_qry_exchange_margin_rate(spi: *mut CThostFtdcTraderSpi, pExchangeMarginRate: *const CThostFtdcExchangeMarginRateField, pRspInfo: *const CThostFtdcRspInfoField, nRequestID: c_int, bIsLast: c_bool) {
     let rsp_info = from_rsp_info_to_rsp_result(pRspInfo);
-    unsafe { transmute::<*mut TraderSpi, &mut TraderSpi>(transmute::<*mut CThostFtdcTraderSpi, &mut CThostFtdcTraderSpi>(spi).trader_spi_ptr).on_rsp_qry_exchange_margin_rate(pExchangeMarginRate.as_ref(), rsp_info, nRequestID, bIsLast != 0) };
+    unsafe { transmute::<*mut dyn TraderSpi, &mut dyn TraderSpi>(transmute::<*mut CThostFtdcTraderSpi, &mut CThostFtdcTraderSpi>(spi).trader_spi_ptr).on_rsp_qry_exchange_margin_rate(pExchangeMarginRate.as_ref(), rsp_info, nRequestID, bIsLast != 0) };
 }
 
 #[allow(non_snake_case, unused_variables)]
 extern "C" fn spi_on_rsp_qry_exchange_margin_rate_adjust(spi: *mut CThostFtdcTraderSpi, pExchangeMarginRateAdjust: *const CThostFtdcExchangeMarginRateAdjustField, pRspInfo: *const CThostFtdcRspInfoField, nRequestID: c_int, bIsLast: c_bool) {
     let rsp_info = from_rsp_info_to_rsp_result(pRspInfo);
-    unsafe { transmute::<*mut TraderSpi, &mut TraderSpi>(transmute::<*mut CThostFtdcTraderSpi, &mut CThostFtdcTraderSpi>(spi).trader_spi_ptr).on_rsp_qry_exchange_margin_rate_adjust(pExchangeMarginRateAdjust.as_ref(), rsp_info, nRequestID, bIsLast != 0) };
+    unsafe { transmute::<*mut dyn TraderSpi, &mut dyn TraderSpi>(transmute::<*mut CThostFtdcTraderSpi, &mut CThostFtdcTraderSpi>(spi).trader_spi_ptr).on_rsp_qry_exchange_margin_rate_adjust(pExchangeMarginRateAdjust.as_ref(), rsp_info, nRequestID, bIsLast != 0) };
 }
 
 #[allow(non_snake_case, unused_variables)]
 extern "C" fn spi_on_rsp_qry_exchange_rate(spi: *mut CThostFtdcTraderSpi, pExchangeRate: *const CThostFtdcExchangeRateField, pRspInfo: *const CThostFtdcRspInfoField, nRequestID: c_int, bIsLast: c_bool) {
     let rsp_info = from_rsp_info_to_rsp_result(pRspInfo);
-    unsafe { transmute::<*mut TraderSpi, &mut TraderSpi>(transmute::<*mut CThostFtdcTraderSpi, &mut CThostFtdcTraderSpi>(spi).trader_spi_ptr).on_rsp_qry_exchange_rate(pExchangeRate.as_ref(), rsp_info, nRequestID, bIsLast != 0) };
+    unsafe { transmute::<*mut dyn TraderSpi, &mut dyn TraderSpi>(transmute::<*mut CThostFtdcTraderSpi, &mut CThostFtdcTraderSpi>(spi).trader_spi_ptr).on_rsp_qry_exchange_rate(pExchangeRate.as_ref(), rsp_info, nRequestID, bIsLast != 0) };
 }
 
 #[allow(non_snake_case, unused_variables)]
@@ -1262,34 +1258,34 @@ extern "C" fn spi_on_rsp_qry_accountregister(spi: *mut CThostFtdcTraderSpi, pAcc
 #[allow(non_snake_case)]
 extern "C" fn spi_on_rsp_error(spi: *mut CThostFtdcTraderSpi, pRspInfo: *const CThostFtdcRspInfoField, nRequestID: c_int, bIsLast: c_bool) {
     let rsp_info = from_rsp_info_to_rsp_result(pRspInfo);
-    unsafe { transmute::<*mut TraderSpi, &mut TraderSpi>(transmute::<*mut CThostFtdcTraderSpi, &mut CThostFtdcTraderSpi>(spi).trader_spi_ptr).on_rsp_error(rsp_info, nRequestID, bIsLast != 0) };
+    unsafe { transmute::<*mut dyn TraderSpi, &mut dyn TraderSpi>(transmute::<*mut CThostFtdcTraderSpi, &mut CThostFtdcTraderSpi>(spi).trader_spi_ptr).on_rsp_error(rsp_info, nRequestID, bIsLast != 0) };
 }
 
 #[allow(non_snake_case)]
 extern "C" fn spi_on_rtn_order(spi: *mut CThostFtdcTraderSpi, pOrder: *const CThostFtdcOrderField) {
-    unsafe { transmute::<*mut TraderSpi, &mut TraderSpi>(transmute::<*mut CThostFtdcTraderSpi, &mut CThostFtdcTraderSpi>(spi).trader_spi_ptr).on_rtn_order(pOrder.as_ref()) };
+    unsafe { transmute::<*mut dyn TraderSpi, &mut dyn TraderSpi>(transmute::<*mut CThostFtdcTraderSpi, &mut CThostFtdcTraderSpi>(spi).trader_spi_ptr).on_rtn_order(pOrder.as_ref()) };
 }
 
 #[allow(non_snake_case, unused_variables)]
 extern "C" fn spi_on_rtn_trade(spi: *mut CThostFtdcTraderSpi, pTrade: *const CThostFtdcTradeField) {
-    unsafe { transmute::<*mut TraderSpi, &mut TraderSpi>(transmute::<*mut CThostFtdcTraderSpi, &mut CThostFtdcTraderSpi>(spi).trader_spi_ptr).on_rtn_trade(pTrade.as_ref()) };
+    unsafe { transmute::<*mut dyn TraderSpi, &mut dyn TraderSpi>(transmute::<*mut CThostFtdcTraderSpi, &mut CThostFtdcTraderSpi>(spi).trader_spi_ptr).on_rtn_trade(pTrade.as_ref()) };
 }
 
 #[allow(non_snake_case)]
 extern "C" fn spi_on_err_rtn_order_insert(spi: *mut CThostFtdcTraderSpi, pInputOrder: *const CThostFtdcInputOrderField, pRspInfo: *const CThostFtdcRspInfoField) {
     let rsp_info = from_rsp_info_to_rsp_result(pRspInfo);
-    unsafe { transmute::<*mut TraderSpi, &mut TraderSpi>(transmute::<*mut CThostFtdcTraderSpi, &mut CThostFtdcTraderSpi>(spi).trader_spi_ptr).on_err_rtn_order_insert(pInputOrder.as_ref(), rsp_info) };
+    unsafe { transmute::<*mut dyn TraderSpi, &mut dyn TraderSpi>(transmute::<*mut CThostFtdcTraderSpi, &mut CThostFtdcTraderSpi>(spi).trader_spi_ptr).on_err_rtn_order_insert(pInputOrder.as_ref(), rsp_info) };
 }
 
 #[allow(non_snake_case)]
 extern "C" fn spi_on_err_rtn_order_action(spi: *mut CThostFtdcTraderSpi, pOrderAction: *const CThostFtdcOrderActionField, pRspInfo: *const CThostFtdcRspInfoField) {
     let rsp_info = from_rsp_info_to_rsp_result(pRspInfo);
-    unsafe { transmute::<*mut TraderSpi, &mut TraderSpi>(transmute::<*mut CThostFtdcTraderSpi, &mut CThostFtdcTraderSpi>(spi).trader_spi_ptr).on_err_rtn_order_action(pOrderAction.as_ref(), rsp_info) };
+    unsafe { transmute::<*mut dyn TraderSpi, &mut dyn TraderSpi>(transmute::<*mut CThostFtdcTraderSpi, &mut CThostFtdcTraderSpi>(spi).trader_spi_ptr).on_err_rtn_order_action(pOrderAction.as_ref(), rsp_info) };
 }
 
 #[allow(non_snake_case)]
 extern "C" fn spi_on_rtn_instrument_status(spi: *mut CThostFtdcTraderSpi, pInstrumentStatus: *const CThostFtdcInstrumentStatusField) {
-    unsafe { transmute::<*mut TraderSpi, &mut TraderSpi>(transmute::<*mut CThostFtdcTraderSpi, &mut CThostFtdcTraderSpi>(spi).trader_spi_ptr).on_rtn_instrument_status(pInstrumentStatus.as_ref()) };
+    unsafe { transmute::<*mut dyn TraderSpi, &mut dyn TraderSpi>(transmute::<*mut CThostFtdcTraderSpi, &mut CThostFtdcTraderSpi>(spi).trader_spi_ptr).on_rtn_instrument_status(pInstrumentStatus.as_ref()) };
 }
 
 #[allow(non_snake_case, unused_variables)]
@@ -1297,7 +1293,7 @@ extern "C" fn spi_on_rtn_bulletin(spi: *mut CThostFtdcTraderSpi, pBulletin: *con
 
 #[allow(non_snake_case)]
 extern "C" fn spi_on_rtn_trading_notice(spi: *mut CThostFtdcTraderSpi, pTradingNoticeInfo: *const CThostFtdcTradingNoticeInfoField) {
-    unsafe { transmute::<*mut TraderSpi, &mut TraderSpi>(transmute::<*mut CThostFtdcTraderSpi, &mut CThostFtdcTraderSpi>(spi).trader_spi_ptr).on_rtn_trading_notice(pTradingNoticeInfo.as_ref()) };
+    unsafe { transmute::<*mut dyn TraderSpi, &mut dyn TraderSpi>(transmute::<*mut CThostFtdcTraderSpi, &mut CThostFtdcTraderSpi>(spi).trader_spi_ptr).on_rtn_trading_notice(pTradingNoticeInfo.as_ref()) };
 }
 
 #[allow(non_snake_case, unused_variables)]
@@ -1821,10 +1817,10 @@ static SPI_VTABLE: SpiVTable = SpiVTable{
 #[repr(C)]
 pub struct CThostFtdcTraderSpi {
     vtable: *const SpiVTable,
-    pub trader_spi_ptr: *mut TraderSpi
+    pub trader_spi_ptr: *mut dyn TraderSpi
 }
 
-fn new_spi(trader_spi: *mut TraderSpi) -> CThostFtdcTraderSpi {
+fn new_spi(trader_spi: *mut dyn TraderSpi) -> CThostFtdcTraderSpi {
     CThostFtdcTraderSpi{ vtable: &SPI_VTABLE, trader_spi_ptr: trader_spi }
 }
 

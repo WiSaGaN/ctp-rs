@@ -1,14 +1,6 @@
-#[macro_use]
-extern crate serde;
-extern crate serde_yaml;
-#[macro_use]
-extern crate simple_error;
-extern crate ctp_trader;
-
-use std::fs;
-
 use ctp_trader::*;
-use simple_error::SimpleResult;
+use serde::Deserialize;
+use simple_error::{try_with, SimpleResult};
 
 #[derive(Deserialize)]
 #[derive(Clone, Debug, PartialEq, Eq)]
@@ -53,7 +45,7 @@ fn new_user_password_update(config: &Config) -> CThostFtdcUserPasswordUpdateFiel
 }
 
 fn main() -> SimpleResult<()> {
-    let yaml_str = try_with!(fs::read_to_string("config.password_update.yml"), "cannot read config.password_update.yml");
+    let yaml_str = try_with!(std::fs::read_to_string("config.password_update.yml"), "cannot read config.password_update.yml");
     let config: Config = try_with!(serde_yaml::from_str(&yaml_str), "cannot parse config");
 
     let mut last_request_id = 0;

@@ -1,7 +1,8 @@
 [package]
 name = "ctp-common"
-version = "0.8.0"
+version = "0.8.1"
 authors = ["Wangshan Lu <wisagan@gmail.com>"]
+edition = "2018"
 
 [dependencies]
 encoding = "0.2"

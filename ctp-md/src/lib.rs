@@ -1,7 +1,3 @@
-#[cfg(feature = "channel")]
-extern crate crossbeam_channel;
-extern crate ctp_common;
-
 use std::ffi::{ CStr, CString };
 use std::mem::transmute;
 use std::os::raw::{ c_void, c_char, c_int };
@@ -62,7 +58,7 @@ pub trait GenericMdApi {
     fn register_front(&mut self, front_socket_address: CString);
     fn register_name_server(&mut self, name_server: CString);
     fn register_fens_user_info(&mut self, fens_user_info: &CThostFtdcFensUserInfoField);
-    fn register_spi(&mut self, md_spi: Box<MdSpi>);
+    fn register_spi(&mut self, md_spi: Box<dyn MdSpi>);
     fn subscribe_market_data(&mut self, instrument_ids: &[CString]) -> ApiResult;
     fn unsubscribe_market_data(&mut self, instrument_ids: &[CString]) -> ApiResult;
     fn subscribe_for_quote_rsp(&mut self, instrument_ids: &[CString]) -> ApiResult;
@@ -119,7 +115,7 @@ impl GenericMdApi for MdApi {
         unsafe { CFtdcMdApiImplRegisterFensUserInfo(self.md_api_ptr, fens_user_info) };
     }
 
-    fn register_spi(&mut self, md_spi: Box<MdSpi>) {
+    fn register_spi(&mut self, md_spi: Box<dyn MdSpi>) {
         let last_registered_spi_ptr = self.registered_spi.take();
         let md_spi_ptr = Box::into_raw(md_spi);
         let spi_ptr = Box::into_raw(Box::new(new_spi(md_spi_ptr)));
@@ -391,13 +387,13 @@ impl<T> MdSpi for SenderMdSpi<T> where T: From<MdSpiOutput> + Send + 'static {
 
 #[allow(non_snake_case)]
 extern "C" fn spi_on_front_connected(spi: *mut CThostFtdcMdSpi) {
-    unsafe { transmute::<*mut MdSpi, &mut MdSpi>(transmute::<*mut CThostFtdcMdSpi, &mut CThostFtdcMdSpi>(spi).md_spi_ptr).on_front_connected() };
+    unsafe { transmute::<*mut dyn MdSpi, &mut dyn MdSpi>(transmute::<*mut CThostFtdcMdSpi, &mut CThostFtdcMdSpi>(spi).md_spi_ptr).on_front_connected() };
 }
 
 #[allow(non_snake_case)]
 extern "C" fn spi_on_front_disconnected(spi: *mut CThostFtdcMdSpi, nReason: c_int) {
     let reason = std::convert::From::from(nReason);
-    unsafe { transmute::<*mut MdSpi, &mut MdSpi>(transmute::<*mut CThostFtdcMdSpi, &mut CThostFtdcMdSpi>(spi).md_spi_ptr).on_front_disconnected(reason) };
+    unsafe { transmute::<*mut dyn MdSpi, &mut dyn MdSpi>(transmute::<*mut CThostFtdcMdSpi, &mut CThostFtdcMdSpi>(spi).md_spi_ptr).on_front_disconnected(reason) };
 }
 
 #[allow(non_snake_case, unused_variables)]
@@ -409,53 +405,53 @@ extern "C" fn spi_on_heart_beat_warning(spi: *mut CThostFtdcMdSpi, nTimeLapse: c
 #[allow(non_snake_case)]
 extern "C" fn spi_on_rsp_user_login(spi: *mut CThostFtdcMdSpi, pRspUserLogin: *const CThostFtdcRspUserLoginField, pRspInfo: *const CThostFtdcRspInfoField, nRequestID: c_int, bIsLast: c_bool) {
     let rsp_info = from_rsp_info_to_rsp_result(pRspInfo);
-    unsafe { transmute::<*mut MdSpi, &mut MdSpi>(transmute::<*mut CThostFtdcMdSpi, &mut CThostFtdcMdSpi>(spi).md_spi_ptr).on_rsp_user_login(pRspUserLogin.as_ref(), rsp_info, nRequestID, bIsLast != 0) };
+    unsafe { transmute::<*mut dyn MdSpi, &mut dyn MdSpi>(transmute::<*mut CThostFtdcMdSpi, &mut CThostFtdcMdSpi>(spi).md_spi_ptr).on_rsp_user_login(pRspUserLogin.as_ref(), rsp_info, nRequestID, bIsLast != 0) };
 }
 
 #[allow(non_snake_case)]
 extern "C" fn spi_on_rsp_user_logout(spi: *mut CThostFtdcMdSpi, pUserLogout: *const CThostFtdcUserLogoutField, pRspInfo: *const CThostFtdcRspInfoField, nRequestID: c_int, bIsLast: c_bool) {
     let rsp_info = from_rsp_info_to_rsp_result(pRspInfo);
-    unsafe { transmute::<*mut MdSpi, &mut MdSpi>(transmute::<*mut CThostFtdcMdSpi, &mut CThostFtdcMdSpi>(spi).md_spi_ptr).on_rsp_user_logout(pUserLogout.as_ref(), rsp_info, nRequestID, bIsLast != 0) };
+    unsafe { transmute::<*mut dyn MdSpi, &mut dyn MdSpi>(transmute::<*mut CThostFtdcMdSpi, &mut CThostFtdcMdSpi>(spi).md_spi_ptr).on_rsp_user_logout(pUserLogout.as_ref(), rsp_info, nRequestID, bIsLast != 0) };
 }
 
 #[allow(non_snake_case)]
 extern "C" fn spi_on_rsp_error(spi: *mut CThostFtdcMdSpi, pRspInfo: *const CThostFtdcRspInfoField, nRequestID: c_int, bIsLast: c_bool) {
     let rsp_info = from_rsp_info_to_rsp_result(pRspInfo);
-    unsafe { transmute::<*mut MdSpi, &mut MdSpi>(transmute::<*mut CThostFtdcMdSpi, &mut CThostFtdcMdSpi>(spi).md_spi_ptr).on_rsp_error(rsp_info, nRequestID, bIsLast != 0) };
+    unsafe { transmute::<*mut dyn MdSpi, &mut dyn MdSpi>(transmute::<*mut CThostFtdcMdSpi, &mut CThostFtdcMdSpi>(spi).md_spi_ptr).on_rsp_error(rsp_info, nRequestID, bIsLast != 0) };
 }
 
 #[allow(non_snake_case)]
 extern "C" fn spi_on_rsp_sub_market_data(spi: *mut CThostFtdcMdSpi, pSpecificInstrument: *const CThostFtdcSpecificInstrumentField, pRspInfo: *const CThostFtdcRspInfoField, nRequestID: c_int, bIsLast: c_bool) {
     let rsp_info = from_rsp_info_to_rsp_result(pRspInfo);
-    unsafe { transmute::<*mut MdSpi, &mut MdSpi>(transmute::<*mut CThostFtdcMdSpi, &mut CThostFtdcMdSpi>(spi).md_spi_ptr).on_rsp_sub_market_data(pSpecificInstrument.as_ref(), rsp_info, nRequestID, bIsLast != 0) };
+    unsafe { transmute::<*mut dyn MdSpi, &mut dyn MdSpi>(transmute::<*mut CThostFtdcMdSpi, &mut CThostFtdcMdSpi>(spi).md_spi_ptr).on_rsp_sub_market_data(pSpecificInstrument.as_ref(), rsp_info, nRequestID, bIsLast != 0) };
 }
 
 #[allow(non_snake_case)]
 extern "C" fn spi_on_rsp_un_sub_market_data(spi: *mut CThostFtdcMdSpi, pSpecificInstrument: *const CThostFtdcSpecificInstrumentField, pRspInfo: *const CThostFtdcRspInfoField, nRequestID: c_int, bIsLast: c_bool) {
     let rsp_info = from_rsp_info_to_rsp_result(pRspInfo);
-    unsafe { transmute::<*mut MdSpi, &mut MdSpi>(transmute::<*mut CThostFtdcMdSpi, &mut CThostFtdcMdSpi>(spi).md_spi_ptr).on_rsp_un_sub_market_data(pSpecificInstrument.as_ref(), rsp_info, nRequestID, bIsLast != 0) };
+    unsafe { transmute::<*mut dyn MdSpi, &mut dyn MdSpi>(transmute::<*mut CThostFtdcMdSpi, &mut CThostFtdcMdSpi>(spi).md_spi_ptr).on_rsp_un_sub_market_data(pSpecificInstrument.as_ref(), rsp_info, nRequestID, bIsLast != 0) };
 }
 
 #[allow(non_snake_case)]
 extern "C" fn spi_on_rsp_sub_for_quote_rsp(spi: *mut CThostFtdcMdSpi, pSpecificInstrument: *const CThostFtdcSpecificInstrumentField, pRspInfo: *const CThostFtdcRspInfoField, nRequestID: c_int, bIsLast: c_bool) {
     let rsp_info = from_rsp_info_to_rsp_result(pRspInfo);
-    unsafe { transmute::<*mut MdSpi, &mut MdSpi>(transmute::<*mut CThostFtdcMdSpi, &mut CThostFtdcMdSpi>(spi).md_spi_ptr).on_rsp_sub_for_quote_rsp(pSpecificInstrument.as_ref(), rsp_info, nRequestID, bIsLast != 0) };
+    unsafe { transmute::<*mut dyn MdSpi, &mut dyn MdSpi>(transmute::<*mut CThostFtdcMdSpi, &mut CThostFtdcMdSpi>(spi).md_spi_ptr).on_rsp_sub_for_quote_rsp(pSpecificInstrument.as_ref(), rsp_info, nRequestID, bIsLast != 0) };
 }
 
 #[allow(non_snake_case)]
 extern "C" fn spi_on_rsp_un_sub_for_quote_rsp(spi: *mut CThostFtdcMdSpi, pSpecificInstrument: *const CThostFtdcSpecificInstrumentField, pRspInfo: *const CThostFtdcRspInfoField, nRequestID: c_int, bIsLast: c_bool) {
     let rsp_info = from_rsp_info_to_rsp_result(pRspInfo);
-    unsafe { transmute::<*mut MdSpi, &mut MdSpi>(transmute::<*mut CThostFtdcMdSpi, &mut CThostFtdcMdSpi>(spi).md_spi_ptr).on_rsp_un_sub_for_quote_rsp(pSpecificInstrument.as_ref(), rsp_info, nRequestID, bIsLast != 0) };
+    unsafe { transmute::<*mut dyn MdSpi, &mut dyn MdSpi>(transmute::<*mut CThostFtdcMdSpi, &mut CThostFtdcMdSpi>(spi).md_spi_ptr).on_rsp_un_sub_for_quote_rsp(pSpecificInstrument.as_ref(), rsp_info, nRequestID, bIsLast != 0) };
 }
 
 #[allow(non_snake_case)]
 extern "C" fn spi_on_rtn_depth_market_data(spi: *mut CThostFtdcMdSpi, pDepthMarketData: *const CThostFtdcDepthMarketDataField ) {
-    unsafe { transmute::<*mut MdSpi, &mut MdSpi>(transmute::<*mut CThostFtdcMdSpi, &mut CThostFtdcMdSpi>(spi).md_spi_ptr).on_rtn_depth_market_data(pDepthMarketData.as_ref()) };
+    unsafe { transmute::<*mut dyn MdSpi, &mut dyn MdSpi>(transmute::<*mut CThostFtdcMdSpi, &mut CThostFtdcMdSpi>(spi).md_spi_ptr).on_rtn_depth_market_data(pDepthMarketData.as_ref()) };
 }
 
 #[allow(non_snake_case)]
 extern "C" fn spi_on_rtn_for_quote_rsp(spi: *mut CThostFtdcMdSpi, pForQuoteRsp: *const CThostFtdcForQuoteRspField ) {
-    unsafe { transmute::<*mut MdSpi, &mut MdSpi>(transmute::<*mut CThostFtdcMdSpi, &mut CThostFtdcMdSpi>(spi).md_spi_ptr).on_rtn_for_quote_rsp(pForQuoteRsp.as_ref()) };
+    unsafe { transmute::<*mut dyn MdSpi, &mut dyn MdSpi>(transmute::<*mut CThostFtdcMdSpi, &mut CThostFtdcMdSpi>(spi).md_spi_ptr).on_rtn_for_quote_rsp(pForQuoteRsp.as_ref()) };
 }
 
 #[repr(C)]
@@ -505,10 +501,10 @@ static SPI_VTABLE: SpiVTable = SpiVTable{
 #[repr(C)]
 pub struct CThostFtdcMdSpi {
     vtable: *const SpiVTable,
-    pub md_spi_ptr: *mut MdSpi
+    pub md_spi_ptr: *mut dyn MdSpi
 }
 
-fn new_spi(md_spi: *mut MdSpi) -> CThostFtdcMdSpi {
+fn new_spi(md_spi: *mut dyn MdSpi) -> CThostFtdcMdSpi {
     CThostFtdcMdSpi{ vtable: &SPI_VTABLE, md_spi_ptr: md_spi }
 }
 

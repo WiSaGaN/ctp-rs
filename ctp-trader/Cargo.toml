@@ -1,7 +1,8 @@
 [package]
 name = "ctp-trader"
-version = "0.8.1"
+version = "0.8.2"
 authors = ["Wangshan Lu <wisagan@gmail.com>"]
+edition = "2018"
 links = "ctp-trader"
 
 [features]

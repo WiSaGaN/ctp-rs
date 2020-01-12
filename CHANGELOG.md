@@ -2,7 +2,7 @@
 
 This project roughly adheres to [Semantic Versioning](http://semver.org/). For 0.x.y releases, `x` is the major version in semver, while `y` is the minor version.
 
-## Unreleased
+## 0.8.1 - 2020-01-12
 
 * Upgrade to 2018 edition
 

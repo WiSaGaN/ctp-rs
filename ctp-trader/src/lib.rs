@@ -1849,18 +1849,4 @@ mod tests {
         drop(trader_api);
         assert!(true);
     }
-
-    #[test]
-    fn get_trading_day() {
-        let flow_path = CString::new("").unwrap();
-        let mut trader_api = TraderApi::new(flow_path);
-        let trading_day = trader_api.get_trading_day();
-        assert_eq!(b"19700101".len(), trading_day.to_bytes().len());
-        let year = ::std::str::from_utf8(&trading_day.to_bytes()[0..4]).unwrap().parse::<i32>().unwrap();
-        assert!(year > 1970 && year < 2038);
-        let month = ::std::str::from_utf8(&trading_day.to_bytes()[4..6]).unwrap().parse::<i32>().unwrap();
-        assert!(month > 0 && month < 13);
-        let day = ::std::str::from_utf8(&trading_day.to_bytes()[6..8]).unwrap().parse::<i32>().unwrap();
-        assert!(day > 0 && day < 32);
-    }
 }

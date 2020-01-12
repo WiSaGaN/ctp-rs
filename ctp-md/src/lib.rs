@@ -533,18 +533,4 @@ mod tests {
         drop(md_api);
         assert!(true);
     }
-
-    #[test]
-    fn get_trading_day() {
-        let flow_path = CString::new("").unwrap();
-        let mut md_api = MdApi::new(flow_path, false, false);
-        let trading_day = md_api.get_trading_day();
-        assert_eq!(b"19700101".len(), trading_day.to_bytes().len());
-        let year = ::std::str::from_utf8(&trading_day.to_bytes()[0..4]).unwrap().parse::<i32>().unwrap();
-        assert!(year > 1970 && year < 2038, "year of trading day {} is not an integer in [1971, 2037]", year);
-        let month = ::std::str::from_utf8(&trading_day.to_bytes()[4..6]).unwrap().parse::<i32>().unwrap();
-        assert!(month > 0 && month < 13, "month of trading day {} is not an integer in [1, 12]", month);
-        let day = ::std::str::from_utf8(&trading_day.to_bytes()[6..8]).unwrap().parse::<i32>().unwrap();
-        assert!(day > 0 && day < 32, "day of trading day {} is not an integer in [1, 31]", day);
-    }
 }

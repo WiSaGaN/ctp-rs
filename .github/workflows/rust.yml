@@ -1,0 +1,40 @@
+name: Rust
+
+on: [push]
+
+jobs:
+  ubuntu1804:
+    runs-on: ubuntu-18.04
+    steps:
+      - uses: actions/checkout@v2
+      - name: Checkout submodules
+        shell: bash
+        run: |
+          git submodule update --init
+      - uses: actions-rs/toolchain@v1
+        with:
+          toolchain: 1.32.0
+      - uses: actions-rs/cargo@v1
+        with:
+          command: test
+          args: --manifest-path ctp-common/Cargo.toml
+      - uses: actions-rs/cargo@v1
+        with:
+          command: test
+          args: --manifest-path ctp-common/Cargo.toml
+      - uses: actions-rs/cargo@v1
+        with:
+          command: test
+          args: --manifest-path ctp-md/Cargo.toml
+      - uses: actions-rs/cargo@v1
+        with:
+          command: test
+          args: --manifest-path ctp-md/Cargo.toml --features channel
+      - uses: actions-rs/cargo@v1
+        with:
+          command: test
+          args: --manifest-path ctp-trader/Cargo.toml
+      - uses: actions-rs/cargo@v1
+        with:
+          command: test
+          args: --manifest-path ctp-trader/Cargo.toml --features channel

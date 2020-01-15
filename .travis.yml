@@ -18,7 +18,7 @@ rust:
   - nightly
   - beta
   - stable
-  - 1.26.0
+  - 1.32.0
 
 # the main build
 script:

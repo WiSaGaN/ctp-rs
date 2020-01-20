@@ -46,7 +46,7 @@ pub fn ascii_cstr_to_str(s: &[u8]) -> Result<&str, SimpleError> {
     }
 }
 
-pub fn gb18030_cstr_to_str<'a>(v: &'a [u8]) -> Cow<'a, str> {
+pub fn gb18030_cstr_to_str(v: &[u8]) -> Cow<str> {
     let slice = v.split(|&c| c == 0u8).next().unwrap();
     if slice.is_ascii() {
         unsafe {
@@ -193,19 +193,19 @@ pub type RspResult = Result<(), RspError>;
 
 pub fn from_rsp_result_to_string(rsp_result: &RspResult) -> String {
     match rsp_result {
-        &Ok(()) => "Ok(())".to_string(),
-        &Err(ref err) => format!("Err(RspError{{ id: {}, msg: {} }})", err.id, err.msg),
+        Ok(()) => "Ok(())".to_string(),
+        Err(err) => format!("Err(RspError{{ id: {}, msg: {} }})", err.id, err.msg),
     }
 }
 
 pub fn from_rsp_info_to_rsp_result(rsp_info: *const CThostFtdcRspInfoField) -> RspResult {
     match unsafe { rsp_info.as_ref() } {
         Some(info) => match *info {
-            CThostFtdcRspInfoField { ErrorID: 0, ErrorMsg: _ } => {
+            CThostFtdcRspInfoField { ErrorID: 0, .. } => {
                 Ok(())
             },
             CThostFtdcRspInfoField { ErrorID: id, ErrorMsg: ref msg } => {
-                Err(RspError{ id: id, msg: gb18030_cstr_to_str(msg).into_owned() })
+                Err(RspError{ id, msg: gb18030_cstr_to_str(msg).into_owned() })
             }
         },
         None => {
@@ -215,14 +215,14 @@ pub fn from_rsp_info_to_rsp_result(rsp_info: *const CThostFtdcRspInfoField) -> R
 }
 
 pub fn is_terminal_order_status(order_status: TThostFtdcOrderStatusType) -> bool {
-    return order_status == THOST_FTDC_OST_AllTraded ||
+    order_status == THOST_FTDC_OST_AllTraded ||
         order_status == THOST_FTDC_OST_PartTradedNotQueueing ||
         order_status == THOST_FTDC_OST_NoTradeNotQueueing ||
-        order_status == THOST_FTDC_OST_Canceled;
+        order_status == THOST_FTDC_OST_Canceled
 }
 
 pub fn is_valid_order_sys_id(order_sys_id: &TThostFtdcOrderSysIDType) -> bool {
-    return order_sys_id[0] != b'\0';
+    order_sys_id[0] != b'\0'
 }
 
 pub fn to_exchange_timestamp(trading_day: &TThostFtdcDateType,

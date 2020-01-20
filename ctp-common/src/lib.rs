@@ -5,7 +5,6 @@ use encoding::{ DecoderTrap, Encoding };
 use encoding::all::GB18030;
 use simple_error::SimpleError;
 use std::borrow::Cow;
-use std::error::Error;
 use std::fmt;
 use std::os::raw::c_int;
 use time::{ Timespec, Tm };
@@ -147,19 +146,15 @@ pub enum ApiError {
 }
 
 impl std::error::Error for ApiError {
-    fn description(&self) -> &str {
-        use ApiError::*;
-        match *self {
-            NetworkError => "network error",
-            QueueFull => "queue full",
-            Throttled => "throttled",
-        }
-    }
 }
 
 impl fmt::Display for ApiError {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        f.write_str(self.description())
+        match *self {
+            ApiError::NetworkError => f.write_str("network error"),
+            ApiError::QueueFull => f.write_str("queue full"),
+            ApiError::Throttled => f.write_str("throttled"),
+        }
     }
 }
 
@@ -185,9 +180,6 @@ pub struct RspError {
 }
 
 impl std::error::Error for RspError {
-    fn description(&self) -> &str {
-        &self.msg
-    }
 }
 
 impl fmt::Display for RspError {

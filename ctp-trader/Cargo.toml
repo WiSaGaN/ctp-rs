@@ -1,6 +1,6 @@
 [package]
 name = "ctp-trader"
-version = "0.8.2"
+version = "0.9.0"
 authors = ["Wangshan Lu <wisagan@gmail.com>"]
 edition = "2018"
 links = "ctp-trader"
@@ -9,7 +9,7 @@ links = "ctp-trader"
 channel = ["crossbeam-channel"]
 
 [dependencies]
-crossbeam-channel = { version = "0.3.8", optional = true }
+crossbeam-channel = { version = "0.4.0", optional = true }
 
 [dependencies.ctp-common]
 version = "0.8.0"

@@ -124,7 +124,8 @@ impl GenericMdApi for MdApi {
         if let Some(last_registered_spi_ptr) = last_registered_spi_ptr {
             unsafe {
                 let last_registered_spi = Box::from_raw(last_registered_spi_ptr);
-                drop(last_registered_spi.md_spi_ptr);
+                let md_spi = Box::from_raw(last_registered_spi.md_spi_ptr);
+                drop(md_spi);
                 drop(last_registered_spi);
             }
         };
@@ -166,7 +167,8 @@ impl Drop for MdApi {
             unsafe {
                 CFtdcMdApiImplRegisterSpi(self.md_api_ptr, ::std::ptr::null_mut::<c_void>());
                 let last_registered_spi = Box::from_raw(last_registered_spi_ptr);
-                drop(last_registered_spi.md_spi_ptr);
+                let md_spi = Box::from_raw(last_registered_spi.md_spi_ptr);
+                drop(md_spi);
                 drop(last_registered_spi);
             }
         };

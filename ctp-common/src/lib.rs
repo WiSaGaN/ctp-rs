@@ -198,14 +198,18 @@ pub fn from_rsp_result_to_string(rsp_result: &RspResult) -> String {
     }
 }
 
-pub fn from_rsp_info_to_rsp_result(rsp_info: *const CThostFtdcRspInfoField) -> RspResult {
+/// # Safety
+///
+/// `rsp_info` needs to be either a null pointer or a valid pointer of type `CThostFtdcRspInfoField`.
+pub unsafe fn from_rsp_info_to_rsp_result(rsp_info: *const CThostFtdcRspInfoField) -> RspResult {
+    #[allow(unused_unsafe)] // for future "unsafe blocks in unsafe fn" feature
     match unsafe { rsp_info.as_ref() } {
-        Some(info) => match *info {
+        Some(info) => match info {
             CThostFtdcRspInfoField { ErrorID: 0, .. } => {
                 Ok(())
             },
-            CThostFtdcRspInfoField { ErrorID: id, ErrorMsg: ref msg } => {
-                Err(RspError{ id, msg: gb18030_cstr_to_str(msg).into_owned() })
+            CThostFtdcRspInfoField { ErrorID: id, ErrorMsg: msg } => {
+                Err(RspError{ id: *id, msg: gb18030_cstr_to_str(msg).into_owned() })
             }
         },
         None => {

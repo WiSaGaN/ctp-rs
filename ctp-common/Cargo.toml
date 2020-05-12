@@ -1,6 +1,6 @@
 [package]
 name = "ctp-common"
-version = "0.8.2"
+version = "0.9.0"
 authors = ["Wangshan Lu <wisagan@gmail.com>"]
 edition = "2018"
 

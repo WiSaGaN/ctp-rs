@@ -5,7 +5,7 @@ authors = ["Wangshan Lu <wisagan@gmail.com>"]
 edition = "2018"
 
 [dependencies]
-encoding = "0.2"
-memchr = "2.0.2"
-simple-error = "0.2.0"
-time = "0.1"
+encoding = "0.2.33"
+memchr = "2.3.3"
+simple-error = "0.2.1"
+time = "0.1.43"

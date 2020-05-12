@@ -229,6 +229,8 @@ pub fn is_valid_order_sys_id(order_sys_id: &TThostFtdcOrderSysIDType) -> bool {
     order_sys_id[0] != b'\0'
 }
 
+#[allow(clippy::trivially_copy_pass_by_ref)] // Will be removed
+#[deprecated(since = "0.9.0", note = "This will be removed in 0.10.0")]
 pub fn to_exchange_timestamp(trading_day: &TThostFtdcDateType,
                               update_time: &TThostFtdcTimeType,
                               update_millisec: &TThostFtdcMillisecType) -> Result<Timespec, SimpleError> {

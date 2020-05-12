@@ -404,44 +404,58 @@ extern "C" fn spi_on_heart_beat_warning(spi: *mut CThostFtdcMdSpi, nTimeLapse: c
 
 #[allow(non_snake_case)]
 extern "C" fn spi_on_rsp_user_login(spi: *mut CThostFtdcMdSpi, pRspUserLogin: *const CThostFtdcRspUserLoginField, pRspInfo: *const CThostFtdcRspInfoField, nRequestID: c_int, bIsLast: c_bool) {
-    let rsp_info = from_rsp_info_to_rsp_result(pRspInfo);
-    unsafe { transmute::<*mut dyn MdSpi, &mut dyn MdSpi>(transmute::<*mut CThostFtdcMdSpi, &mut CThostFtdcMdSpi>(spi).md_spi_ptr).on_rsp_user_login(pRspUserLogin.as_ref(), rsp_info, nRequestID, bIsLast != 0) };
+    unsafe {
+        let rsp_info = from_rsp_info_to_rsp_result(pRspInfo);
+        transmute::<*mut dyn MdSpi, &mut dyn MdSpi>(transmute::<*mut CThostFtdcMdSpi, &mut CThostFtdcMdSpi>(spi).md_spi_ptr).on_rsp_user_login(pRspUserLogin.as_ref(), rsp_info, nRequestID, bIsLast != 0);
+    }
 }
 
 #[allow(non_snake_case)]
 extern "C" fn spi_on_rsp_user_logout(spi: *mut CThostFtdcMdSpi, pUserLogout: *const CThostFtdcUserLogoutField, pRspInfo: *const CThostFtdcRspInfoField, nRequestID: c_int, bIsLast: c_bool) {
-    let rsp_info = from_rsp_info_to_rsp_result(pRspInfo);
-    unsafe { transmute::<*mut dyn MdSpi, &mut dyn MdSpi>(transmute::<*mut CThostFtdcMdSpi, &mut CThostFtdcMdSpi>(spi).md_spi_ptr).on_rsp_user_logout(pUserLogout.as_ref(), rsp_info, nRequestID, bIsLast != 0) };
+    unsafe {
+        let rsp_info = from_rsp_info_to_rsp_result(pRspInfo);
+        transmute::<*mut dyn MdSpi, &mut dyn MdSpi>(transmute::<*mut CThostFtdcMdSpi, &mut CThostFtdcMdSpi>(spi).md_spi_ptr).on_rsp_user_logout(pUserLogout.as_ref(), rsp_info, nRequestID, bIsLast != 0);
+    }
 }
 
 #[allow(non_snake_case)]
 extern "C" fn spi_on_rsp_error(spi: *mut CThostFtdcMdSpi, pRspInfo: *const CThostFtdcRspInfoField, nRequestID: c_int, bIsLast: c_bool) {
-    let rsp_info = from_rsp_info_to_rsp_result(pRspInfo);
-    unsafe { transmute::<*mut dyn MdSpi, &mut dyn MdSpi>(transmute::<*mut CThostFtdcMdSpi, &mut CThostFtdcMdSpi>(spi).md_spi_ptr).on_rsp_error(rsp_info, nRequestID, bIsLast != 0) };
+    unsafe {
+        let rsp_info = from_rsp_info_to_rsp_result(pRspInfo);
+        transmute::<*mut dyn MdSpi, &mut dyn MdSpi>(transmute::<*mut CThostFtdcMdSpi, &mut CThostFtdcMdSpi>(spi).md_spi_ptr).on_rsp_error(rsp_info, nRequestID, bIsLast != 0);
+    }
 }
 
 #[allow(non_snake_case)]
 extern "C" fn spi_on_rsp_sub_market_data(spi: *mut CThostFtdcMdSpi, pSpecificInstrument: *const CThostFtdcSpecificInstrumentField, pRspInfo: *const CThostFtdcRspInfoField, nRequestID: c_int, bIsLast: c_bool) {
-    let rsp_info = from_rsp_info_to_rsp_result(pRspInfo);
-    unsafe { transmute::<*mut dyn MdSpi, &mut dyn MdSpi>(transmute::<*mut CThostFtdcMdSpi, &mut CThostFtdcMdSpi>(spi).md_spi_ptr).on_rsp_sub_market_data(pSpecificInstrument.as_ref(), rsp_info, nRequestID, bIsLast != 0) };
+    unsafe {
+        let rsp_info = from_rsp_info_to_rsp_result(pRspInfo);
+        transmute::<*mut dyn MdSpi, &mut dyn MdSpi>(transmute::<*mut CThostFtdcMdSpi, &mut CThostFtdcMdSpi>(spi).md_spi_ptr).on_rsp_sub_market_data(pSpecificInstrument.as_ref(), rsp_info, nRequestID, bIsLast != 0);
+    }
 }
 
 #[allow(non_snake_case)]
 extern "C" fn spi_on_rsp_un_sub_market_data(spi: *mut CThostFtdcMdSpi, pSpecificInstrument: *const CThostFtdcSpecificInstrumentField, pRspInfo: *const CThostFtdcRspInfoField, nRequestID: c_int, bIsLast: c_bool) {
-    let rsp_info = from_rsp_info_to_rsp_result(pRspInfo);
-    unsafe { transmute::<*mut dyn MdSpi, &mut dyn MdSpi>(transmute::<*mut CThostFtdcMdSpi, &mut CThostFtdcMdSpi>(spi).md_spi_ptr).on_rsp_un_sub_market_data(pSpecificInstrument.as_ref(), rsp_info, nRequestID, bIsLast != 0) };
+    unsafe {
+        let rsp_info = from_rsp_info_to_rsp_result(pRspInfo);
+        transmute::<*mut dyn MdSpi, &mut dyn MdSpi>(transmute::<*mut CThostFtdcMdSpi, &mut CThostFtdcMdSpi>(spi).md_spi_ptr).on_rsp_un_sub_market_data(pSpecificInstrument.as_ref(), rsp_info, nRequestID, bIsLast != 0);
+    }
 }
 
 #[allow(non_snake_case)]
 extern "C" fn spi_on_rsp_sub_for_quote_rsp(spi: *mut CThostFtdcMdSpi, pSpecificInstrument: *const CThostFtdcSpecificInstrumentField, pRspInfo: *const CThostFtdcRspInfoField, nRequestID: c_int, bIsLast: c_bool) {
-    let rsp_info = from_rsp_info_to_rsp_result(pRspInfo);
-    unsafe { transmute::<*mut dyn MdSpi, &mut dyn MdSpi>(transmute::<*mut CThostFtdcMdSpi, &mut CThostFtdcMdSpi>(spi).md_spi_ptr).on_rsp_sub_for_quote_rsp(pSpecificInstrument.as_ref(), rsp_info, nRequestID, bIsLast != 0) };
+    unsafe {
+        let rsp_info = from_rsp_info_to_rsp_result(pRspInfo);
+        transmute::<*mut dyn MdSpi, &mut dyn MdSpi>(transmute::<*mut CThostFtdcMdSpi, &mut CThostFtdcMdSpi>(spi).md_spi_ptr).on_rsp_sub_for_quote_rsp(pSpecificInstrument.as_ref(), rsp_info, nRequestID, bIsLast != 0);
+    }
 }
 
 #[allow(non_snake_case)]
 extern "C" fn spi_on_rsp_un_sub_for_quote_rsp(spi: *mut CThostFtdcMdSpi, pSpecificInstrument: *const CThostFtdcSpecificInstrumentField, pRspInfo: *const CThostFtdcRspInfoField, nRequestID: c_int, bIsLast: c_bool) {
-    let rsp_info = from_rsp_info_to_rsp_result(pRspInfo);
-    unsafe { transmute::<*mut dyn MdSpi, &mut dyn MdSpi>(transmute::<*mut CThostFtdcMdSpi, &mut CThostFtdcMdSpi>(spi).md_spi_ptr).on_rsp_un_sub_for_quote_rsp(pSpecificInstrument.as_ref(), rsp_info, nRequestID, bIsLast != 0) };
+    unsafe {
+        let rsp_info = from_rsp_info_to_rsp_result(pRspInfo);
+        transmute::<*mut dyn MdSpi, &mut dyn MdSpi>(transmute::<*mut CThostFtdcMdSpi, &mut CThostFtdcMdSpi>(spi).md_spi_ptr).on_rsp_un_sub_for_quote_rsp(pSpecificInstrument.as_ref(), rsp_info, nRequestID, bIsLast != 0);
+    }
 }
 
 #[allow(non_snake_case)]

@@ -2,6 +2,12 @@
 
 This project roughly adheres to [Semantic Versioning](http://semver.org/). For 0.x.y releases, `x` is the major version in semver, while `y` is the minor version.
 
+## ctp-common 0.9.0, ctp-md 0.10.0, ctp-trader 0.10.0 - 2020-05-13
+
+* Fix memory leaks
+* Fix unsafe function signature
+* Fix clippy warnings
+
 ## ctp-md 0.9.0, ctp-trader 0.9.0 - 2020-01-23
 
 * Upgrade `crossbeam-channel` to 0.4.0
